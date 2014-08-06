@@ -1,0 +1,14 @@
+<Context>
+	<Resource 
+		name="jdbc/bronimesto" 
+		auth="Container"
+		type="javax.sql.DataSource" 
+		maxActive="100" 
+		maxIdle="30" 
+		maxWait="10000"
+		username="admin" 
+		password="qwerty12Q"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://127.0.0.1:3006/bronimesto"
+	/>
+</Context>
