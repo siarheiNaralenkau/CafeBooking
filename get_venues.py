@@ -17,7 +17,6 @@ VENUE_INSERT = u"INSERT INTO venues(unique_id, name, phone, address, city, count
                "'{2}', '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9})"
 DELETE_VENUES = 'DELETE FROM venues'
 
-
 explore_url = 'https://api.foursquare.com/v2/venues/explore?ll=' + GOMEL_CENTER + \
     '&radius=' + RADIUS + \
     '&section={0}' + \
@@ -28,17 +27,30 @@ explore_url = 'https://api.foursquare.com/v2/venues/explore?ll=' + GOMEL_CENTER 
     '&v=' + VERSION
 
 
-def get_venues_by_type(v_type, offset):
+def query_venues(v_type, offset):
     url = explore_url.format(v_type, offset)
-    print url
     req = requests.get(url)
     json_result = req.json()
     t_venues = [item["venue"] for item in json_result["response"]["groups"][0]["items"]]
+    return t_venues
+
+
+def get_venues_by_type(v_type, offset):
+    v_list = []
+    cur_offset = offset
+    t_venues = query_venues(v_type, offset)
+    v_list = v_list + t_venues
     result_length = len(t_venues)
     print "Venues list size: {0}".format(result_length)
-    if result_length >= 50:
+    if result_length == 50:
         print "Not all venues received!"
-    return t_venues
+        while result_length == 50:
+            cur_offset += result_length
+            t_venues = query_venues(v_type, cur_offset)
+            v_list = v_list + t_venues
+            result_length = len(t_venues)
+    print "Result list size: {0}".format(len(v_list))
+    return v_list
 
 
 def get_phone(venue):
