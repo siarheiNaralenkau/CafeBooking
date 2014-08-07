@@ -18,7 +18,6 @@ import javax.sql.DataSource;
 /**
  * Servlet implementation class VenuesListServlet
  */
-@WebServlet(description = "Servlet to receive the list of nearest venues", urlPatterns = { "/VenuesListServlet" })
 public class VenuesListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
