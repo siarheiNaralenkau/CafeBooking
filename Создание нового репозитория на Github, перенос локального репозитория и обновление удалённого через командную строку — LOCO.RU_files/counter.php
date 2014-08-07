@@ -1,0 +1,1 @@
+if (typeof pluso != "undefined") pluso.setCounter("0", "http://loco.ru/materials/293-sozdanie-novogo-repozitoriya-na-github-perenos", undefined, undefined, undefined);

@@ -1,0 +1,1258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0069)http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" g_init="6735"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming</title>
+<link href="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/programming_notes_v1.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/programming_notes_v1.js"></script>
+<link rel="shortcut icon" href="http://www.ntu.edu.sg/home/ehchua/programming/favicon.ico" type="image/x-icon"><link href="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/css" rel="stylesheet" type="text/css"></head>
+
+<body>
+
+<div id="wrap-outer">
+
+<!-- header filled by JavaScript -->
+<div id="header" class="header-footer"><p>yet another insignificant programming notes... &nbsp;&nbsp;| &nbsp;&nbsp;<a href="http://www.ntu.edu.sg/home/ehchua/programming/index.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/index.html">HOME</a></p></div>
+
+<div id="wrap-inner">
+
+<div id="wrap-toc">
+<h5>TABLE OF CONTENTS <a id="show-toc" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#show-toc" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#show-toc">(HIDE)</a></h5>
+<div id="toc"><a class="toc-H3" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1." rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.">1.&nbsp;&nbsp;Introduction</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.1" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.1">1.1&nbsp;&nbsp;Web Application (Webapp)</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.2" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.2">1.2&nbsp;&nbsp;Hypertext Transfer Protocol (HTTP)</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.3" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-1.3">1.3&nbsp;&nbsp;Apache Tomcat HTTP Server</a><br><a class="toc-H3" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2." rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.">2.&nbsp;&nbsp;How to Install Tomcat 7 and Get Started with Java Servlet Programming</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.1" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.1">2.1&nbsp;&nbsp;STEP 1:  Download and Install Tomcat</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.2" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.2">2.2&nbsp;&nbsp;STEP 2:  Create an Environment Variable <span class="font-code">JAVA_HOME</span></a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.3" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.3">2.3&nbsp;&nbsp;STEP 3:  Configure Tomcat Server</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.4" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.4">2.4&nbsp;&nbsp;STEP 4:  Start  Tomcat Server</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.5" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.5">2.5&nbsp;&nbsp;STEP 5: Develop and Deploy a WebApp</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.6" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.6">2.6&nbsp;&nbsp;STEP 6: Write a "Hello-world" Java Servlet</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.7" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.7">2.7&nbsp;&nbsp;STEP 7: Write a Database Servlet</a><br><a class="toc-H4" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.8" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-2.8">2.8&nbsp;&nbsp;(Advanced) Deploying Servlet using <span class="font-code">@WebServlet</span> (Servlet 3.0 on Tomcat 7)</a><br><a class="toc-H3" href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-3." rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#zz-3.">3.&nbsp;&nbsp;How to Debug?</a><br><br></div>  <!-- for showing the "Table of Content" -->
+</div>
+
+<div id="content-header">
+<h1>How to Install Apache Tomcat 7/8</h1>
+<h2>(on Windows, Mac, Ubuntu)</h2>
+<h2>and</h2>
+<h2> Get Started with Java Servlet Programming</h2>
+</div>
+
+<div id="content-main">
+
+<p>This practical can be completed in a 3-hour session.</p>
+<p>This installation and configuration guide is applicable to Tomcat 7 and 8, and possibly the earlier versions.</p>
+<p>At the time of writing (Feb 2014), Tomcat 8 is in the beta stage. <strong>I suggest that you use Tomcat 7 at this moment.</strong></p>
+<p>Take note that Tomcat 8 requires JDK 1.7. It will NOT work with JDK 1.6.</p>
+
+<h3>1.&nbsp;&nbsp;Introduction<a id="zz-1." rollapp-href=""></a></h3>
+
+<h4>1.1&nbsp;&nbsp;Web Application (Webapp)<a id="zz-1.1" rollapp-href=""></a></h4>
+<p>A <em>web application</em> (or webapp), unlike standalone application, runs over the Internet. Examples of webapps are google, amazon, ebay, facebook and twitter.</p>
+
+<p>A webapp is typically a <em>3-tier</em> (or <em>multi-tier</em>) <em>client-server database application</em> run over the Internet as illustrated in the diagram below. It comprises five components:</p>
+
+<ol>
+<li><span class="line-heading">HTTP Server</span>: E.g., Apache HTTP Server, Apache Tomcat  Server, Microsoft Internet Information Server (IIS), nginx, Google Web Server (GWS), and others.</li>
+<li><span class="line-heading">HTTP Client (or Web Browser)</span>: E.g., Internet Explorer (MSIE), FireFox, Chrome, Safari, and others.</li>
+<li><span class="line-heading">Database</span>: E.g., Open-source MySQL, Apache Derby, mSQL, SQLite, PostgreSQL, OpenOffice's Base; Commercial Oracle, IBM DB2, SAP SyBase, MS SQL Server, MS Access; and others.</li>
+<li><span class="line-heading">Client-Side Programs</span>: could be written in HTML Form, JavaScript, VBScript, Flash, and others.</li>
+<li><span class="line-heading">Server-Side Programs</span>: could be written in Java Servlet/JSP, ASP, PHP, Perl, Python, CGI, and others.</li>
+</ol>
+
+<img class="image-center image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/HTTP_ClientServerSystem.png" alt="HTTP_ClientServerSystem.png">
+
+<p>The typical use-case is:</p>
+<ol>
+<li>A user, via a web browser (HTTP client), issues a URL request to an HTTP server to start a webapp.</li>
+<li>A client-side program (such as an HTML form) is loaded into client's browser.</li>
+<li>The user fills up the query criteria in the form.</li>
+<li>The client-side program sends the query parameters to a server-side program.</li>
+<li>The server-side program receives the query parameters, queries the database and returns the query result to the client.</li>
+<li>The client-side program displays the query result on the browser.</li>
+<li>The process repeats.</li>
+</ol>
+
+<h4>1.2&nbsp;&nbsp;Hypertext Transfer Protocol (HTTP)<a id="zz-1.2" rollapp-href=""></a></h4>
+<ul>
+<li>HTTP is an <em>application layer</em> protocol runs over TCP/IP. The IP provides support for routing and addressing (via an unique IP address for machines on the Internet); while TCP supports multiplexing via 64K ports from port number 0 to 65535. The default port number assigned to HTTP is TCP port 80.</li>
+
+<li>HTTP is an <em>asynchronous request-response application-layer protocol</em>. A client sends a request message to the server. The server then returns a response message to the client.</li>
+
+<li>HTTP is a <em>pull</em> protocol, a client pulls a page from the server (instead of server pushes pages to the clients).</li>
+
+<li>The syntax of the message is defined in the <a href="http://www.w3.org/standards/webdesign/htmlcss" rollapp-href="http://www.w3.org/standards/webdesign/htmlcss">HTTP specification</a>.</li>
+</ul>
+
+<img class="image-center image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/HTTP_RequestResponseMessages.png" alt="HTTP_RequestResponseMessages.png">
+
+<h4>1.3&nbsp;&nbsp;Apache Tomcat HTTP Server<a id="zz-1.3" rollapp-href=""></a></h4>
+
+<p><em>Apache Tomcat</em> is a Java-capable HTTP server, which could execute special Java programs known as Java Servlet and Java Server Pages (JSP). It is the official <em>Reference Implementation</em> (<em>RI</em>) for Java Servlets and JavaServer Pages (JSP) technologies.  Tomcat is an <em>open-source</em> project, under the "Apache Software Foundation" (which also provides the most use, open-source, industrial-strength Apache HTTP Server).  The mother site for Tomcat is <a href="http://tomcat.apache.org/" rollapp-href="http://tomcat.apache.org/">http://tomcat.apache.org</a>. Alternatively, you can find tomcat via the Apache mother site @ <a href="http://www.apache.org/" rollapp-href="http://www.apache.org/">http://www.apache.org</a>.</p>
+<p>Tomcat was originally written by James Duncan Davison (then working in Sun), in 1998, based on an earlier Sun's server called Java Web Server (JWS). It began at version 3.0 after JSWDK 2.1 it replaced. Sun subsequently made Tomcat open-source and gave it to Apache.</p>
+
+<p>The various Tomcat releases are:</p>
+<ol>
+<li>Tomcat 3.x (1999): RI for Servlet 2.2 and JSP 1.1.</li>
+<li>Tomcat 4.x (2001): RI for Servlet 2.3 and JSP 1.2.</li>
+<li>Tomcat 5.x (2002): RI for Servlet 2.4 and JSP 2.0.</li>
+<li>Tomcat 6.x (2006): RI for Servlet 2.5 and JSP 2.1.</li>
+<li>Tomcat 7.x (2010): RI for Servlet 3.0, JSP 2.2 and EL 2.2.</li>
+<li>Tomcat 8.x (2013): RI for Servlet 3.1, JSP 2.3, EL 3.0 and Java WebSocket 1.0.</li>
+</ol>
+
+<p>Tomcat is an HTTP application runs over TCP/IP. In other words, the Tomcat server runs on a specific TCP port in a specific IP address. The default TCP port number for HTTP protocol is 80, which is used for the <em>production</em> HTTP server. For <em>test</em> HTTP server, you can choose any unused port number between 1024 and 65535.</p>
+
+<h3 id="TomcatInstall">2.&nbsp;&nbsp;How to Install Tomcat 7 and Get Started with Java Servlet Programming<a id="zz-2." rollapp-href=""></a></h3>
+
+<h4>2.1&nbsp;&nbsp;STEP 1:  Download and Install Tomcat<a id="zz-2.1" rollapp-href=""></a></h4>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<ol>
+<li>Goto <a href="http://tomcat.apache.org/" rollapp-href="http://tomcat.apache.org/">http://tomcat.apache.org</a> ⇒ Downloads ⇒ Tomcat 8.0 ⇒ "<code>8.0.{<em>xx</em>}</code>" (where <code>{<em>xx</em>}</code> is the latest upgrade number) ⇒ Binary Distributions ⇒ Core ⇒ "<strong>zip</strong>" package (e.g., "<code>apache-tomcat-8.0.{<em>xx</em>}.<strong>zip</strong></code>", about 8 MB).</li>
+
+<li> UNZIP into a directory of your choice. DO NOT unzip onto the Desktop (because its <em>path</em> is hard to locate). I suggest using "<code>d:\myproject</code>". Tomcat will be unzipped into directory "<code>d:\myproject\apache-tomcat-8.0.{<em>xx</em>}</code>". For ease of use, we shall shorten and rename this directory to "<code>d:\myproject\tomcat</code>". <strong><span class="color-new"><strong>Take note of Your Tomcat Installed Directory</strong></span></strong>. Hereafter, I shall refer to the Tomcat installed directory as <code>&lt;TOMCAT_HOME&gt;</code> (or <code>&lt;CATALINA_HOME&gt;</code> - "Catalina" is the codename for Tomcat 5 and above).</li>
+</ol>
+
+<p><span class="line-heading">(Advanced)</span> A better approach is to keep the original directory name, such as <code>apache-tomcat-8.0.{<em>xx</em>}</code>, but create a <em>symlink</em> called <code>tomcat</code> via command "<code>mklink /D tomcat apache-tomcat-8.0.{<em>xx</em>}</code>". Symlink is available in Windows Vista/7/8 only.</p>
+
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">For Mac</span></p>
+
+<ol>
+<li>Goto <a href="http://tomcat.apache.org/" rollapp-href="http://tomcat.apache.org/">http://tomcat.apache.org</a> ⇒ Download ⇒ Tomcat 8.0 ⇒ "<code>8.0.{<em>xx</em>}</code>" (where <code>{<em>xx</em>}</code> denotes the latest upgrade number) ⇒ Binary distribution ⇒ Core ⇒ "<strong>tar.gz</strong>" package (e.g., "<code>apache-tomcat-8.0.{<em>xx</em>}.<strong>tar.gz</strong></code>", about 8 MB).</li>
+
+<li>To install Tomcat:
+<ol>
+<li>Goto "<code>~/Downloads</code>", double-click the  downloaded tarball (e.g., "<code>apache-tomcat-8.0.{<em>xx</em>}.tar.gz</code>") to expand it into a folder (e.g., "<code>apache-tomcat-8.0.{<em>xx</em>}</code>").</li>
+
+<li>Move the extracted folder (e.g., "<code>apache-tomcat-8.0.{<em>xx</em>}</code>") to "<code>/Applications</code>".</li>
+
+<li>Rename the folder to "tomcat", for ease of use. <strong><span class="color-new"><strong>Take note of Your Tomcat Installed Directory</strong></span></strong>. Hereafter, I shall refer to the Tomcat installed directory as <code>&lt;TOMCAT_HOME&gt;</code> (or <code>&lt;CATALINA_HOME&gt;</code> - "Catalina" is the codename for Tomcat 5 and above).</li>
+</ol></li>
+</ol>
+
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">For Ubuntu</span></p>
+<p>Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Ubuntu_HowTo.html#tomcat" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Ubuntu_HowTo.html#tomcat">How to Install Tomcat 7 on Ubuntu</a>". You need to switch between these two articles.</p>
+
+</div>
+
+
+<p>For academic learning, I recommend "<code>zip</code>" (or "<code>tar.gz</code>") version, as you could simply delete the entire directory when  Tomcat is no longer needed (without running any un-installer). You are free to move or rename the Tomcat's installed directory. You can install (unzip) multiple copies of Tomcat in the same machine. For production, it is easier to use the installer to properly configure the Tomcat.</p>
+
+<h5>Tomcat's Directories</h5>
+
+<p>Take a quick look at the Tomcat installed directory. It contains the following sub-directories:</p>
+<ul>
+<li><span class="line-heading font-code">bin</span>: contains the binaries; and startup script (<code>startup.bat</code> for Windows and <code>startup.sh</code> for Unix and Mac), shutdown script (<code>shutdown.bat</code> for Windows and <code>shutdown.sh</code> for Unix and Mac), and other binaries and scripts.</li>
+
+<li><span class="line-heading font-code">conf</span>: contains the system-wide configuration files, such as <code>server.xml</code>, <code>web.xml</code>, <code>context.xml</code>, and <code>tomcat-users.xml</code>.</li>
+
+<li><span class="line-heading font-code">lib</span>: contains the Tomcat's system-wide JAR files, accessible by all webapps. You could also place external JAR file (such as MySQL JDBC Driver) here.</li>
+
+<li><span class="line-heading font-code">logs</span>: contains Tomcat's log files. You may need to check for error messages here.</li>
+
+<li><span class="line-heading font-code">webapps</span>: contains the webapps to be deployed. You can also place the WAR (Webapp Archive) file for deployment here.</li>
+
+<li><span class="line-heading font-code">work</span>: Tomcat's working directory used by JSP, for JSP-to-Servlet conversion.</li>
+
+<li><span class="line-heading font-code">temp</span>: Temporary files.</li>
+</ul>
+
+
+<h4 id="javahome">2.2&nbsp;&nbsp;STEP 2:  Create an Environment Variable <span class="font-code">JAVA_HOME</span><a id="zz-2.2" rollapp-href=""></a></h4>
+
+<div class="side-note">
+<p class="line-heading">(For Windows)</p>
+
+<p>You need to create an <em>environment variable</em> called "<code>JAVA_HOME</code>" and set it to your JDK installed directory.</p>
+
+<ol>
+<li>First, take note of your JDK installed directory. The default is "<code>c:\Program Files\Java\jdk1.7.0_{<em>xx</em>}</code>", where <code>{<em>xx</em>}</code> is the latest upgrade number. It is <strong>important</strong> to verify your JDK installed directory, via the "Computer", before you proceed further.</li>
+
+<li>Start a CMD shell, and issue the command "<code>set JAVA_HOME</code>" to check if variable <code>JAVA_HOME</code> has been set:
+<pre class="color-command">&gt; <strong>set JAVA_HOME</strong>
+Environment variable JAVA_HOME not defined</pre>
+If <code>JAVA_HOME</code> is set, check if it is set to your JDK installed directory correctly. Otherwise, goto next step.</li>
+
+<li> To set the environment variable <code>JAVA_HOME</code> in Windows 2000/XP/Vista/7/8: Push "Start" button ⇒ Control Panel ⇒ System ⇒ (Vista/7/8) Advanced system settings ⇒ Switch to "Advanced"   tab ⇒ Environment Variables ⇒ System Variables  ⇒ "New" (or "Edit" for modification) ⇒ In "Variable Name", enter "<code>JAVA_HOME</code>"  ⇒ In "Variable Value", enter your JDK installed directory (e.g., "<code>c:\Program Files\Java\jdk1.7.0_{xx}</code>").</li>
+
+<li> To verify, <strong>RE-START</strong> a CMD shell (need to refresh the environment) and issue:
+<pre class="color-command">&gt; <strong>set JAVA_HOME</strong>
+JAVA_HOME=<span class="color-highlight">c:\Program Files\Java\jdk1.7.0_{<em>xx</em>}</span>   <span class="color-comment">&lt;== Verify that this is YOUR JDK installed directory</span></pre>
+</li>
+</ol>
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">(For Macs)</span></p>
+<p>Skip this step. No need to do anything.</p>
+</div>
+
+
+<h4 id="configure">2.3&nbsp;&nbsp;STEP 3:  Configure Tomcat Server<a id="zz-2.3" rollapp-href=""></a></h4>
+
+<p>The Tomcat configuration files are located in the "<code>conf</code>" sub-directory of your Tomcat installed directory, e.g. "<code>d:\myproject\tomcat\conf</code>" (for Windows) or "<code>/Applications/tomcat</code>" (for Mac). There are 4 configuration XML files:</p>
+<ol>
+<li><code>server.xml</code></li>
+<li><code>web.xml</code></li>
+<li><code>context.xml</code></li>
+<li><code>tomcat-users.xml</code></li>
+</ol>
+
+<p>Make a BACKUP of the configuration files before you proceed.</p>
+
+<h5>Step 3(a) "<span class="font-code">conf\server.xml</span>" - <strong>Set the TCP Port Number</strong></h5>
+
+<p>Use a programming text editor (e.g., NotePad++, TextPad for Windows; or gEdit, jEdit, TextEdit for Mac) to open the configuration file "<code>server.xml</code>", under the "<code>conf</code>" sub-directory of Tomcat installed directory.</p>
+
+<p>The default TCP port number configured in Tomcat is 8080, you may choose any number between 1024 and 65535, which is not used by an existing application. We shall choose 9999 in this article. (For production server, you should use port 80, which is pre-assigned to HTTP server as the default port number.)</p>
+
+<p>Locate the following lines that define the HTTP connector, and change <code>port="8080"</code> to <code>port="9999"</code>.</p>
+
+<pre class="color-example"><span class="color-comment">&lt;!-- A "Connector" represents an endpoint by which requests are received
+      and responses are returned. Documentation at :
+      Java HTTP Connector: /docs/config/http.html (blocking &amp; non-blocking)
+      Java AJP  Connector: /docs/config/ajp.html
+      APR (HTTP/AJP) Connector: /docs/apr.html
+      <strong><span class="color-new">Define a non-SSL HTTP/1.1 Connector on port 8080</span></strong>
+--&gt;</span>
+&lt;Connector <span class="color-highlight">port="<span class="underline">9999</span>"</span> protocol="HTTP/1.1"
+           connectionTimeout="20000"
+           redirectPort="8443" /&gt;</pre>
+
+<h5>Step 3(b) "<span class="font-code">conf\web.xml</span>" - <strong>Enabling Directory Listing</strong></h5>
+
+<p>Again, use a programming text editor to open the configuration file "<code>web.xml</code>", under the "<code>conf</code>" sub-directory of Tomcat installed directory.</p>
+
+<p>We shall enable directory listing by changing "<code>listings</code>"  from "<code>false</code>" to "<code>true</code>" for the "<code>default</code>" servlet. This is handy for test system, but not for production system for security reasons.</p>
+<p>Locate the following lines that define the "default" servlet; and change the "listings" from "<code>false</code>" to "<code>true</code>".</p>
+
+<pre class="color-example"><span class="color-comment">&lt;!-- The default servlet for all web applications, that serves static     --&gt;
+&lt;!-- resources.  It processes all requests that are not mapped to other   --&gt;
+&lt;!-- servlets with servlet mappings.                                      --&gt;</span>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;<span class="color-highlight"><strong>default</strong></span>&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.apache.catalina.servlets.DefaultServlet&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;debug&lt;/param-name&gt;
+    &lt;param-value&gt;0&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;<span class="color-highlight"><strong>listings</strong></span>&lt;/param-name&gt;
+    &lt;param-value&gt;<span class="color-highlight"><strong><span class="underline">true</span></strong></span>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;</pre>
+
+<h5>Step 3(c) "<span class="font-code">conf\context.xml</span>" - <strong>Enabling Automatic Reload</strong></h5>
+
+<p>We shall add the attribute <code>reloadable="true"</code> to the <code>&lt;Context&gt;</code> element to enable automatic reload after code changes. Again, this is handy for test system but not for production, due to the overhead of detecting changes.</p>
+<p>Locate the <code>&lt;Context&gt;</code> start element, and change it to <code>&lt;Context reloadable="true"&gt;</code>.</p>
+<pre class="color-example">&lt;Context <span class="color-highlight"><strong><span class="underline">reloadable="true</span>"</strong></span>&gt;
+   ......
+&lt;/Context&gt;</pre>
+
+<h5>Step 3(d) (Optional) "<span class="font-code">conf\tomcat-users.xml</span>"</h5>
+<p>Enable the Tomcat's manager by adding the highlighted lines, inside the <code>&lt;tomcat-users&gt;</code> elements:</p>
+
+<pre class="color-example">&lt;tomcat-users&gt;
+  <span class="color-highlight">&lt;role rolename="manager-gui"/&gt;</span>
+  <span class="color-highlight">&lt;user username="manager" password="xxxx" roles="manager-gui"/&gt;</span>
+&lt;/tomcat-users&gt;</pre>
+
+<p>This enables the manager GUI app for managing Tomcat server.</p>
+
+<h4>2.4&nbsp;&nbsp;STEP 4:  Start  Tomcat Server<a id="zz-2.4" rollapp-href=""></a></h4>
+
+<p>The Tomcat's executable programs and scripts are kept in the "<code>bin</code>" sub-directory of the Tomcat installed directory, e.g., "<code>d:\myproject\tomcat\bin</code>" (for Windows) or "<code>/Applications/tomcat/bin</code>" (for Mac).</p>
+
+<h5>Step 4(a) Start Server</h5>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+
+<p>Launch a CMD shell. Set the current directory to "<code>&lt;TOMCAT_HOME</code>&gt;\<code>bin</code>", and run "<code>startup.bat</code>" as follows:</p>
+
+<pre class="color-command"><span class="color-comment">// Change the current directory to Tomcat's "bin"
+// Assume that Tomcat is installed in "d:\myproject\tomcat"</span>
+&gt; <strong>d:</strong>                           <span class="color-comment">// Change the current drive</span>
+d:\&gt; <strong>cd \myproject\tomcat\bin</strong>  <span class="color-comment">// Change Directory to YOUR Tomcat's "bin" directory</span>
+ 
+<span class="color-comment">// Start Tomcat Server</span>
+D:\myproject\tomcat\bin&gt; <strong><span class="color-highlight">startup</span></strong></pre>
+
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">For Mac</span></p>
+<p>I assume that Tomcat is installed in "<code>/Applications/tomcat</code>". To start the Tomcat server, open a new "Terminal" and issue:</p>
+<pre class="color-command"><span class="color-comment">// Change current directory to Tomcat's binary directory</span>
+$ <strong>cd /Applications/tomcat/bin</strong>
+ 
+<span class="color-comment">// Start tomcat server</span>
+$ <strong><span class="color-highlight">./catalina.sh run</span></strong></pre>
+</div>
+
+
+<p>A <em>new</em> Tomcat console window appears. Study the messages on the console. Look out for the Tomcat's port number (double check that Tomcat is running on port 9999). Future error messages will be send to this console. <code>System.out.println()</code> issued by your Java servlets will also be sent to this console.</p>
+
+<pre class="output">......
+......
+xxx xx, xxxx x:xx:xx xx org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler [<strong><span class="color-new">"http-bio-9999"</span></strong>]
+xxx xx, xxxx x:xx:xx xx org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+xxx xx, xxxx x:xx:xx xx org.apache.catalina.startup.Catalina start
+INFO: <strong><span class="color-new">Server startup</span></strong><span class="color-new"></span> in 2477 ms</pre>
+
+<p><span class="line-heading">(Skip Unless ...) Cannot Start Tomcat:</span> Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug">How to Debug</a>".</p>
+
+
+
+
+<h5>Step 4(b) Start a Client to Access the Server</h5>
+
+
+<p>Start a browser (as HTTP client). Issue URL "<code>http://localhost:9999</code>" to access the Tomcat server's welcome page. The hostname "<code>localhost</code>" (with IP address of <code>127.0.0.1</code>) is meant for local loop-back testing inside the same machine. For users on the other machines over the net, they have to use the server's IP address or DNS domain name or hostname in the format of "<code>http://<em>serverHostnameOrIPAddress</em>:9999</code>".</p>
+
+<img class="image-left image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/TomcatHomePage.png" alt="TomcatHomePage.png">
+
+<p>Try issuing URL <code>http://localhost:9999/examples</code> to view the servlet and JSP examples. Try running some of the servlet examples.</p>
+<p>(Optional) Try issuing URL <code>http://localhost:9999/manager/html</code> to run the Tomcat Web Manager. Enter the username and password configured earlier in <code>tomcat-users.xml</code>.</p>
+
+<h5>Step 4(c) Shutdown Server</h5>
+
+<div class="side-note">
+<p class="line-heading">For Windows</p>
+<p>You can shutdown the tomcat server by either:</p>
+
+<ol>
+<li>Press ctrl-c on the Tomcat console; or</li>
+<li>Run "<code>&lt;TOMCAT_HOME&gt;\bin\<strong>shutdown.bat</strong></code>" script:
+  <pre class="color-command"><span class="color-comment">// Change the current directory to Tomcat's "bin"</span>
+&gt; <strong>d:</strong>                           <span class="color-comment">// Change the current drive</span>
+d:\&gt; <strong>cd \myproject\tomcat\bin</strong>  <span class="color-comment">// Change Directory to YOUR Tomcat's "bin" directory</span>
+ 
+<span class="color-comment">// Shutdown the server</span>
+d:\myproject\tomcat\bin&gt; <strong>shutdown</strong>
+</pre> 
+</li>
+</ol>
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">For Mac</span></p>
+
+<p>To shutdown the Tomcat server:</p>
+<ol>
+<li>Press control-c (NOT command-c); or</li>
+<li>Run the "<code>&lt;TOMCAT_HOME&gt;/bin/shutdown.sh</code>" script. Open a new "Terminal" and issue:
+  <pre class="color-command"><span class="color-comment">// Change current directory to Tomcat's bin directory</span>
+$ <strong>cd /Applications/tomcat/bin</strong>
+ 
+<span class="color-comment">// Shutdown the server</span>
+$ <strong>./shutdown.sh</strong></pre></li>
+</ol>
+</div>
+
+<p><span class="line-heading">WARNING</span>: You MUST properly shutdown the Tomcat. DO NOT kill the cat by pushing the window's "CLOSE" button.</p>
+
+<h4>2.5&nbsp;&nbsp;STEP 5: Develop and Deploy a WebApp<a id="zz-2.5" rollapp-href=""></a></h4>
+
+<h5>Step 5(a) Create the Directory Structure for your WebApp</h5>
+
+<img class="image-float-right" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/TomcatWebappHello.png" alt="TomcatWebappHello.png">
+
+<p>First of all, choose a <em>name</em> for your webapp. Let's call it "<code>hello</code>". Goto Tomcat's "<code>webapps</code>" sub-directory. Create the following directory structure for you webapp "<code>hello</code>" (as illustrated):</p>
+
+<ol>
+<li>Under Tomcat's "<code>webapps</code>", create your webapp <em>root</em> directory "<code>hello</code>" (i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\hello</code>").</li>
+
+<li>Under "<code>hello</code>", create a sub-directory "<code>WEB-INF</code>" (case sensitive, a "dash" not an underscore) (i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\hello\WEB-INF</code>").</li>
+
+<li>Under "<code>WEB-INF</code>", create a sub-sub-directory "<code>classes</code>" (case sensitive, plural) (i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\hello\WEB-INF\classes</code>").</li>
+</ol>
+
+
+<p>You need to keep your web resources (e.g., HTMLs, CSSs, images, scripts, servlets, JSPs) in the proper directories:</p>
+<ul>
+<li>"<code>hello</code>": The is called the <em>context root</em> (or <em>document base directory</em>) of your  webapp. You should keep all your HTML files and resources visible to the web users (e.g., HTMLs, CSSs, images, scripts, JSPs) under this <em>context root</em>.</li>
+<li>"<code>hello\WEB-INF</code>": This directory, although under the context root, is <em>not visible</em> to the web users. This is where you keep your application's web descriptor file "<code>web.xml</code>".</li>
+<li>"<code>hello\WEB-INF\classes</code>": This is where you keep all the Java classes such as servlet class-files.</li>
+</ul>
+
+<p>You should <span class="color-new">RE-START</span> your Tomcat server to pick up the <code>hello</code> webapp. Check the Tomcat's console to confirm that "<code>hello</code>" application has been properly depolyed:</p>
+
+<pre class="color-example">......
+INFO: Deploying web application directory D:\myproject\tomcat\webapps\<span class="color-new"><strong>hello</strong></span>
+......</pre>
+
+<p>You can issue the following URL to access the web application "<code>hello</code>":</p>
+<pre class="color-command">http://localhost:9999<strong>/hello</strong></pre>
+
+<p>You should see the directory listing of the directory "<code>&lt;TOMCAT_HOME&gt;\webapps\hello</code>", which shall be empty (provided you have enabled directory listing in <code>web.xml</code> earlier).</p>
+
+<h5>Step 5(b) Write a Welcome Page</h5>
+
+<p>Create the following HTML page and save as "<code>HelloHome.html</code>"
+in your application's root directory "<code>hello</code>".</p>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6</pre>
+</td>
+<td>
+<pre>&lt;html&gt;
+  &lt;head&gt;&lt;title&gt;My Home Page&lt;/title&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;My Name is so and so. This is my HOME.&lt;/h1&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You can browse this page by issuing this URL:</p>
+
+<pre class="color-command">http://localhost:9999/hello/<strong>HelloHome.html</strong></pre>
+
+<img class="image-center image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/TomcatWebappHelloHome.png" alt="TomcatWebappHelloHome.png">
+
+<p>Alternatively, you can issue an URL  to your web application root "<code>hello</code>":</p>
+<pre class="color-command">http://localhost:9999/hello</pre>
+<p>The server will return the directory listing of your base directory. You can then click on "<code>HelloHome.html</code>".</p>
+
+<p>Rename "<code>HelloHome.html</code>" to "<code>index.html</code>", and issue a directory request again:</p>
+<pre class="color-command">http://localhost:9999/hello</pre>
+<p>Now, the server will redirect the directory request to "<code>index.html</code>", if the root directory contains an "<code>index.html</code>", instead of serving the directory listing.</p>
+
+<p>You can check out the home page of your peers by issuing:</p>
+<pre class="color-command">http://<em>YourPeerHostnameOrIPAddress</em>:9999/hello
+http://<em>YourPeerHostnameOrIPAddress</em>:9999/hello/HelloHome.html
+http://<em>YourPeerHostnameOrIPAddress</em>:9999/hello/index.html</pre>
+
+<p>with a valid "<code><em>YourPeerHostnameOrIPAddress</em></code>", provided that your peer has started his tomcat server and his firewall does not block your access. You can use command such as "<code>ipconfig</code>", "<code>winipcfg</code>", "<code>ping</code>" to find the IP address.</p>
+
+<br>
+<p><span class="line-heading">(Skip Unless...)</span> The likely errors are "Unable to Connect", "Internet Explorer cannot display the web page", and "404 File Not Found". Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug">How to Debug</a>" section.</p>
+<h4>2.6&nbsp;&nbsp;STEP 6: Write a "Hello-world" Java Servlet<a id="zz-2.6" rollapp-href=""></a></h4>
+
+<p>A <em>servlet</em> is Java program that runs inside a Java-capable HTTP Server, such as Apache Tomcat. A web user invokes a servlet by issuing an appropriate URL from a web browser (HTTP client).</p>
+
+<p>Before you proceed, I shall assume that you are familiar with Java Programming and have installed the followings:</p>
+
+<ol>
+<li>JDK (Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/JDK_HowTo.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/JDK_HowTo.html">How to install JDK and Get Started</a>").</li>
+<li>A programming text editor, such as TextPad or Notepad++ (for Windows); or jEdit or gEdit (for Macs) (Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/CMD_Survival.html#editor" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/CMD_Survival.html#editor">Programming Text Editor</a>").</li>
+</ol>
+
+<h5>Step 6(a) Write a "Hello-world" Java Servlet</h5>
+
+<p>A Java servlet is a Java program that runs inside a HTTP server. A web user invokes a servlet by issuing a URL from a browser (or HTTP client). </p>
+<p>In this example,  we are going to write a Java servlet called <code>HelloServlet</code>, which says "Hello, world!". We will then write a configuration such that web users can invoke this servlet by issuing URL <code>http://<em>hostname</em>:<em>port</em>/hello/<span class="underline">sayhello</span></code> from their browser, as illustrated:</p>
+
+<img class="image-center image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/TomcatWebappHelloServlet.png" alt="TomcatWebappHelloServlet.png">
+
+<p>Write the following source codes called "<code>HelloServlet.java</code>" and save it under your application "<code>classes</code>" directory (i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\hello\<span class="underline"><strong>WEB-INF\classes</strong></span>\HelloServlet.java</code>"). This servlet says "Hello", echos some request information, and prints a random number upon each request.</p>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre>
+</td>
+<td>
+<pre><span class="color-comment">// To save as "<span class="color-new">&lt;TOMCAT_HOME&gt;\webapps\hello\WEB-INF\classes\HelloServlet.java</span>"</span>
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class <strong>HelloServlet</strong> extends HttpServlet {
+   @Override
+   public void <strong>doGet</strong>(HttpServletRequest <strong>request</strong>, HttpServletResponse <strong>response</strong>)
+         throws IOException, ServletException {
+ 
+      <span class="color-comment">// Set the response MIME type of the response message</span>
+      <strong>response.setContentType("text/html");</strong>
+      <span class="color-comment">// Allocate a output writer to write the response message into the network socket</span>
+      <strong>PrintWriter out = response.getWriter();</strong>
+ 
+      <span class="color-comment">// Write the response message, in an HTML page</span>
+      try {
+         out.println("&lt;html&gt;");
+         out.println("&lt;head&gt;&lt;title&gt;Hello, World&lt;/title&gt;&lt;/head&gt;");
+         out.println("&lt;body&gt;");
+         out.println("&lt;h1&gt;Hello, world!&lt;/h1&gt;");  <span class="color-comment">// says Hello</span>
+         <span class="color-comment">// Echo client's request information</span>
+         out.println("&lt;p&gt;Request URI: " + <strong>request.getRequestURI()</strong> + "&lt;/p&gt;");
+         out.println("&lt;p&gt;Protocol: " + <strong>request.getProtocol()</strong> + "&lt;/p&gt;");
+         out.println("&lt;p&gt;PathInfo: " + <strong>request.getPathInfo()</strong> + "&lt;/p&gt;");
+         out.println("&lt;p&gt;Remote Address: " + <strong>request.getRemoteAddr()</strong> + "&lt;/p&gt;");
+         <span class="color-comment">// Generate a random number upon each request</span>
+         out.println("&lt;p&gt;A Random Number: &lt;strong&gt;" + <strong>Math.random()</strong> + "&lt;/strong&gt;&lt;/p&gt;");
+         out.println("&lt;/body&gt;&lt;/html&gt;");
+      } finally {
+         out.close();  <span class="color-comment">// Always close the output writer</span>
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h5>Step 6(b) Compiling the Servlet</h5>
+
+<p>We need the Servlet API to compile the servlet. Servlet API is NOT part of JDK. Nonetheless, Tomcat provides a copy in <code>&lt;TOMCAT_HOME&gt;/lib/servlet-api.jar</code>. We need to include this JAR file in the compilation via the <code>-cp</code> (classpath) option.</p>
+
+<div class="side-note">
+<p><span class="line-heading">(For Windows)</span></p>
+<pre><span class="color-comment">// Assume that Tomcat is installed in d:\myproject\tomcat</span>
+&gt; <span class="color-highlight">d:</span>                                                   <span class="color-comment">// switch to D dive</span>
+&gt; cd <span class="color-highlight">\myproject\tomcat</span>\webapps\hello\WEB-INF\classes   <span class="color-comment">// change directory to the source file</span>
+&gt; javac -cp .;<span class="color-highlight">d:\myproject\tomcat</span>\lib\servlet-api.jar HelloServlet.java   <span class="color-comment">// Compile</span>
+    <span class="color-comment">// Note: You need to enclose the jar file in double quotes if the path contains blank
+    //       e.g., javac -cp .;"d:\Path To\tomcat\lib\servlet-api.jar" HelloServlet.java</span></pre>
+</div>
+
+<div class="side-note">
+<p><span class="line-heading">(For Macs)</span></p>
+<pre><span class="color-comment">// Assume that Tomcat is installed in /Applications/tomcat</span>
+$ cd <span class="color-highlight">/Applications/tomcat</span>/webapps/hello/WEB-INF/classes   <span class="color-comment"> // change directory to the source file</span>
+$ javac -cp .:<span class="color-highlight">/Applications/tomcat</span>/lib/servlet-api.jar HelloServlet.java  <span class="color-comment">// Compile</span>
+</pre>
+</div>
+
+<p>The output of the compilation is "<code>HelloServlet.class</code>". <span class="color-new">Browse the "<code>classes</code>" folder to make sure that it is created.</span></p>
+
+<br>
+<p><span class="line-heading">(Skip Unless...)</span> Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html#ServletErrors" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html#ServletErrors">Common Errors in Compiling Java Servlet</a>".</p>
+
+<h5>Step 6(c) Configure Servlet's Request URL in "<span class="font-code">webapps\hello\WEB-INF\web.xml</span>"</h5>
+
+<p>A web user invokes a servlet, which is kept in the web server, by issuing <em>a request URL</em> from the browser. We need to configure this request URL for our <code>HelloServlet</code>. </p>
+<p>Create the following configuration file called "<code><strong>web.xml</strong></code>", and save it under "<strong><code>webapps\hello\<span class="underline">WEB-INF</span></code></strong>" (i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\hello\<span class="underline">WEB-INF</span>\web.xml</code>").</p>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+</td>
+<td>
+<pre>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;web-app version="3.0"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"&gt;
+ 
+   <span class="color-comment"><strong>&lt;!-- To save as "hello\WEB-INF\web.xml" --&gt;</strong></span>
+ 
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;<strong>HelloWorld</strong>&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;<strong><span class="color-highlight">HelloServlet</span></strong>&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+ 
+   <strong><span class="color-comment">&lt;!-- Note: All &lt;servlet&gt; elements MUST be grouped together and
+         placed IN FRONT of the &lt;servlet-mapping&gt; elements --&gt;</span></strong>
+ 
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;<strong>HelloWorld</strong>&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;<strong><span class="color-highlight">/sayhello</span></strong>&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In the above configuration, a servlet having a class file "<code>HelloServlet.class</code>" is mapped to request URL "<code>/sayhello</code>" (via an <em>arbitrary</em> <code>servlet-name</code> "<code>HelloWorld</code>"), under this web application "<code>hello</code>". In other words, the complete request URL for this servlet is "<code>http://<em>hostname</em>:<em>port</em><span class="underline"><strong>/hello/sayhello</strong></span></code>".</p>
+<p>This configuration file, saved under your webapp "<code>hello</code>", is applicable only to this particular webapp "<code>hello</code>".</p>
+<p>RESTART your Tomcat server to refresh the "<code>web.xml</code>" file.</p>
+
+<p><span class="line-heading">IMPORTANT:</span> For EACH servlet, you need to write a pair of <code>&lt;servlet&gt;</code> and <code>&lt;servlet-mapping&gt;</code> elements with a common but arbitrary <code>&lt;servlet-name&gt;</code>. Take note that all the <code>&lt;servlet&gt;</code> elements MUST be grouped together and placed IN FRONT of the <code>&lt;servlet-mapping&gt;</code> elements.</p>
+
+<h5>Step 6(d) Invoke the Servlet</h5>
+
+<p>To run this servlet, start a browser, and issue the request URL configured earlier:</p>
+<pre class="color-command">http://localhost:9999/<strong>hello/sayhello</strong></pre>
+<p>You shall see the output of the servlet displayed in your web browser. </p>
+<p>Refresh the browser, you shall see a new random number upon each refresh. In other word, the <code>doGet()</code> method of the servlet runs once per request.</p>
+<p>Try "View Source" to look at the output received by the web users. Take note that the web users receive only the output of the servlet (generated via the <code>out.println()</code> statements). They have no access to the servlet programs (which may contain confidential information).</p>
+
+<pre class="output">&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Hello, World&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Hello, world!&lt;/h1&gt;
+&lt;p&gt;Request URI: /hello/sayhello&lt;/p&gt;
+&lt;p&gt;Protocol: HTTP/1.1&lt;/p&gt;
+&lt;p&gt;PathInfo: null&lt;/p&gt;
+&lt;p&gt;Remote Address: 127.0.0.1&lt;/p&gt;
+&lt;p&gt;A Random Number: &lt;strong&gt;0.3523682325749493&lt;/strong&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+<br>
+<p><span class="line-heading">(Skip Unless...)</span> The likely errors are "404 File Not Found" and "500 Internal Server Error". Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug">How to debug</a>" Section.</p>
+
+
+<h4 id="DatabaseServlet">2.7&nbsp;&nbsp;STEP 7: Write a Database Servlet<a id="zz-2.7" rollapp-href=""></a></h4>
+
+<p>This section assumes that you are familiar with "Java database programming" and "MySQL database server". Otherwise, read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html">Java Database Program</a>" and "<a href="http://www.ntu.edu.sg/home/ehchua/programming/sql/MySQL_HowTo.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/sql/MySQL_HowTo.html">How to Install MySQL 5 and Get Started</a>".</p>
+
+<h5>Step 7(a) Setup a Database on MySQL</h5>
+
+<p>Start your MySQL server. Take note of the server's port number. I shall assume that the MySQL server is running on port <code>8888</code> (whereas the Tomcat is running on port <code>9999</code>).</p>
+
+<pre class="color-command"><span class="color-comment">// For Windows</span>
+&gt; <strong>d:</strong>
+&gt; <strong>cd \myproject\mysql\bin</strong>
+&gt; <strong>mysqld --console</strong>
+ 
+<span class="color-comment">// For Mac</span>
+$ <strong>cd /usr/local/mysql/bin</strong>
+$ <strong>sudo ./mysqld_safe --console</strong></pre>
+
+
+<p>Start a MySQL client. I shall assume that there is a user called "<code>myuser</code>" with password "<code>xxxx</code>".</p>
+
+<pre class="color-command"><span class="color-comment">// For Windows</span>
+&gt; <strong>d:</strong>
+&gt; <strong>cd \myproject\mysql\bin</strong>
+&gt; <strong>mysql -u <em>myuser</em> -p</strong>
+ 
+<span class="color-comment">// For Mac</span>
+$ <strong>cd /usr/local/mysql/bin</strong>
+$ <strong>./mysql -u <em>myuser</em> -p</strong></pre>
+
+<p> Run the following SQL statements to create a database called "<code>ebookshop</code>", with a table called "<code>books</code>" with 5 columns: <code>id</code>, <code>title</code>, <code>author</code>, <code>price</code>, <code>qty</code>.
+ </p>
+ <pre class="color-example">create database if not exists <strong>ebookshop</strong>;
+
+use ebookshop;
+
+drop table if exists books;
+create table <strong>books</strong> (
+   <strong>id</strong>     int,
+   <strong>title</strong>  varchar(50),
+   <strong>author</strong> varchar(50),
+   <strong>price</strong>  float,
+   <strong>qty</strong>    int,
+   primary key (id));
+
+insert into books values (1001, 'Java for dummies', 'Tan Ah Teck', 11.11, 11);
+insert into books values (1002, 'More Java for dummies', 'Tan Ah Teck', 22.22, 22);
+insert into books values (1003, 'More Java for more dummies', 'Mohammad Ali', 33.33, 33);
+insert into books values (1004, 'A Cup of Java', 'Kumar', 55.55, 55);
+insert into books values (1005, 'A Teaspoon of Java', 'Kevin Jones', 66.66, 66);
+
+select * from books;</pre>
+
+<h5>Step 7(b) Install MySQL JDBC Driver</h5>
+
+<p>You need to download MySQL JDBC driver if you have not done so. Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html#MySQLJDBCDriverInstall" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html#MySQLJDBCDriverInstall">Installing the MySQL JDBC Driver</a>".</p>
+
+<div class="side-note">
+<p><span class="line-heading">(For Advanced Users Only)</span> You could also place the MySQL driver jar-file "<code>mysql-connector-java-5.1.{<em>xx</em>}-bin.jar</code>" in  Tomcat's "<code>lib</code>" directory.</p>
+</div>
+  
+
+
+<h5>Step 7(c) Write a Client-side HTML Form</h5>
+  
+<p>Let's write an HTML script to create a <em>query form</em> with  3 checkboxes and a submit button, as illustrated below.&nbsp; Save the HTML file as “<code>querybook.html</code>” in your application  root directory “<code>&lt;TOMCAT_HOME&gt;\webapps\hello</code>”.</p>
+
+<img class="image-center image-border" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/HtmlFormBookQuery.png" alt="HtmlFormBookQuery.png">
+
+<br>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15</pre>
+</td>
+<td>
+<pre>&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Yet Another Bookshop&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Yet Another Bookshop&lt;/h2&gt;
+  &lt;form method="get" <strong>action="http://localhost:9999/hello/query"</strong>&gt;
+    &lt;b&gt;Choose an author:&lt;/b&gt;
+    &lt;input type="checkbox" <strong>name="author" value="Tan Ah Teck"</strong>&gt;Ah Teck
+    &lt;input type="checkbox" <strong>name="author" value="Mohammad Ali"</strong>&gt;Ali
+    &lt;input type="checkbox" <strong>name="author" value="Kumar"</strong>&gt;Kumar
+    &lt;input type="submit" value="Search"&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>You can browse the HTML page by issuing the following URL:</p>
+
+<pre class="color-command">http://localhost:9999/<strong>hello/querybook.html</strong></pre>
+
+<p>Check a box (e.g., "Tan Ah Teck") and click the "Search"  button.&nbsp; An HTTP GET request will be issued to the URL specified in the <code>&lt;form&gt;</code>'s "<code>action</code>" attribute.&nbsp; Observe the URL of the HTTP GET  request:</p>
+
+<pre class="color-command">http://localhost:9999/hello/query<strong><span class="color-comment">?</span>author=Tan+Ah+Teck</strong></pre>
+
+<p>The request consists of two part: a URL corresponding to the "<code>action</code>" attribute of the <code>&lt;form&gt;</code> tag, and the "name=value" pair extracted from the <code>&lt;input&gt;</code> tag, separated by a <code>'?'</code>. Take note that blanks are replaced by <code>'+'</code> (or <code>%20</code>), because blanks are not allowed in the URL.</p>
+
+<p>If you check two boxes  (e.g., "Tan Ah Teck" and "Mohammad Ali"), you will get this URL, which has two "name=value" pairs separated by an <code>'&amp;'</code>.</p>
+<pre class="color-command">http://localhost:9999/hello/query<strong><span class="color-comment">?</span>author=Tan+Ah+Teck<span class="color-comment">&amp;</span>author=Mohammad+Ali</strong></pre>
+
+<p>You are expected to get an error "404 File Not Found", as you have yet to write the server-side program.</p>
+
+<h5>Step 7(d) Write the Server-side Database Query Servlet</h5>
+
+<p>The next step is to write a Java servlet, which responses to the client’s request by querying the database and returns the query results.</p>
+
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64</pre>
+</td>
+<td>
+<pre><span class="color-comment">// To save as "&lt;TOMCAT_HOME&gt;\webapps\hello\WEB-INF\<strong><span class="color-highlight">classes\QueryServlet.java</span></strong>".</span>
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+ 
+public class <strong>QueryServlet</strong> extends HttpServlet {  <span class="color-comment">// JDK 6 and above only</span>
+ 
+   <span class="color-comment">// The doGet() runs once per HTTP GET request to this servlet.</span>
+   @Override
+   public void doGet(HttpServletRequest request, HttpServletResponse response)
+               throws ServletException, IOException {
+      <span class="color-comment">// Set the MIME type for the response message</span>
+      response.setContentType("text/html");
+      <span class="color-comment">// Get a output writer to write the response message into the network socket</span>
+      PrintWriter out = response.getWriter();
+ 
+      Connection conn = null;
+      Statement stmt = null;
+      try {
+         <span class="color-comment">// Step 1: Allocate a database Connection object</span>
+         <strong>conn = DriverManager.getConnection(
+            <span class="color-highlight">"jdbc:mysql://localhost:8888/ebookshop", "myuser", "xxxx"</span>);</strong> <span class="color-comment">// &lt;== Check!</span>
+            <span class="color-comment">// database-URL(hostname, port, default database), username, password</span>
+ 
+         <span class="color-comment">// Step 2: Allocate a Statement object within the Connection</span>
+         <strong>stmt = conn.createStatement();</strong>
+ 
+         <span class="color-comment">// Step 3: Execute a SQL SELECT query</span>
+         <strong>String sqlStr = "select * from books where author = "
+              + <span class="color-highlight">"'" + request.getParameter("author") + "'"</span>
+              + " and qty &gt; 0 order by price desc";</strong>
+ 
+         <span class="color-comment">// Print an HTML page as the output of the query</span>
+         out.println("&lt;html&gt;&lt;head&gt;&lt;title&gt;Query Response&lt;/title&gt;&lt;/head&gt;&lt;body&gt;");
+         out.println("&lt;h3&gt;Thank you for your query.&lt;/h3&gt;");
+         out.println("&lt;p&gt;You query is: " + sqlStr + "&lt;/p&gt;"); <span class="color-comment">// Echo for debugging</span>
+         <strong>ResultSet rset = stmt.executeQuery(sqlStr);</strong>  <span class="color-comment">// Send the query to the server</span>
+ 
+         <span class="color-comment">// Step 4: Process the query result set</span>
+         int count = 0;
+         while(<strong>rset.next()</strong>) {
+            <span class="color-comment">// Print a paragraph &lt;p&gt;...&lt;/p&gt; for each record</span>
+            out.println("&lt;p&gt;" + <strong>rset.getString("author")</strong>
+                 + ", " + <strong>rset.getString("title")</strong>
+                 + ", $" + <strong>rset.getDouble("price")</strong> + "&lt;/p&gt;");
+            count++;
+         }
+         out.println("&lt;p&gt;==== " + count + " records found =====&lt;/p&gt;");
+         out.println("&lt;/body&gt;&lt;/html&gt;");
+     } catch (SQLException ex) {
+        ex.printStackTrace();
+     } finally {
+        out.close();  <span class="color-comment">// Close the output writer</span>
+        try {
+           <span class="color-comment">// Step 5: Close the resources</span>
+           if (stmt != null) <strong>stmt.close()</strong>;
+           if (conn != null) <strong>conn.close()</strong>;
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+     }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Compile the source "<code>QueryServlet.java</code>" into "<code>QueryServlet.class</code>". See the previous example in Step 6(b) on how to compile servlet.</p>
+
+<h5>Step 7(e) Configure the Request URL for the Servlet</h5>
+
+<p>Open the configuration file "<code>web.xml</code>" of your application "<code>hello</code>" that you have created earlier for the <code>HelloServlet</code>, i.e., "<code>&lt;TOMCAT_HOME&gt;\webapps\<span class="underline">hello\WEB-INF\web.xml</span></code>". Add the lines that are shown in red at the <span class="underline">LOCATIONS INDICATED.</span></p>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre>
+</td>
+<td>
+<pre>&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;web-app version="3.0"
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"&gt;
+ 
+   <span class="color-comment">&lt;!-- To save as "hello\WEB-INF\web.xml" --&gt;</span>
+ 
+   &lt;servlet&gt;
+      &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;HelloServlet&lt;/servlet-class&gt;
+   &lt;/servlet&gt;
+ 
+   <span class="color-new">&lt;servlet&gt;
+      &lt;servlet-name&gt;<strong>UserQuery</strong>&lt;/servlet-name&gt;
+      &lt;servlet-class&gt;<strong><span class="color-highlight">QueryServlet</span></strong>&lt;/servlet-class&gt;
+   &lt;/servlet&gt;</span>
+ 
+   <strong><span class="color-comment">&lt;!-- Note: All &lt;servlet&gt; elements MUST be grouped together and
+         placed IN FRONT of the &lt;servlet-mapping&gt; elements --&gt;</span></strong><span class="color-comment"></span>
+ 
+   &lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;HelloWorld&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;/sayhello&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;
+ 
+   <span class="color-new">&lt;servlet-mapping&gt;
+      &lt;servlet-name&gt;<strong>UserQuery</strong>&lt;/servlet-name&gt;
+      &lt;url-pattern&gt;<strong><span class="color-highlight">/query</span></strong>&lt;/url-pattern&gt;
+   &lt;/servlet-mapping&gt;</span>
+&lt;/web-app&gt;</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The above lines configure the following URL to invoke <code>QueryServlet</code>:</p>
+<pre class="color-command">http://localhost:9999/hello<strong>/query</strong></pre>
+
+<h5>Step 7(f) Invoke the Servlet from the Client-Side Form</h5>
+
+<p>Issue the following URL to browse the HMTL form "<code>querybook.html</code>" that you have created earlier:</p>
+<pre class="color-command">http://localhost:9999/hello/<strong>querybook.html</strong></pre>
+
+<p>Select an author (e.g., "Tan Ah Teck") and click the submit button, which activates the following URL coded in the <code>&lt;form&gt;</code>'s "<code>action</code>" attribute, together with the name=value pair:</p>
+<pre class="color-command">http://localhost:9999/hello/<strong>query?author=Tan+Ah+Teck</strong></pre>
+
+<p>This URL "/<code>query</code>" triggers <code>QueryServlet</code>. The <code>QueryServlet</code> retrieves the name=value pair of "<code>author=Tan+Ah+Teck</code>". Inside the <code>QueryServlet</code>, the method <code>request.getParameter("author")</code> returns "<code>Tan Ah Teck</code>", which is  inserted into the SQL <code>SELECT</code> command to query the database. The processed query result is then written to the client as an HTML document.</p>
+
+<br>
+<p><span class="line-heading">(Skip Unless...)</span> The likely errors are "404 File Not Found" and "500 Internal Server Error". Read "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html#TomcatDebug">How to debug</a>" Section.</p>
+
+<h4>2.8&nbsp;&nbsp;(Advanced) Deploying Servlet using <span class="font-code">@WebServlet</span> (Servlet 3.0 on Tomcat 7)<a id="zz-2.8" rollapp-href=""></a></h4>
+
+<p>Servlet 3.0, which is supported by Tomcat 7, introduces the <code>@WebServlet</code> annotation, which greatly simplifies the deployment of servlets. You no longer need to write the deployment descriptor in "<code>web.xml</code>". Instead, you can use the <code>@WebServlet</code> annotation to specify the url mapping.</p>
+<p>For example, let us write a new servlet called <code>AnotherHelloServlet.java</code>, by modifying the <code>HelloServlet.java</code> written earlier, with url mapping of "<code>sayhi</code>".</p>
+
+<table class="table-program">
+<colgroup><col class="col-line-number">
+<col class="col-program">
+</colgroup><tbody>
+<tr>
+<td>
+<pre class="text-right">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36</pre>
+</td>
+<td>
+<pre><span class="color-comment">// To save as "&lt;TOMCAT_HOME&gt;\webapps\hello\WEB-INF\classes\<strong>AnotherHelloServlet</strong>.java"</span>
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+<strong>import javax.servlet.annotation.*;</strong>
+ 
+<span class="color-highlight">@WebServlet("/sayhi")</span>
+public class <span class="color-highlight">AnotherHelloServlet</span> extends HttpServlet {
+   @Override
+   public void doGet(HttpServletRequest request, HttpServletResponse response)
+         throws IOException, ServletException {
+ 
+      <span class="color-comment">// Set the response MIME type</span>
+      response.setContentType("text/html;charset=UTF-8");
+      <span class="color-comment">// Allocate a output writer to write the response message into the network socket</span>
+      PrintWriter out = response.getWriter();
+ 
+      <span class="color-comment">// Write the response message, in an HTML page</span>
+      try {
+         out.println("&lt;html&gt;");
+         out.println("&lt;head&gt;&lt;title&gt;Hello, World&lt;/title&gt;&lt;/head&gt;");
+         out.println("&lt;body&gt;");
+         out.println("&lt;h1&gt;Hello world, again!&lt;/h1&gt;");  <span class="color-comment">// says Hello</span>
+         <span class="color-comment">// Echo client's request information</span>
+         out.println("&lt;p&gt;Request URI: " + request.getRequestURI() + "&lt;/p&gt;");
+         out.println("&lt;p&gt;Protocol: " + request.getProtocol() + "&lt;/p&gt;");
+         out.println("&lt;p&gt;PathInfo: " + request.getPathInfo() + "&lt;/p&gt;");
+         out.println("&lt;p&gt;Remote Address: " + request.getRemoteAddr() + "&lt;/p&gt;");
+         <span class="color-comment">// Generate a random number upon each request</span>
+         out.println("&lt;p&gt;A Random Number: &lt;strong&gt;" + Math.random() + "&lt;/strong&gt;&lt;/p&gt;");
+         out.println("&lt;/body&gt;&lt;/html&gt;");
+      } finally {
+         out.close();  <span class="color-comment">// Always close the output writer</span>
+      }
+   }
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>In Line 7, the annotation <code>@WebServlet("/sayhi")</code> is used to declare the URL mapping for this servlet, i.e., <code>http://localhost:9999/hello/sayhi</code>. There is no need to provide any more configuration in "<code>web.xml</code>"!</p>
+
+
+<h3 id="TomcatDebug">3.&nbsp;&nbsp;How to Debug?<a id="zz-3." rollapp-href=""></a></h3>
+
+<p>"Everything that can possibly go wrong will go wrong." The most important thing to do is to find the <strong><span class="color-new">ERROR MESSAGE</span></strong>!!!</p>
+<h5>Always...</h5>
+
+<ol>
+
+<li>Refresh your browser using <strong>Cntl-F5</strong> (instead of refresh button or simply F5) to get a fresh copy, instead of from the cache.</li>
+
+<li>You may re-start your Tomcat server. You may also re-start your browser to clear the cache.</li>
+
+<li>Check your spelling! Always assume that all programs are case-sensitive. Don't type, copy and paste if possible!</li>
+
+<li>and MOST IMPORTANTLY - Find the <strong><span class="color-new">ERROR MESSAGE</span></strong>!!!
+  <ol>
+    <li>Check the Error Messages on Tomcat's Console. Most of the error messages have a few screens of lines. You need to scroll up slowly from the last line to <strong>look for the FIRST LINE of the error messages</strong>.</li>
+    
+    <li>Check the Tomcat's log files, located at "<code>&lt;TOMCAT_HOME&gt;\logs</code>". The "<code>catalina.yyyy-mm-dd.log</code>" shows the Tomcat's startup messages. Also check the "<code>localhost.yyyy-mm-dd.log</code>".
+    </li>
+  </ol>
+</li>
+
+<li>If things were running fine until the lightning strikes, ask yourself "What have I changed?"</li>
+
+</ol>
+
+<h5>Cannot Start Tomcat - Tomcat's Console Flashes and Disappears</h5>
+<ol>
+<li>Try running the script "<code>configtest.bat</code>" (for Windows) or "<code>./configtest.sh</code>" (for Mac/Linux) to check your configuration files.</li>
+<li>Check the Tomcat's log files for error messages. The log files are located at "<code>&lt;TOMCAT_HOME&gt;\logs</code>". The "<code>catalina.{yyyy-mm-dd}.log</code>" shows the Tomcat's startup messages. Also check the "<code>localhost.{yyyy-mm-dd}.log</code>".</li>
+<li>If the error messages indicate that another Tomcat instance is running (<code>java.net.BindException: Address already in use: JVM_Bind</code>), kill the Tomcat process (see below); or try running the "shutdown" script at Tomcat's <code>bin</code> (For Windows, simply double-click the "<code>shutdown.bat</code>" or issue "<code>shutdown</code>" from CMD. For Mac, issue "<code>./shutdown.sh</code>" from Terminal.)</li>
+<li>If the error messages indicate that another application is running on the Tomcat's port numbers, then you need to change the Tomcat's port number in <code>server.xml</code>. You can issue command "<code>netstat -an</code>" to check the status of all the ports.</li>
+<li>Start the tomcat in the debugging mode by running "<code>catalina debug</code>" (or <code>./catalina.sh debug</code>) and type "<code>run</code>" in the "<code>jdb</code>" prompt. Look for the error messages.</li>
+
+</ol>
+
+<h5>Locating/Killing Tomcat's Process</h5>
+<ul>
+<li>In windows, start "Task Manager", Tomcat run as a "process" named "<code>java.exe</code>". You may need to kill the process.</li>
+<li>In Mac, start "Activity Monitor". Select "All Processes" and look for "<code>java.exe</code>".</li>
+<li> In Linux/Mac, you may issue "<code>ps aux | grep tomcat</code>" to locate the Tomcat process. Note down the process ID (pid). You can kill the Tomcat process via "<code>kill -9 <em>pid</em></code>".</li>
+</ul>
+
+<h5>(Firefox) Unable to Connect<br>
+  (IE) Internet Explorer cannot display the webpage<br>
+  (Chrome) Oops! Google Chrome could not connect to ...<br>
+  (Safari) Safari can't connect to the server</h5>
+
+<p>Cause: You are simply not connecting to your Tomcat.</p>
+
+<p>Solution:</p>
+<ol>
+<li>Check if your Tomcat server has been started?</li>
+<li>Check the hostname and port number, separated by a colon <code>':'</code>, of your URL (<code>http://localhost:9999/...</code>).</li>
+</ol>
+  
+<h5>Error 404 File Not Found</h5>
+
+<p>Cause: You have connected to your Tomcat. But Tomcat server cannot find the HTML file or Servlet that your requested.</p>
+
+<p>Solution:</p>
+<ol>
+<li>Check your spelling! The path is case-sensitive!</li>
+
+<li>For HTML file with URL <code>http://localhost:9999/<em>xxxx</em>/<em>filename</em>.html</code>:
+
+  <ol>
+<li>Open Tomcat's "<code>webapps</code>" directory, check if sub-directory "<em><code>xxxx</code></em>" exists. It is case-sensitive.</li>
+<li>Open the "<em><code>xxxx</code></em>" directory, check if "<code><em>filename</em>.html</code>" exists.</li>
+</ol></li>
+
+<li>For Servlet with URL  <code>http://localhost:9999/<em>xxxx</em>/<em>servletURL</em></code>:
+
+  <ol>
+<li>Check the Tomcat's console for error message. Your application cannot be deployed if you make a mistake in editing "<code>web.xml</code>", which triggered many error messages.</li>
+<li>Check the Tomcat console to make sure that your application has been deployed.</li>
+<li>Open Tomcat's "<code>webapps</code>" directory, check if sub-directory "<em><code>xxxx</code></em>" exists.</li>
+<li>Open the "<em><code>xxxx</code></em>" directory, check if sub-sub-directory "<code>WEB-INF</code>" (uppercase with a dash) exists.</li>
+<li>Open the "<code>WEB-INF</code>", check if sub-sub-sub directory "classes" (lowercase, plural) exists.</li>
+
+<li>Open the configuration file "<code>WEB-INF\web.xml</code>":
+
+<ol>
+<li>Check that <em><code>servletURL</code></em> is defined in a <code>&lt;servlet-mapping&gt;</code> tag. Take note of the <em><code>name</code></em> in <code>&lt;servlet-name&gt;</code> tag.</li>
+
+<li>Based on the <em><code>name</code></em> noted, look for the matching <code>&lt;servlet-class&gt;</code> tag. Take note of the <em><code>ServletClassname</code></em>.</li>
+
+<li>Open "<code>WEB-INF\classes</code>", check if "<em><code>ServletClassname</code></em><code>.class</code>" that you noted exists (Note: It is "<code>.class</code>", and NOT "<code>.java</code>". You need to compile the "<code>.java</code>" to get the "<code>.class</code>".)</li>
+</ol>
+</li>
+  </ol>
+  </li>
+</ol>
+
+<h5>Error 500 Internal Server Error</h5>
+
+<p>Error 500 should have triggered many error message in the Tomcat's console. Go to the Tomcat's console, find the error message. The error message spans tens of lines. You need to scroll up slowly to look for the <em>first line</em> of the error message. The error message should tell you the cuase of this error, e.g. SQL syntax error, wrong user/password, etc.</p>
+
+<p>For database servlet, you may check the error messages at "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html#JDBCErrors" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html#JDBCErrors">Common Errors in JDBC Programming</a>".</p>
+
+<ul>
+<li>For "No suitable driver found" (Windows) or <code>NullPointerException</code> (Mac and Linux): Read Step 7(b) again, again, and again.</li>
+</ul>
+
+<h5>More Errors</h5>
+<p>Try searching "<a href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/howto/ErrorMessages.html">Common Error Messages</a>".</p>
+
+<p class="references">REFERENCES &amp; RESOURCES</p>
+<ol>
+  <li>Apache Tomcat mother site @ <a href="http://tomcat.apache.org/" rollapp-href="http://tomcat.apache.org/">http://tomcat.apache.org</a>.</li>
+  <li>Apache Tomcat Documentation @ "<code>&lt;TOMCAT_HOME&gt;\webapps\docs</code>".</li>
+  <li>"<a href="http://www.ntu.edu.sg/home/ehchua/programming/sql/MySQL_HowTo.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/sql/MySQL_HowTo.html">How to install MySQL and Get Started</a>".</li>
+  <li>"<a href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/java/JDBC_Basic.html">Introduction to Java Database (JDBC) Programming</a>".</li>
+  <li>Jason Brittain, Ian F. Darwin, "<em>Tomcat The Definitive Guide</em>", 2nd eds, OReilly, 2007.</li>
+</ol>
+
+</div> <!-- End the content-main division -->
+
+<div id="content-footer">
+<p>Latest version tested: Tomcat 7.0.50/8.0.3(beta), MySQL 5.6.16, JDK 1.7.0_51, Windows 7/8, Mac OS X 10.5, Ubuntu 13.10<br>
+Last modified: February, 2014</p>
+</div>
+
+</div>  <!-- End the wrap-inner division -->
+
+<!-- footer filled by JavaScript -->
+<div id="footer" class="header-footer"><p>Feedback, comments, corrections, and errata can be sent to Chua Hock-Chuan (ehchua@ntu.edu.sg) &nbsp;&nbsp;|&nbsp;&nbsp; <a href="http://www.ntu.edu.sg/home/ehchua/programming/index.html" rollapp-href="http://www.ntu.edu.sg/home/ehchua/programming/index.html">HOME</a></p></div>
+
+</div>  <!-- End the wrap-outer division -->
+
+
+<img width="1" height="1" src="./How to Install Tomcat 7 (on Windows, Mac and Ubuntu) and Get Started with Java Servlet Programming_files/foo"></body></html>

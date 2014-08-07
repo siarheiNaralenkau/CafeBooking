@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)https://www.rollapp.com/fileopener.html#http://loco.ru -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <title>rollApp File Opener</title>
+    <style type="text/css">
+    	#logo {
+    		height: 32px;
+    		width: 150px;
+    	}
+    	body {
+    		overflow: hidden;
+    		margin: 0px;
+    	}
+    </style>
+    <script type="text/javascript" async="" src="dc.js"></script><script type="text/javascript" async="" src="version.js"></script><script type="text/javascript">
+        var API_VERSION = '1';
+        function setVersion(version){
+            API_VERSION = version;
+        }
+    </script>
+  </head>
+  <body>
+    <img id="logo" src="popup-logo.png">
+    <script type="text/javascript">
+        /* Load API version info, do it anisochronous */
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = 'https://api.rollapp.com/version.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-1380258-5']);
+      _gaq.push(['_setDomainName', '.rollapp.com']);
+      _gaq.push(['_trackPageview']);
+      _gaq.push(['_trackEvent', 'Fileopener', 'Popup', 'Opened']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+  
+</body></html>
