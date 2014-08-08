@@ -23,7 +23,7 @@ import com.grum.geocalc.Point;
 public class VenuesDAO {
 
 	private static final String VENUES_LIST_QUERY = "SELECT * FROM venues LIMIT ?";
-	private static final String SORTED_COORDS_QUERY = "select * from venues order by ABS(latitude-52), ABS(longitude-30) limit 30";
+	private static final String SORTED_COORDS_QUERY = "select * from venues order by ABS(latitude-?), ABS(longitude-?) LIMIT ?";
 	private static DataSource dataSource;
 	
 	static {		
@@ -40,8 +40,10 @@ public class VenuesDAO {
 	public static List<Venue> getVenues(double lat, double lng, int limit) throws SQLException {
 		List<Venue> venues = new ArrayList<Venue>();
 		Connection con = dataSource.getConnection();
-		PreparedStatement ps = con.prepareStatement(VENUES_LIST_QUERY);
-		ps.setInt(1, limit);
+		PreparedStatement ps = con.prepareStatement(SORTED_COORDS_QUERY);
+		ps.setDouble(1, lat);
+		ps.setDouble(2, lng);
+		ps.setInt(3, limit);
 		ResultSet rs = ps.executeQuery();
 		while(rs.next()) {
 			Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),

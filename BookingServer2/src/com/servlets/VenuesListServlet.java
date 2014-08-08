@@ -8,6 +8,7 @@ import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,21 +36,44 @@ public class VenuesListServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		try {
-			response.setContentType("application/json;charset=utf-8");
+		try {			
+			request.setCharacterEncoding("UTF-8");
 			double lat = Double.valueOf(request.getParameter("lat"));
 			double lng = Double.valueOf(request.getParameter("lng"));
 			int limit = DEFAULT_LIMIT;
 			if(request.getParameterMap().containsKey("limit")) {
 				limit = Integer.valueOf(request.getParameter("limit"));
 			}
+			String responseType = request.getParameter("responseType");
 			List<Venue> nearestVenues = VenuesDAO.getVenues(lat, lng, limit);
-			Gson gson = new Gson();
-			String jsonResult = gson.toJson(nearestVenues);			
-			response.getWriter().write(jsonResult);
+			System.out.println("Venues list: ");
+			for(Venue venue: nearestVenues) {
+				System.out.println(venue.getName() + ": " + venue.getDistance() + " metres");
+			}
+			request.setAttribute("venues", nearestVenues);
+			if(responseType.equals("json")) {
+				response.setContentType("application/json;charset=utf-8");
+				Gson gson = new Gson();
+				String jsonResult = gson.toJson(nearestVenues);			
+				response.getWriter().write(jsonResult);
+			} else if(responseType.equals("jsp")) {
+				forwardToList(request, response);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}		
-
+	
+	protected void forwardToList(HttpServletRequest request, HttpServletResponse response) {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/list_venues.jsp");
+		try {
+			dispatcher.forward(request, response);
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

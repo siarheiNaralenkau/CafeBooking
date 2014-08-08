@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<a href="./venues_list?lat=52.405348&lng=30.920542">Get Venues JSON</a>
+	<a href="./venues_list?lat=52.405348&lng=30.920542&responseType=json">Get Venues JSON</a>
+	<a href="./venues_list?lat=52.405348&lng=30.920542&responseType=jsp">Get Venues JSP</a>
 </body>
 </html>
