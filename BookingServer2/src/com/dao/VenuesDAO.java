@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.naming.Context;
@@ -23,6 +24,8 @@ import com.grum.geocalc.Point;
 public class VenuesDAO {
 
 	private static final String VENUES_LIST_QUERY = "SELECT * FROM venues LIMIT ?";
+	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes) " +
+			"VALUES(?, ?, ?, ?, ?, 1, ?)";
 	private static final String SORTED_COORDS_QUERY = "select * from venues order by ABS(latitude-?), ABS(longitude-?) LIMIT ?";
 	private static DataSource dataSource;
 	
@@ -54,6 +57,24 @@ public class VenuesDAO {
 		}
 		Collections.sort(venues, new VenueDistanceComp());
 		return venues;
+	}
+	
+	public static int bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes) throws SQLException {
+		int result = 0;
+		Connection con = dataSource.getConnection();
+		PreparedStatement ps = con.prepareStatement(BOOK_QUERY);
+		ps.setInt(1, venue_id);
+		ps.setString(2, visitorName);
+		ps.setString(3, visitorPhone);
+		ps.setDate(4, new java.sql.Date(bookingTime.getTime()));
+		ps.setByte(5, places);
+		ps.setString(6, notes);
+		result = ps.executeUpdate();
+		if(result > 0) {
+			return places;
+		} else {
+			return result;
+		}
 	}
 	
 	private static void calcDistance(Venue v, double lat, double lng) {

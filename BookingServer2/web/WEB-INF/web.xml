@@ -9,12 +9,22 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
   <servlet>
     <servlet-name>VenuesList</servlet-name>
     <servlet-class>com.servlets.VenuesListServlet</servlet-class>
   </servlet>
+  <servlet>
+  	<servlet-name>BookPlace</servlet-name>
+  	<servlet-class>com.servlets.BookPlaceServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>VenuesList</servlet-name>
     <url-pattern>/venues_list</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BookPlace</servlet-name>
+    <url-pattern>/book_place</url-pattern>
   </servlet-mapping>
 </web-app>
