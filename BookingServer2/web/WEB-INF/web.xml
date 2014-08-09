@@ -15,8 +15,12 @@
     <servlet-class>com.servlets.VenuesListServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>BookPlace</servlet-name>
-  	<servlet-class>com.servlets.BookPlaceServlet</servlet-class>
+    <servlet-name>BookPlace</servlet-name>
+    <servlet-class>com.servlets.BookPlaceServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ChangeBookingStatus</servlet-name>
+  	<servlet-class>com.servlets.ChangeBookingStatusServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -27,4 +31,9 @@
     <servlet-name>BookPlace</servlet-name>
     <url-pattern>/book_place</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ChangeBookingStatus</servlet-name>
+  	<url-pattern>/change_booking_status</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

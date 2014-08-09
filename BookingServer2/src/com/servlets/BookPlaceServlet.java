@@ -61,9 +61,6 @@ public class BookPlaceServlet extends HttpServlet {
 			String errorMessage = "Incorrect time parameter. Expecting String in format 'dd-MM-YYYY HH:mm', got " + sBookingTime;
 			System.out.println("ERROR: " + errorMessage);
 			throw new ServletException(errorMessage);	
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			throw new ServletException(e);
 		}
 	}
 
