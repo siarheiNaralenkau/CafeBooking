@@ -8,6 +8,7 @@ create table venues(id integer primary key not null AUTO_INCREMENT,
 	latitude float,
 	longitude float,
 	category varchar(60),
-	has_free_seats BOOL);
+	has_free_seats BOOL,
+	admin_user varchar(100));
 	
 	
