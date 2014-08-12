@@ -18,6 +18,25 @@ public class Venue {
 		this.category = category;
 		this.hasFreeSeats = hasFreeSeats;
 	}
+	
+	public Venue(long id, String uniqueId, String name, String phone,
+			String address, String city, String country, double lat,
+			double lng, String category, boolean hasFreeSeats, String adminUser) {
+		super();
+		this.id = id;
+		this.uniqueId = uniqueId;
+		this.name = name;
+		this.phone = phone;
+		this.address = address;
+		this.city = city;
+		this.country = country;
+		this.lat = lat;
+		this.lng = lng;
+		this.category = category;
+		this.hasFreeSeats = hasFreeSeats;
+		this.adminUser = adminUser;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -89,7 +108,14 @@ public class Venue {
 	}
 	public void setDistance(double distance) {
 		this.distance = distance;
+	}	
+	public String getAdminUser() {
+		return adminUser;
 	}
+	public void setAdminUser(String adminUser) {
+		this.adminUser = adminUser;
+	}
+	
 	public Venue() {
 		// TODO Auto-generated constructor stub
 	}
@@ -106,5 +132,5 @@ public class Venue {
 	private String category;
 	private boolean hasFreeSeats;
 	private double distance;
-	
+	private String adminUser;
 }

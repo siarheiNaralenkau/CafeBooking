@@ -19,8 +19,12 @@
     <servlet-class>com.servlets.BookPlaceServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>ChangeBookingStatus</servlet-name>
-  	<servlet-class>com.servlets.ChangeBookingStatusServlet</servlet-class>
+    <servlet-name>ChangeBookingStatus</servlet-name>
+    <servlet-class>com.servlets.ChangeBookingStatusServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>CheckBookingStatus</servlet-name>
+    <servlet-class>com.servlets.CheckBookingStatusServlet</servlet-class>  
   </servlet>
   
   <servlet-mapping>
@@ -32,8 +36,11 @@
     <url-pattern>/book_place</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>ChangeBookingStatus</servlet-name>
-  	<url-pattern>/change_booking_status</url-pattern>
+    <servlet-name>ChangeBookingStatus</servlet-name>
+    <url-pattern>/change_booking_status</url-pattern>
   </servlet-mapping>
-  
+  <servlet-mapping>
+    <servlet-name>CheckBookingStatus</servlet-name>
+    <url-pattern>/check_booking_status</url-pattern>
+  </servlet-mapping>
 </web-app>
