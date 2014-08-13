@@ -4,7 +4,8 @@ public enum BookingStatus {
    PENDING(1),
    APPROVED(2),
    CANCELLED(3),
-   REJECTED(4);
+   REJECTED(4),
+   DELETED(5);
    
    private int value;
    

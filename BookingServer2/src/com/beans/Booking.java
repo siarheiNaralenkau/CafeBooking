@@ -2,8 +2,6 @@ package com.beans;
 
 import java.sql.Timestamp;
 
-import com.constants.BookingStatus;
-
 public class Booking {
 
 	private int id;

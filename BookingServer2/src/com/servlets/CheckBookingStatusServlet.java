@@ -1,14 +1,11 @@
 package com.servlets;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +16,8 @@ import com.constants.Consts;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
-/*
+/**
+ * Check the status of specified booking
  * Example:
  * http://localhost:8080/BookingServer2/check_booking_status?userName=Sergey&bookingId=2
  */

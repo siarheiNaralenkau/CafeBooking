@@ -18,14 +18,12 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.beans.Booking;
+import com.beans.HistoryEnrty;
 import com.beans.Venue;
 import com.beans.VenueDistanceComp;
 import com.constants.BookingStatus;
 import com.constants.Consts;
-import com.grum.geocalc.Coordinate;
-import com.grum.geocalc.DegreeCoordinate;
-import com.grum.geocalc.EarthCalc;
-import com.grum.geocalc.Point;
+import com.utils.LocationUtil;
 
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes) " +
@@ -33,11 +31,13 @@ public class VenuesDAO {
 	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
-	private static final String GET_HISTORY_QUERY = "SELECT h.id, h.booking_id, h.new_status, h.action_user, h.change_time, b.venue_id FROM booking_history h, bookings b WHERE b.id = h.id AND b.venue_id = ?";
+	private static final String GET_HISTORY_QUERY = "h.booking_id, h.new_status, h.action_user, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE b.id = h.id AND b.venue_id = ?";
 	private static final String UPDATE_STATUS_QUERY = "UPDATE bookings SET status = ? WHERE id = ?"; 
 	private static final String GET_BOOKING_QUERY = "SELECT * FROM bookings WHERE id = ?";
 	private static final String GET_VENUE_QUERY = "SELECT * FROM venues WHERE id = ?";
 	private static final String BLOCK_BOOKING_QUERY = "UPDATE venues SET has_free_seats = false WHERE id = ?";
+	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue();
+	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
 	private static DataSource dataSource;
 	
 	static {		
@@ -51,40 +51,50 @@ public class VenuesDAO {
 				
 	}
 	
-	public static List<Venue> getVenues(Double lat, Double lng, Integer limit) throws SQLException {
+	public static List<Venue> getVenues(Double lat, Double lng, Integer limit) {
 		Double sLat = lat, sLng = lng;
 		List<Venue> venues = new ArrayList<Venue>();
-		Connection con = dataSource.getConnection();
-		String query = new String(SORTED_COORDS_QUERY);
-		if(limit != null) {
-			query += " LIMIT ?";
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			String query = new String(SORTED_COORDS_QUERY);
+			if(limit != null) {
+				query += " LIMIT ?";
+			}
+			ps = con.prepareStatement(query);
+			if(sLat == null ) {
+				sLat = Consts.DEFAULT_LAT;  			
+			} 
+			if(sLng == null) {
+				sLng = Consts.DEFAULT_LNG;
+			} 
+			ps.setDouble(1, sLat);
+			ps.setDouble(2, sLng);
+			if(limit != null) {
+				ps.setInt(3, limit);
+			}		
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
+						rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
+						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"));
+				LocationUtil.calcDistance(v, sLat, sLng);
+				venues.add(v);
+			}
+			Collections.sort(venues, new VenueDistanceComp());
+		} catch (SQLException e) { 
+			System.out.println("Error: " + e.getMessage());
+		} finally {
+			closeConnection(con, ps);
 		}
-		PreparedStatement ps = con.prepareStatement(query);
-		if(sLat == null ) {
-			sLat = Consts.DEFAULT_LAT;  			
-		} 
-		if(sLng == null) {
-			sLng = Consts.DEFAULT_LNG;
-		} 
-		ps.setDouble(1, sLat);
-		ps.setDouble(2, sLng);
-		if(limit != null) {
-			ps.setInt(3, limit);
-		}		
-		ResultSet rs = ps.executeQuery();
-		while(rs.next()) {
-			Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
-					rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
-					rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"));
-			calcDistance(v, sLat, sLng);
-			venues.add(v);
-		}
-		Collections.sort(venues, new VenueDistanceComp());
+		
 		return venues;
 	}
 	
-	public static int bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes) {
-		int result = 0;
+	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		int qResult = 0;
 		Connection con = null;
 		PreparedStatement ps = null;		
 		try {
@@ -96,9 +106,10 @@ public class VenuesDAO {
 			ps.setTimestamp(4, new Timestamp(bookingTime.getTime()));
 			ps.setByte(5, places);
 			ps.setString(6, notes);
-			result = ps.executeUpdate();
-			if(result > 0) {
-				result = places;
+			qResult = ps.executeUpdate();
+			if(qResult > 0) {
+				result.put("status", "success");
+				result.put("places_booked", places);
 				ps = con.prepareStatement(GET_LAST_AUTOINCREMENT);
 				ResultSet rs = ps.executeQuery();
 				if(rs.next()) {
@@ -107,7 +118,8 @@ public class VenuesDAO {
 				}				
 			} 
 		} catch(SQLException e) {
-			System.out.println(e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
 		} finally {			
 			closeConnection(con, ps);
 		}
@@ -124,30 +136,34 @@ public class VenuesDAO {
 		ps.close();
 	}
 	
-	public static int updateStatus(int bookingId, int newStatus, String actionUser) {
+	public static Map<String, Object> updateStatus(int bookingId, int newStatus, String actionUser) {
 		Connection con = null;
 		PreparedStatement ps = null;
-		int result = 0;
-		try {
-			con = dataSource.getConnection();
-			ps = con.prepareStatement(UPDATE_STATUS_QUERY);
-			ps.setInt(1, newStatus);
-			ps.setInt(2, bookingId);
-			int updated = ps.executeUpdate();
-			if(updated > 0) {
-				result = newStatus;
-				writeHistory(con, bookingId, newStatus, actionUser);
-			}
-		} catch (SQLException e) {			
-			System.out.println(e.getMessage());
-		} finally {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Booking booking = getBookingById(bookingId);
+		Venue venue = getVenueById(booking.getVenueId());
+		if( (newStatus == BookingStatus.APPROVED.getValue() || newStatus == BookingStatus.REJECTED.getValue() || 
+				newStatus == BookingStatus.DELETED.getValue()) && !venue.getAdminUser().equals(actionUser)) {
+			result.put("status", "failure");
+			result.put("error", "User: " + actionUser + " is not allowed set status " + newStatus + " for booking");
+		} else {
 			try {
-				if(ps != null) {
-					ps.close();
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(UPDATE_STATUS_QUERY);
+				ps.setInt(1, newStatus);
+				ps.setInt(2, bookingId);
+				int updated = ps.executeUpdate();
+				if(updated > 0) {
+					result.put("status", "success");
+					result.put("bookingId", bookingId);
+					result.put("newBookingStatus", newStatus);
+					writeHistory(con, bookingId, newStatus, actionUser);
 				}
-			} catch(SQLException e) {
-				System.out.println("Unable to close connection");
-				System.out.println(e.getMessage());
+			} catch (SQLException e) {			
+				result.put("status", "failure");
+				result.put("error", e.getMessage());
+			} finally {
+				closeConnection(con, ps);
 			}
 		}
 		return result;
@@ -180,7 +196,7 @@ public class VenuesDAO {
 		Venue venue = null;
 		try {
 			con = dataSource.getConnection();
-			ps = con.prepareStatement(GET_BOOKING_QUERY);
+			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
@@ -197,7 +213,7 @@ public class VenuesDAO {
 	}
 	
 	public static Map<String, Object> blockBookingForVenue(String actionUser, int venueId) {
-		Map<String, Object> resultStatus = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();
 		Venue venue = getVenueById(venueId);
 		if(venue.getAdminUser().equals(actionUser)) {
 			Connection con = null;
@@ -207,33 +223,116 @@ public class VenuesDAO {
 				ps = con.prepareStatement(BLOCK_BOOKING_QUERY);
 				ps.setInt(1, venueId);
 				ps.executeUpdate();
-				resultStatus.put("status", "success");
+				result.put("status", "success");
 			} catch(SQLException e) {
 				System.out.println("Error: " + e.getMessage());
-				resultStatus.put("status", "failure");
-				resultStatus.put("error", e.getMessage());
+				result.put("status", "failure");
+				result.put("error", e.getMessage());
 			} finally {
 				closeConnection(con, ps);
 			}
 		} else {
-			resultStatus.put("status", "failure");
-			resultStatus.put("error", "User: " + actionUser + " is not allowed to block booking for venue: " + venue.getName());
+			result.put("status", "failure");
+			result.put("error", "User: " + actionUser + " is not allowed to block booking for venue: " + venue.getName());
 		}
-		return resultStatus;
+		return result;
 	}
 	
-	private static void calcDistance(Venue v, double lat, double lng) {
-		Coordinate latPos = new DegreeCoordinate(lat);
-		Coordinate lngPos = new DegreeCoordinate(lng);
-		Point pos = new Point(latPos, lngPos);
-		
-		Coordinate latV = new DegreeCoordinate(v.getLat());
-		Coordinate lngV = new DegreeCoordinate(v.getLng());
-		Point pV = new Point(latV, lngV);
-		
-		double distance = EarthCalc.getDistance(pos, pV);
-		v.setDistance(distance);
+	public static Map<String, Object> getBookingHistory(String actionUser, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<HistoryEnrty> bookingHistory = new ArrayList<HistoryEnrty>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			Venue venue = getVenueById(venueId);
+			if(!venue.getAdminUser().equals(actionUser)) {
+				result.put("status", "failure");
+				result.put("error", "User " + actionUser + " is not allowed to block booking for venue with id " + venueId);
+			} else {
+				ps = con.prepareStatement(GET_HISTORY_QUERY);
+				ps.setInt(1, venueId);
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()) {
+					HistoryEnrty he = new HistoryEnrty(rs.getInt("booking_id"), rs.getInt("new_status"), rs.getString("action_user"), 
+							rs.getTimestamp("change_time"), rs.getInt("venue_id"), rs.getInt("places_amount"));
+					bookingHistory.add(he);					
+				}
+				result.put("status", "success");
+				result.put("bookingHistory", bookingHistory);
+			}			
+		} catch (SQLException e) {			
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
+	
+	public static Map<String, Object> getPendingBookings(String actionUser, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Booking> pendingBookings = new ArrayList<Booking>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			Venue venue = getVenueById(venueId);
+			if(!venue.getAdminUser().equals(actionUser)) {
+				result.put("status", "failure");
+				result.put("error", "User " + actionUser + " is not allowed to block booking for venue with id " + venueId);
+			} else {
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(PENDING_BOOKINGS_QUERY);
+				ps.setInt(1, venueId);
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()) {
+					Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
+							rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+					pendingBookings.add(b);
+				}
+				result.put("status", "success");
+				result.put("pendingBookings", pendingBookings);
+			}			
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> deleteBooking(String actionUser, int bookingId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			Booking booking = getBookingById(bookingId);
+			Venue venue = getVenueById(booking.getVenueId());
+			if(!venue.getAdminUser().equals(actionUser)) {
+				result.put("status", "failure");
+				result.put("error", "User " + actionUser + " is not allowed to delete bookings for venue with id " + booking.getVenueId());
+			} else {
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(DELETE_BOOKING_QUERY);
+				ps.setInt(1, bookingId);
+				ps.executeUpdate();
+				result.put("status", "success");
+				result.put("bookingId", bookingId);
+				result.put("newBookingStatus", BookingStatus.DELETED.getValue());
+			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		
+		return result;
+	}		
 	
 	private static void closeConnection(Connection con, PreparedStatement ps) {
 		try {

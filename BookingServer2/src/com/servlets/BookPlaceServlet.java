@@ -1,21 +1,27 @@
 package com.servlets;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dao.VenuesDAO;
+import com.google.gson.Gson;
 
 
-@WebServlet("/BookPlaceServlet")
+/**
+ * Puts a booking request in some cafe, restaurant, bar or club.
+ * Requires POST request.
+ * Example:
+ * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00
+ */
+
 public class BookPlaceServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -27,10 +33,12 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String BOOKING_TIME = "bookingTime";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		doPost(request, response);
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json;charset=utf-8");
 		String sBookingTime = "";
 		String sVenueId;
 		int venueId = 0;
@@ -52,7 +60,10 @@ public class BookPlaceServlet extends HttpServlet {
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);
 			}		
-			VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes);
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes);
+			Gson gson = new Gson();
+			String jsonResult = gson.toJson(result);	
+			response.getWriter().write(jsonResult);
 		} catch (NumberFormatException e) {
 			String errorMessage = "Wrong venue_id parameter, whould be integer";
 			System.out.println("ERROR: " + errorMessage);

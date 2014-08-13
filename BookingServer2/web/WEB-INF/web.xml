@@ -9,7 +9,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <servlet>
     <servlet-name>VenuesList</servlet-name>
     <servlet-class>com.servlets.VenuesListServlet</servlet-class>
@@ -23,8 +22,24 @@
     <servlet-class>com.servlets.ChangeBookingStatusServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>CheckBookingStatus</servlet-name>
-    <servlet-class>com.servlets.CheckBookingStatusServlet</servlet-class>  
+    <servlet-name>CheckBookingStatus</servlet-name>
+    <servlet-class>com.servlets.CheckBookingStatusServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DisableBooking</servlet-name>
+    <servlet-class>com.servlets.DisableBookingServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetHistory</servlet-name>
+    <servlet-class>com.servlets.GetHistoryServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>DeleteBooking</servlet-name>
+  	<servlet-class>com.servlets.DeleteBookingServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>GetPendingBookings</servlet-name>
+  	<servlet-class>com.servlets.GetPendingBookingsServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -42,5 +57,21 @@
   <servlet-mapping>
     <servlet-name>CheckBookingStatus</servlet-name>
     <url-pattern>/check_booking_status</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>DisableBooking</servlet-name>
+    <url-pattern>/disable_booking</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetHistory</servlet-name>
+    <url-pattern>/get_history</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>DeleteBooking</servlet-name>
+  	<url-pattern>/delete_booking</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>GetPendingBookings</servlet-name>
+  	<url-pattern>/get_pending_bookings</url-pattern>
   </servlet-mapping>
 </web-app>
