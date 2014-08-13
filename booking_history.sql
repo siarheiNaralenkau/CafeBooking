@@ -12,4 +12,4 @@ CREATE TABLE `booking_history` (
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
-AUTO_INCREMENT=5;
+AUTO_INCREMENT=4;
