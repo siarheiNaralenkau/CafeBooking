@@ -50,8 +50,8 @@
     <servlet-class>com.servlets.SetVenueAdminServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>ClearBookings</servlet-name>
-  	<servlet-class>com.servlets.ClearBookingsServlet</servlet-class>
+    <servlet-name>ClearBookings</servlet-name>
+    <servlet-class>com.servlets.ClearBookingsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>VenuesList</servlet-name>
@@ -94,7 +94,7 @@
     <url-pattern>/set_venue_admin</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>ClearBookings</servlet-name>
-  	<url-pattern>/clear_bookings</url-pattern>
+    <servlet-name>ClearBookings</servlet-name>
+    <url-pattern>/clear_bookings</url-pattern>
   </servlet-mapping>
 </web-app>

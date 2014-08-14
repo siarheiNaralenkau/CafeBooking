@@ -1,0 +1,1 @@
+export JAVA_TOOL_OPTIONS=-Duser.timezone="GMT+3:00"
