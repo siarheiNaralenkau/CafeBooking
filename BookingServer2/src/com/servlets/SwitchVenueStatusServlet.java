@@ -12,12 +12,12 @@ import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
 /**
- * Disable booking places in specified venue
+ * Disable or enable booking places in specified venue
  * Should be called by venue admin if there are no free places in venue
  * Example:
- * http://localhost:8080/BookingServer2/disable_booking?actionUser=admin&venueId=1
+ * http://localhost:8080/BookingServer2/switch_venue_status?actionUser=admin&venueId=1&enableBooking=false
  */
-public class DisableBookingServlet extends HttpServlet {
+public class SwitchVenueStatusServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
               
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,7 +30,8 @@ public class DisableBookingServlet extends HttpServlet {
 		
 		String actionUser = request.getParameter("actionUser");
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		Map<String, Object> qResult = VenuesDAO.blockBookingForVenue(actionUser, venueId);
+		boolean enableBooking = Boolean.valueOf(request.getParameter("enableBooking"));
+		Map<String, Object> qResult = VenuesDAO.switchVenueStatus(actionUser, venueId, enableBooking);
 		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(qResult);			

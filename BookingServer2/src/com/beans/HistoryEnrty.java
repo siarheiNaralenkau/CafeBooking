@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class HistoryEnrty {
 	private int bookingId;
 	private int status;
-	private String actionuser;
+	private String actionUser;
 	private Timestamp changeTime;
 	private int venueId;
 	private int placesAmount;
@@ -27,11 +27,11 @@ public class HistoryEnrty {
 	}
 
 	public String getActionuser() {
-		return actionuser;
+		return actionUser;
 	}
 
 	public void setActionuser(String actionuser) {
-		this.actionuser = actionuser;
+		this.actionUser = actionuser;
 	}
 
 	public Timestamp getChangeTime() {
@@ -62,12 +62,12 @@ public class HistoryEnrty {
 		super();
 	}
 
-	public HistoryEnrty(int bookingId, int status, String actionuser,
+	public HistoryEnrty(int bookingId, int status, String actionUser,
 			Timestamp changeTime, int venueId, int placesAmount) {
 		super();
 		this.bookingId = bookingId;
 		this.status = status;
-		this.actionuser = actionuser;
+		this.actionUser = actionUser;
 		this.changeTime = changeTime;
 		this.venueId = venueId;
 		this.placesAmount = placesAmount;

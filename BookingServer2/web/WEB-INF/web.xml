@@ -26,22 +26,33 @@
     <servlet-class>com.servlets.CheckBookingStatusServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>DisableBooking</servlet-name>
-    <servlet-class>com.servlets.DisableBookingServlet</servlet-class>
+    <servlet-name>SwitchVenueStatus</servlet-name>
+    <servlet-class>com.servlets.SwitchVenueStatusServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>GetHistory</servlet-name>
     <servlet-class>com.servlets.GetHistoryServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>DeleteBooking</servlet-name>
-  	<servlet-class>com.servlets.DeleteBookingServlet</servlet-class>
+    <servlet-name>DeleteBooking</servlet-name>
+    <servlet-class>com.servlets.DeleteBookingServlet</servlet-class>
   </servlet>
   <servlet>
-  	<servlet-name>GetPendingBookings</servlet-name>
-  	<servlet-class>com.servlets.GetPendingBookingsServlet</servlet-class>
+    <servlet-name>GetPendingBookings</servlet-name>
+    <servlet-class>com.servlets.GetPendingBookingsServlet</servlet-class>
   </servlet>
-  
+  <servlet>
+    <servlet-name>GetVenueBookings</servlet-name>
+    <servlet-class>com.servlets.GetVenueBookingsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SetVenueAdmin</servlet-name>
+    <servlet-class>com.servlets.SetVenueAdminServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ClearBookings</servlet-name>
+  	<servlet-class>com.servlets.ClearBookingsServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>VenuesList</servlet-name>
     <url-pattern>/venues_list</url-pattern>
@@ -59,19 +70,31 @@
     <url-pattern>/check_booking_status</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>DisableBooking</servlet-name>
-    <url-pattern>/disable_booking</url-pattern>
+    <servlet-name>SwitchVenueStatus</servlet-name>
+    <url-pattern>/switch_venue_status</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>GetHistory</servlet-name>
     <url-pattern>/get_history</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>DeleteBooking</servlet-name>
-  	<url-pattern>/delete_booking</url-pattern>
+    <servlet-name>DeleteBooking</servlet-name>
+    <url-pattern>/delete_booking</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-  	<servlet-name>GetPendingBookings</servlet-name>
-  	<url-pattern>/get_pending_bookings</url-pattern>
+    <servlet-name>GetPendingBookings</servlet-name>
+    <url-pattern>/get_pending_bookings</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetVenueBookings</servlet-name>
+    <url-pattern>/get_venue_bookings</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SetVenueAdmin</servlet-name>
+    <url-pattern>/set_venue_admin</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ClearBookings</servlet-name>
+  	<url-pattern>/clear_bookings</url-pattern>
   </servlet-mapping>
 </web-app>

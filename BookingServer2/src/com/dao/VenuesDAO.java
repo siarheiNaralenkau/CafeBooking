@@ -31,12 +31,15 @@ public class VenuesDAO {
 	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
-	private static final String GET_HISTORY_QUERY = "h.booking_id, h.new_status, h.action_user, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE b.id = h.id AND b.venue_id = ?";
+	private static final String GET_HISTORY_QUERY = "SELECT h.booking_id, h.new_status, h.action_user, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE h.booking_id = b.id AND b.venue_id = ?";
 	private static final String UPDATE_STATUS_QUERY = "UPDATE bookings SET status = ? WHERE id = ?"; 
 	private static final String GET_BOOKING_QUERY = "SELECT * FROM bookings WHERE id = ?";
 	private static final String GET_VENUE_QUERY = "SELECT * FROM venues WHERE id = ?";
-	private static final String BLOCK_BOOKING_QUERY = "UPDATE venues SET has_free_seats = false WHERE id = ?";
+	private static final String BLOCK_BOOKING_QUERY = "UPDATE venues SET has_free_seats = ? WHERE id = ?";
 	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue();
+	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ?";
+	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
+	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";
 	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
 	private static DataSource dataSource;
 	
@@ -115,6 +118,7 @@ public class VenuesDAO {
 				if(rs.next()) {
 					int bookingId = rs.getInt("NEW_ID");
 					writeHistory(con, bookingId, (byte)1, visitorName);
+					result.put("bookingId", bookingId);
 				}				
 			} 
 		} catch(SQLException e) {
@@ -212,7 +216,7 @@ public class VenuesDAO {
 		return venue;
 	}
 	
-	public static Map<String, Object> blockBookingForVenue(String actionUser, int venueId) {
+	public static Map<String, Object> switchVenueStatus(String actionUser, int venueId, boolean enableBooking) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Venue venue = getVenueById(venueId);
 		if(venue.getAdminUser().equals(actionUser)) {
@@ -221,9 +225,12 @@ public class VenuesDAO {
 			try {
 				con = dataSource.getConnection();
 				ps = con.prepareStatement(BLOCK_BOOKING_QUERY);
-				ps.setInt(1, venueId);
+				ps.setBoolean(1, enableBooking);
+				ps.setInt(2, venueId);
 				ps.executeUpdate();
 				result.put("status", "success");
+				result.put("venueName", venue.getName());
+				result.put("bookingEnabled", enableBooking);
 			} catch(SQLException e) {
 				System.out.println("Error: " + e.getMessage());
 				result.put("status", "failure");
@@ -332,7 +339,94 @@ public class VenuesDAO {
 		}
 		
 		return result;
-	}		
+	}	
+	
+	public static Map<String, Object> getBookingsForVenue(String actionUser, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			Venue venue = getVenueById(venueId);
+			if(!venue.getAdminUser().equals(actionUser)) {
+				result.put("status", "failure");
+				result.put("error", "User " + actionUser + " is not allowed receive bookings list for venue with id " + venueId);
+			} else {
+				List<Booking> bookings = new ArrayList<Booking>();
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(GET_BOOKINGS_QUERY);
+				ps.setInt(1, venueId);
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()) {
+					Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
+							rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+					bookings.add(b);
+				}
+				result.put("status", "success");
+				result.put("venueId", venueId);
+				result.put("bookings", bookings);
+			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		
+		return result;
+	}
+	
+	public static Map<String, Object> setVenueAdmin(String adminUser, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(SET_ADMIN_QUERY);
+			ps.setString(1, adminUser);
+			ps.setInt(2, venueId);
+			ps.executeUpdate();
+			result.put("status", "success");
+			result.put("venueId", venueId);
+			result.put("adminUser", adminUser);
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> clearBookings(String actionUser, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			Venue venue = getVenueById(venueId);
+			if(!venue.getAdminUser().equals(actionUser)) {
+				result.put("status", "failure");
+				result.put("error", "User " + actionUser + " is not allowed receive bookings list for venue with id " + venueId);
+			} else {				
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(DELETE_BOOKINGS_QUERY);
+				ps.setInt(1, venueId);
+				int deleted = ps.executeUpdate();				
+				result.put("status", "success");
+				result.put("venueId", venueId);
+				result.put("deletedBookings", deleted);
+			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		
+		return result;
+	}
 	
 	private static void closeConnection(Connection con, PreparedStatement ps) {
 		try {

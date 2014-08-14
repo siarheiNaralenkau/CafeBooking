@@ -1,6 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,9 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.constants.BookingStatus;
-import com.constants.Consts;
 import com.dao.VenuesDAO;
+import com.google.gson.Gson;
 
 /**
  * Change the booking status
@@ -36,11 +36,10 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 		int newStatus = Integer.valueOf(request.getParameter("newStatus"));
 		String actionUser = request.getParameter("actionUser");
 		
-		if( (newStatus == BookingStatus.APPROVED.getValue() || newStatus == BookingStatus.REJECTED.getValue()) && (!actionUser.equals(Consts.ADMIN))) {
-			System.out.println("You are not allowed to perform this operation!");
-		} else {
-			VenuesDAO.updateStatus(bookingId, newStatus, actionUser);
-		}
+		Map<String, Object> result = VenuesDAO.updateStatus(bookingId, newStatus, actionUser);
+		Gson gson = new Gson();
+		String jsonResult = gson.toJson(result);			
+		response.getWriter().write(jsonResult);
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
