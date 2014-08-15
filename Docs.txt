@@ -1,0 +1,114 @@
+Booking statuses:
+public enum BookingStatus {
+   PENDING(1),
+   APPROVED(2),
+   CANCELLED(3),
+   REJECTED(4),
+   DELETED(5);
+   
+   private int value;
+   
+   private BookingStatus(int value) {
+      this.value = value;
+   }
+   
+   public int getValue() {
+      return value;
+   }
+}
+
+1) Venues list:
+/**
+ * Receives 4 nonmandatory parameters:
+ * responseType: Expected response format(json or jsp) - default is json.
+ * lat - latitude - Default is center of Gomel for now
+ * lng - longutude - Default is center of Gomel for now
+ * limit - Max amount of venues to return
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/venues_list?responseType=json&lat=50&lng=30&limit=50
+ */ 
+ 
+ 2) Book Place
+ /**
+ * Puts a booking request in some cafe, restaurant, bar or club.
+ * Requires POST request.
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00
+ */
+ 
+ 3) Check booking status:
+ /**
+ * Check the status of specified booking
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/check_booking_status?userName=Sergey&bookingId=2
+ */
+ 
+ 4) Change booking status:
+ /**
+ * Change the booking status
+ * User who requested booking can only cancel his booking,
+ * Venue admin user can Approve, Reject, or Delete booking.
+ * Requests examples
+ *  -- Approve booking --
+ * http://bronimesto.by:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=2&actionUser=admin
+ * -- Cancel booking --
+ * http://bronimesto.by:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=3&actionUser=Sergey
+ * -- Reject booking --
+ * http://bronimesto.by:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=4&actionUser=admin
+ */
+ 
+ 5) Delete booking:
+ /**
+ * Deletes a specified booking
+ * Probably should be called by adming when the visitors have already left the venue.
+ * Example: 
+ * http://bronimesto.by:8080/BookingServer2/delete_booking?actionUser=admin&bookingId=33
+ */
+ 
+ 6) Get booking history for venue:
+ /**
+ * Receives the booking history for specified venue.
+ * Can be called only by venue admin.
+ * Example: 
+ * http://bronimesto.by:8080/BookingServer2/get_history?actionUser=admin&venueId=1
+ */
+ 
+ 7) Get Pending Bookings:
+ /**
+ * Receive the list of pending bookings for specified servlet.
+ * Should be called by venue admin user to check the pending bookings for his venue.
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/get_pending_bookings?actionUser=admin&venueId=1
+ */
+ 
+ 8) Get all bookings for venues:
+ /**
+ * Servlet that receives all bookings for specified venue
+ * Can be called only by venue's admin user.
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/get_venue_bookings?actionUser=admin&venueId=1
+ */
+ 
+ 9) Set venue administrator:
+ /**
+ * Sets the admin user for specified venue.
+ * Example
+ * http://bronimesto.by:8080/BookingServer2/set_venue_admin?venueAdmin=admin&venueId=1
+ */
+ 
+ 10) Change free places status:
+ /**
+ * Disable or enable booking places in specified venue
+ * Should be called by venue admin if there are no free places in venue
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/switch_venue_status?actionUser=admin&venueId=1&enableBooking=false
+ */
+ 
+ 11) 
+ /**
+ * Servlet deletes old bookings for specified venue.
+ * Should be called only by venue's admin user.
+ * Example:
+ * http://bronimesto.by:8080/BookingServer2/clear_bookings?actionUser=admin&venueId=1
+ */
+ 
