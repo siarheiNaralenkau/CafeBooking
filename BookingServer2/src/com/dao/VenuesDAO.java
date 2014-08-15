@@ -30,6 +30,7 @@ public class VenuesDAO {
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?)";
 	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
+	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user, new_places, new_time) VALUES(?, ?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
 	private static final String GET_HISTORY_QUERY = "SELECT h.booking_id, h.new_status, h.action_user, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE h.booking_id = b.id AND b.venue_id = ?";
 	private static final String UPDATE_STATUS_QUERY = "UPDATE bookings SET status = ? WHERE id = ?"; 
@@ -41,6 +42,8 @@ public class VenuesDAO {
 	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
 	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";
 	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
+	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -135,6 +138,18 @@ public class VenuesDAO {
 		ps.setInt(1, bookingId);
 		ps.setInt(2, newStatus);
 		ps.setString(3, actionUser);
+		int result = ps.executeUpdate();
+		System.out.println("Updated history records: " + result);
+		ps.close();
+	}
+	
+	public static void writeHistory(Connection con, int bookingId, int newStatus, String actionUser, int newPlaces, Timestamp newTime) throws SQLException {
+		PreparedStatement ps = con.prepareStatement(UPDATE_HISTORY_EXT_QUERY);
+		ps.setInt(1, bookingId);
+		ps.setInt(2, newStatus);
+		ps.setString(3, actionUser);
+		ps.setInt(4, newPlaces);
+		ps.setTimestamp(5, newTime);
 		int result = ps.executeUpdate();
 		System.out.println("Updated history records: " + result);
 		ps.close();
@@ -341,7 +356,7 @@ public class VenuesDAO {
 		return result;
 	}	
 	
-	public static Map<String, Object> getBookingsForVenue(String actionUser, int venueId) {
+	public static Map<String, Object> getBookingsForVenue(String actionUser, int venueId, int filterStatus) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -353,7 +368,11 @@ public class VenuesDAO {
 			} else {
 				List<Booking> bookings = new ArrayList<Booking>();
 				con = dataSource.getConnection();
-				ps = con.prepareStatement(GET_BOOKINGS_QUERY);
+				String query = GET_BOOKINGS_QUERY;
+				if(filterStatus != Consts.STATUS_ALL) {
+					query += " AND status = " + filterStatus; 
+				}
+				ps = con.prepareStatement(query);
 				ps.setInt(1, venueId);
 				ResultSet rs = ps.executeQuery();
 				while(rs.next()) {
@@ -417,6 +436,35 @@ public class VenuesDAO {
 				result.put("venueId", venueId);
 				result.put("deletedBookings", deleted);
 			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		
+		return result;
+	}
+	
+	public static Map<String, Object> updateBooking(int places, Timestamp bookingTime, int bookingId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;		
+		try {			
+			Booking booking = getBookingById(bookingId);
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(UPDATE_BOOKING_QUERY);
+			ps.setInt(1, places);
+			ps.setTimestamp(2, bookingTime);
+			ps.setInt(3, bookingId);
+			ps.executeUpdate();	
+			writeHistory(con, bookingId, BookingStatus.PENDING.getValue(), booking.getVisitorName(), places, bookingTime);
+			result.put("status", "success");
+			result.put("bookingId", bookingId);
+			result.put("booking_time", bookingTime);
+			result.put("places_amount", places);
+			result.put("status", BookingStatus.PENDING.getValue());
 		} catch(SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 			result.put("status", "failure");

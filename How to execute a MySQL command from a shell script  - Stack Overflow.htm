@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<!-- saved from url=(0093)http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script -->
+<html g_init="6758"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>How to execute a MySQL command from a shell script? - Stack Overflow</title>
+    <link rel="shortcut icon" href="http://cdn.sstatic.net/stackoverflow/img/favicon.ico?v=038622610830">
+    <link rel="apple-touch-icon image_src" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png?v=fd7230a85918">
+    <link rel="search" type="application/opensearchdescription+xml" title="Stack Overflow" href="http://stackoverflow.com/opensearch.xml">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:domain" content="stackoverflow.com">
+    <meta name="og:type" content="website">
+    <meta name="og:image" content="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon@2.png?v=fde65a5a78c6">
+    <meta name="og:title" content="How to execute a MySQL command from a shell script?">
+    <meta name="og:description" content="How can I execute an SQL command through a shell script so that I can make it automated?
+
+I want to restore data I have collected in a SQL file using a shell script. I want to connect to a server and ">
+    <meta name="og:url" content="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script">
+    <link rel="canonical" href="./How to execute a MySQL command from a shell script  - Stack Overflow_files/How to execute a MySQL command from a shell script  - Stack Overflow.htm">
+
+    
+    
+    <script type="text/javascript" async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/ados"></script><script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/quant.js"></script><script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/beacon.js"></script><script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/analytics.js"></script><script type="text/javascript" async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/ados.js"></script><script src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/jquery.min.js"></script>
+    <script src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/stub.en.js"></script>
+    <link rel="stylesheet" type="text/css" href="./How to execute a MySQL command from a shell script  - Stack Overflow_files/all.css">
+    
+    <link rel="alternate" type="application/atom+xml" title="Feed for question &#39;How to execute a MySQL command from a shell script?&#39;" href="http://stackoverflow.com/feeds/question/8055694">
+    <script>
+        
+        StackExchange.ready(function () {
+            StackExchange.using("postValidation", function () {
+                StackExchange.postValidation.initOnBlurAndSubmit($('#post-form'), 2, 'answer');
+            });
+
+            
+            StackExchange.question.init({showAnswerHelp:true,totalCommentCount:0,shownCommentCount:0,highlightColor:'#F4A83D',backgroundColor:'#FFF',questionId:8055694});
+
+            styleCode();
+
+                StackExchange.realtime.subscribeToQuestion('1', '8055694');
+            
+                    });
+    </script>
+
+
+    <script>
+        StackExchange.init({"locale":"en","stackAuthUrl":"https://stackauth.com","serverTime":1408083434,"networkMetaHostname":"meta.stackexchange.com","styleCode":true,"enableUserHovercards":true,"site":{"name":"Stack Overflow","description":"Q&A for professional and enthusiast programmers","isNoticesTabEnabled":true,"recaptchaPublicKey":"6LdchgIAAAAAAJwGpIzRQSOFaO0pU6s44Xt8aTwc","recaptchaAudioLang":"en","enableNewTagCreationWarning":true,"nonAsciiTags":true,"enableSocialMediaInSharePopup":true,"useGoogleOAuth2":true},"user":{"fkey":"8c2c35410190433f1a3bd0579b96fc64","isAnonymous":true}});
+        StackExchange.using.setCacheBreakers({"js/prettify-full.en.js":"5bb1cecce44f","js/moderator.en.js":"5364535a0cf6","js/full-anon.en.js":"65bcd49919f5","js/full.en.js":"27d6fddab49b","js/wmd.en.js":"98a6a48d28f0","js/third-party/jquery.autocomplete.min.js":"e5f01e97f7c3","js/third-party/jquery.autocomplete.min.en.js":"","js/mobile.en.js":"5de84d3ef369","js/help.en.js":"637a173e1aa4","js/tageditor.en.js":"51d012a65199","js/tageditornew.en.js":"6e6131ddeef4","js/inline-tag-editing.en.js":"8e0bfffba87d","js/revisions.en.js":"989c474e85a9","js/review.en.js":"4f77f02aa829","js/tagsuggestions.en.js":"8d0285beb9fb","js/post-validation.en.js":"3470c641f860","js/explore-qlist.en.js":"8b8b631bd679","js/events.en.js":"89dc774aa6ff","js/keyboard-shortcuts.en.js":"d15abf8b957e"});
+        StackExchange.using("gps", function() {
+             StackExchange.gps.init(true);
+        });
+    </script>
+    
+        <script>
+            StackExchange.ready(function () {
+                $('#nav-tour').click(function () {
+                    StackExchange.using("gps", function() {
+                        StackExchange.gps.track("aboutpage.click", { aboutclick_location: "headermain" }, true);
+                    });
+                });
+            });
+        </script>
+<script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/full-anon.en.js"></script><script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/post-validation.en.js"></script><script async="" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/prettify-full.en.js"></script><script type="text/javascript" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/adFeedback.js"></script><link rel="stylesheet" href="http://static.adzerk.net/Extensions/adFeedback.css"><link href="./How to execute a MySQL command from a shell script  - Stack Overflow_files/css" rel="stylesheet" type="text/css"><link href="./How to execute a MySQL command from a shell script  - Stack Overflow_files/sidebar.min.css" type="text/css" rel="stylesheet"></head>
+<body class="question-page new-topbar" itemscope="" itemtype="http://schema.org/QAPage">
+    <noscript>&lt;div id="noscript-padding"&gt;&lt;/div&gt;</noscript>
+    <div id="notify-container"></div>
+    <div id="overlay-header"></div>
+    <div id="custom-header"></div>
+<div class="topbar">
+    <div class="topbar-wrapper">
+        
+        <div class="js-topbar-dialog-corral">
+
+<div class="topbar-dialog siteSwitcher-dialog dno">
+    <div class="header">
+        <h3><a href="http://stackoverflow.com/" rollapp-href="http://stackoverflow.com/">current community</a></h3>
+    </div>
+    <div class="modal-content current-site-container">
+        <ul class="current-site">
+                <li>
+                        <div class="related-links">
+            <a href="http://chat.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:6 })" rollapp-href="http://chat.stackoverflow.com/">chat</a>
+                    <a href="http://blog.stackoverflow.com/" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:7 })" rollapp-href="http://blog.stackoverflow.com/">blog</a>
+            </div>
+
+
+
+
+    <a href="http://stackoverflow.com/" class="current-site-link site-link js-gps-track" data-id="1" data-gps-track="
+        site_switcher.click({ item_type:3 })" rollapp-href="http://stackoverflow.com/">
+        <div class="site-icon favicon favicon-stackoverflow" title="Stack Overflow"></div>
+        Stack Overflow
+    </a>
+
+                </li>
+                <li class="related-site">
+                        <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                    
+
+
+
+    <a href="http://meta.stackoverflow.com/" class="site-link js-gps-track" data-id="552" data-gps-track="
+            site.switch({ target_site:552, item_type:3 }),
+        site_switcher.click({ item_type:4 })" rollapp-href="http://meta.stackoverflow.com/">
+        <div class="site-icon favicon favicon-stackoverflowmeta" title="Meta Stack Overflow"></div>
+        Meta Stack Overflow
+    </a>
+
+                </li>
+                            <li class="related-site">
+                        <div class="L-shaped-icon-container">
+        <span class="L-shaped-icon"></span>
+    </div>
+
+                    <a class="site-link js-gps-track" href="http://careers.stackoverflow.com/" data-gps-track="site_switcher.click({ item_type:9 })" rollapp-href="http://careers.stackoverflow.com/">
+                        <div class="site-icon favicon favicon-careers" title="Stack Overflow Careers"></div>
+                        Careers 2.0
+                    </a>
+                </li>
+        </ul>
+    </div>
+    
+    <div class="header" id="your-communities-header">
+        <h3>
+your communities        </h3>
+            
+    </div>
+    <div class="modal-content" id="your-communities-section">
+            
+            <div class="call-to-login">
+                        <a href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:10 })" rollapp-href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script">Sign up</a>
+                    or
+                    <a href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script" class="js-gps-track" data-gps-track="site_switcher.click({ item_type:11 })" rollapp-href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script">log in</a>
+
+                    to customize your list.
+            </div>
+    </div>
+    
+    <div class="header">
+        <h3><a href="http://stackexchange.com/sites" rollapp-href="http://stackexchange.com/sites">more stack exchange communities</a></h3>
+    </div>
+    <div class="modal-content">
+            <div class="child-content"></div>
+    </div>
+</div>
+        </div>
+
+        <div class="network-items">
+            
+            <a href="http://stackexchange.com/" class="topbar-icon icon-site-switcher yes-hover js-site-switcher-button js-gps-track" data-gps-track="site_switcher.show" title="A list of all 131 Stack Exchange sites" rollapp-href="http://stackexchange.com/">
+                <span class="hidden-text">Stack Exchange</span>
+            </a>
+            
+        </div>
+
+        <div class="topbar-links">
+            
+                <div class="links-container">
+                    <span class="topbar-menu-links">
+                            <a href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script" class="login-link" rollapp-href="https://stackoverflow.com/users/signup?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script">sign up</a>
+                            <a href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script" class="login-link" rollapp-href="https://stackoverflow.com/users/login?returnurl=http%3a%2f%2fstackoverflow.com%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script">log in</a>
+                            <a href="http://stackoverflow.com/tour" rollapp-href="http://stackoverflow.com/tour">tour</a>
+
+                            <a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" class="icon-help js-help-button" title="Help Center and other resources" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">
+        help
+        <span class="triangle"></span>
+    </a>
+    <div class="topbar-dialog help-dialog js-help-dialog dno">
+        <div class="modal-content">
+            <ul>
+                                    <li>
+                        <a href="http://stackoverflow.com/tour" class="js-gps-track" data-gps-track="help_popup.click({ item_type:1 })" rollapp-href="http://stackoverflow.com/tour">
+                            Tour
+                            <span class="item-summary">
+                                Start here for a quick overview of the site
+                            </span>
+                        </a>
+                    </li>
+                <li>
+                    <a href="http://stackoverflow.com/help" class="js-gps-track" data-gps-track="help_popup.click({ item_type:4 })" rollapp-href="http://stackoverflow.com/help">
+                        Help Center
+                        <span class="item-summary">
+                            Detailed answers to any questions you might have
+                        </span>
+                    </a>
+                </li>
+                    <li>
+                        <a href="http://meta.stackoverflow.com/" class="js-gps-track" data-gps-track="help_popup.click({ item_type:2 })" rollapp-href="http://meta.stackoverflow.com/">
+                            Meta
+                            <span class="item-summary">
+                                Discuss the workings and policies of this site
+                            </span>
+                        </a>
+                    </li>
+            </ul>
+        </div>
+    </div>
+
+                            <a href="http://careers.stackoverflow.com/" rollapp-href="http://careers.stackoverflow.com/">careers 2.0</a>
+                    </span>
+                </div>
+
+			<div class="search-container">
+                <form id="search" action="http://stackoverflow.com/search" method="get" autocomplete="off">
+                    <input name="q" type="text" placeholder="search" value="" tabindex="1" autocomplete="off" maxlength="240">
+                </form>
+			</div>
+            	
+        </div>      
+    </div> 
+</div>
+<script>
+    StackExchange.ready(function () { StackExchange.topbar.init(); });
+</script>
+    <div class="container">
+        <div id="header" class="headeranon">
+            <br class="cbt">
+            <div id="hlogo">
+                <a href="http://stackoverflow.com/" rollapp-href="http://stackoverflow.com/">
+                    Stack Overflow
+                </a>
+            </div>
+            <div id="hmenus">
+                <div class="nav mainnavs mainnavsanon">
+                    <ul>
+                        <li class="youarehere"><a id="nav-questions" href="http://stackoverflow.com/questions" rollapp-href="http://stackoverflow.com/questions">Questions</a></li>
+                        <li><a id="nav-tags" href="http://stackoverflow.com/tags" rollapp-href="http://stackoverflow.com/tags">Tags</a></li>
+                        <li><a id="nav-users" href="http://stackoverflow.com/users" rollapp-href="http://stackoverflow.com/users">Users</a></li>
+                        <li><a id="nav-badges" href="http://stackoverflow.com/help/badges" rollapp-href="http://stackoverflow.com/help/badges">Badges</a></li>
+                        <li><a id="nav-unanswered" href="http://stackoverflow.com/unanswered" rollapp-href="http://stackoverflow.com/unanswered">Unanswered</a></li>
+                    </ul>
+                </div>
+                <div class="nav askquestion">
+                    <ul>
+                        <li>
+                            <a id="nav-askquestion" href="http://stackoverflow.com/questions/ask" rollapp-href="http://stackoverflow.com/questions/ask">Ask Question</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+        <div id="content">
+            
+
+<div itemscope="" itemtype="http://schema.org/Question">
+	<link itemprop="image" href="http://cdn.sstatic.net/stackoverflow/img/apple-touch-icon.png">
+			<!--googleoff: all-->
+
+<div id="herobox-mini">
+    <div id="hero-content">
+        <span id="controls">
+            <a href="http://stackoverflow.com/tour" id="tell-me-more" class="button" rollapp-href="http://stackoverflow.com/tour">Take the 2-minute tour</a>
+            <span id="close"><a title="click to dismiss" rollapp-href="">×</a></span>
+        </span>
+        <div id="blurb">
+            Stack Overflow is a question and answer site for professional and enthusiast programmers. It's 100% free, no registration required.
+        </div>        
+    </div>
+    <script>
+        $('#tell-me-more').click(function () {
+            var clickSource = $("body").attr("class") + '-mini';
+            if ($("body").hasClass("questions-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("question-page")) {
+                clickSource = 'questionpagemini';
+            } else if ($("body").hasClass("home-page")) {
+                clickSource = 'homepagemini';
+            }
+
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("aboutpage.click", { aboutclick_location: clickSource } , true);
+            });
+        });
+        $('#herobox-mini #close').click(function () {
+            StackExchange.using("gps", function () {
+                StackExchange.gps.track("hero.action", { hero_action_type: "close" }, true);
+            });
+            $.cookie("hero", "none", { path: "/", expires: 365 });
+            var $hero = $("#herobox-mini");
+            $hero.slideUp('fast', function () { $hero.remove(); });
+            return false;
+        });
+    </script>
+</div>
+			<!--googleon: all-->
+			<div id="question-header">
+			<h1 itemprop="name"><a href="./How to execute a MySQL command from a shell script  - Stack Overflow_files/How to execute a MySQL command from a shell script  - Stack Overflow.htm" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script">How to execute a MySQL command from a shell script?</a></h1>
+		</div>
+			<div id="mainbar">
+
+			
+
+<div class="question" data-questionid="8055694" id="question">
+
+    <script>
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk1059534120",4).setZone(43) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow adzerk-vote" id="adzerk1059534120"><a href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6NCwiY20iOjg0NywiY2giOjExNzgsImNyIjo1OTIxLCJkaSI6ImNmYTI5MDlmMjVkNTQyYTU5NmJkOGIwNmRjNjBhYWI3IiwiZG0iOjEsImZjIjo4ODA3LCJmbCI6MjQ0NCwiaXAiOiI4Mi4yMDkuMjE0Ljc0Iiwia3ciOiJteXNxbCxzaGVsbCxzc2giLCJudyI6MjIsInBjIjowLCJwciI6MTU2OCwicnQiOjEsInJmIjoiaHR0cHM6Ly93d3cuZ29vZ2xlLmJ5LyIsInN0Ijo4Mjc3LCJ1ayI6InVlMS02ODU0NzMyZGYxODc0MGQ2OGQzM2RkNjQ0NGFmMjljNSIsInpuIjo0MywidHMiOjE0MDgwODM3MjA3NzUsInVyIjoiaHR0cDovL2NhcmVlcnMuc3RhY2tvdmVyZmxvdy5jb20vIn0&s=mvAkM2rNL3Qlgsijat1eCa20aSc" rel="nofollow" target="_blank" title="" rollapp-href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6NCwiY20iOjg0NywiY2giOjExNzgsImNyIjo1OTIxLCJkaSI6ImNmYTI5MDlmMjVkNTQyYTU5NmJkOGIwNmRjNjBhYWI3IiwiZG0iOjEsImZjIjo4ODA3LCJmbCI6MjQ0NCwiaXAiOiI4Mi4yMDkuMjE0Ljc0Iiwia3ciOiJteXNxbCxzaGVsbCxzc2giLCJudyI6MjIsInBjIjowLCJwciI6MTU2OCwicnQiOjEsInJmIjoiaHR0cHM6Ly93d3cuZ29vZ2xlLmJ5LyIsInN0Ijo4Mjc3LCJ1ayI6InVlMS02ODU0NzMyZGYxODc0MGQ2OGQzM2RkNjQ0NGFmMjljNSIsInpuIjo0MywidHMiOjE0MDgwODM3MjA3NzUsInVyIjoiaHR0cDovL2NhcmVlcnMuc3RhY2tvdmVyZmxvdy5jb20vIn0&amp;s=mvAkM2rNL3Qlgsijat1eCa20aSc"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/9241eb4107b24c588c0ca0042534c03e.png" title="" alt="" border="0" width="728" height="90"></a><div class="adzerk-vote-controls" style="display: none;"><div class="adzerk-vote-option adzerk-vote-up"><div class="adzerk-vote-icon"></div></div><div class="adzerk-vote-option adzerk-vote-down"><div class="adzerk-vote-icon"></div></div></div><div class="adzerk-vote-survey" style="display:none;"><form><span>No problem. We won't show you that ad again. Why didn't you like it?</span><ul><li><label><input type="radio" value="12" name="downvoteReason">Uninteresting</label></li><li><label><input type="radio" value="13" name="downvoteReason">Misleading</label></li><li><label><input type="radio" value="14" name="downvoteReason">Offensive</label></li><li><label><input type="radio" value="15" name="downvoteReason">Repetitive</label></li></ul><a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" class="adzerk-vote-cancel" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">Oops! I didn't mean to do this.</a></form></div><img height="0px" width="0px" border="0" style="position:absolute;" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/i.gif"></div>    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="8055694">
+    <a class="vote-up-off" title="This question shows research effort; it is useful and clear" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">18</span>
+    <a class="vote-down-off" title="This question does not show any research effort; it is unclear or not useful" rollapp-href="">down vote</a>
+    
+    <a class="star-off" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" title="This is a favorite question (click again to undo)" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">favorite</a>
+    <div class="favoritecount"><b>10</b></div>   
+
+</div>
+
+            </td>
+            
+<td class="postcell">
+<div>
+    <div class="post-text" itemprop="text">
+
+        <p>How can I execute an SQL command through a shell script so that I can make it automated?</p>
+
+<p>I want to restore data I have collected in a SQL file using a shell script. I want to connect to a server and restore data. The command works when executed separately via SSH command line.</p>
+
+<p>This is the command I use:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"server-name"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u root </span><span class="str">"password"</span><span class="pln"> </span><span class="str">"database-name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="str">"filename.sql"</span></code></pre>
+
+<p>This is the shell script code that creates the file <code>ds_fbids.sql</code> and pipes it into mysql.</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">perl fb_apps_frm_fb</span><span class="pun">.</span><span class="pln">pl
+perl fb_new_spider</span><span class="pun">.</span><span class="pln">pl ds_fbids</span><span class="pun">.</span><span class="pln">txt ds_fbids</span><span class="pun">.</span><span class="pln">sql
+mysql </span><span class="pun">-</span><span class="pln">h dbservername </span><span class="pun">-</span><span class="pln">u username </span><span class="pun">-</span><span class="pln">ppassword dbname </span><span class="pun">&lt;</span><span class="pln"> ds_fbids</span><span class="pun">.</span><span class="pln">sql</span></code></pre>
+
+<p>What is the correct way to do this?</p>
+
+    </div>
+    <div class="post-taglist">
+        <a href="http://stackoverflow.com/questions/tagged/mysql" class="post-tag js-gps-track" title="show questions tagged &#39;mysql&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/mysql">mysql</a> <a href="http://stackoverflow.com/questions/tagged/shell" class="post-tag js-gps-track" title="show questions tagged &#39;shell&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/shell">shell</a> <a href="http://stackoverflow.com/questions/tagged/ssh" class="post-tag js-gps-track" title="show questions tagged &#39;ssh&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/ssh">ssh</a> 
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/q/8055694" title="short permalink to this question" class="short-link" id="link-post-8055694" rollapp-href="http://stackoverflow.com/q/8055694">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/8055694/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/8055694/edit">improve this question</a></div>        
+    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/8055694/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/8055694/revisions">edited <span title="2013-12-24 21:08:53Z" class="relativetime">Dec 24 '13 at 21:08</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/445131/eric-leschinski" rollapp-href="http://stackoverflow.com/users/445131/eric-leschinski"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/ydqLz.jpg" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/445131/eric-leschinski" rollapp-href="http://stackoverflow.com/users/445131/eric-leschinski">Eric Leschinski</a><br>
+        <span class="reputation-score" title="reputation score 14650" dir="ltr">14.7k</span><span title="8 gold badges"><span class="badge1"></span><span class="badgecount">8</span></span><span title="77 silver badges"><span class="badge2"></span><span class="badgecount">77</span></span><span title="89 bronze badges"><span class="badge3"></span><span class="badgecount">89</span></span>
+    </div>
+</div>    </td>
+    <td class="post-signature owner">
+        <div class="user-info ">
+    <div class="user-action-time">
+        asked <span title="2011-11-08 19:00:32Z" class="relativetime">Nov 8 '11 at 19:00</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/965713/vaibhav" rollapp-href="http://stackoverflow.com/users/965713/vaibhav"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/2f33d4909899eb612235aac7fc09964b" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/965713/vaibhav" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">114</span><span title="2 gold badges"><span class="badge1"></span><span class="badgecount">2</span></span><span title="2 silver badges"><span class="badge2"></span><span class="badgecount">2</span></span><span title="9 bronze badges"><span class="badge3"></span><span class="badgecount">9</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</div>
+</td>
+        </tr>
+                
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8055694" class="comments  dno">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <tr><td></td><td></td></tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-8055694" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid answering questions in comments." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>        </tbody></table>
+</div>
+
+			<div id="answers">
+
+				<a name="tab-top" rollapp-href=""></a>
+				<div id="answers-header">
+					<div class="subheader answers-subheader">
+						<h2>
+								7 Answers
+                                <span style="display:none;" itemprop="answerCount">7</span>
+						</h2>
+						<div>
+							<div id="tabs">
+        <a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=active#tab-top" title="Answers with the latest activity first" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=active#tab-top">active</a>
+        <a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=oldest#tab-top" title="Answers in the order they were provided" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=oldest#tab-top">oldest</a>
+        <a class="youarehere" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=votes#tab-top" title="Answers with the highest score first" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?answertab=votes#tab-top">votes</a>
+</div>
+						</div>
+					</div>    
+				</div>    
+
+
+
+
+  
+<a name="8055745" rollapp-href=""></a>
+<div id="answer-8055745" class="answer accepted-answer" data-answerid="8055745" itemscope="" itemtype="http://schema.org/Answer" itemprop="acceptedAnswer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="8055745">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">37</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+        <span class="vote-accepted-on load-accepted-answer-date" title="loading when this answer was accepted...">accepted</span>
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>You need to use the <code>-p</code> flag to send a password.  And it's tricky because you must have no space between <code>-p</code> and the password.</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">$ mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"server-name"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u </span><span class="str">"root"</span><span class="pln"> </span><span class="str">"-pXXXXXXXX"</span><span class="pln"> </span><span class="str">"database-name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="str">"filename.sql"</span></code></pre>
+
+<p>If you use a space after <code>-p</code> it makes the mysql client prompt you interactively for the password, and then it interprets the next command argument as a database-name:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">$ mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"server-name"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u </span><span class="str">"root"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">p </span><span class="str">"XXXXXXXX"</span><span class="pln"> </span><span class="str">"database-name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="str">"filename.sql"</span><span class="pln">
+</span><span class="typ">Enter</span><span class="pln"> password</span><span class="pun">:</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln">you type it </span><span class="kwd">in</span><span class="pln"> here</span><span class="pun">&gt;</span><span class="pln">
+ERROR </span><span class="lit">1049</span><span class="pln"> </span><span class="pun">(</span><span class="lit">42000</span><span class="pun">):</span><span class="pln"> </span><span class="typ">Unknown</span><span class="pln"> database </span><span class="str">'XXXXXXXX'</span></code></pre>
+
+<p>Actually, I prefer to store the user and password in ~/.my.cnf so I don't have to put it on the command-line at all:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pun">[</span><span class="pln">client</span><span class="pun">]</span><span class="pln">
+user </span><span class="pun">=</span><span class="pln"> root
+password </span><span class="pun">=</span><span class="pln"> XXXXXXXX</span></code></pre>
+
+<p>Then:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">$ mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"server-name"</span><span class="pln"> </span><span class="str">"database-name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="str">"filename.sql"</span></code></pre>
+
+<hr>
+
+<p>Re your comment:</p>
+
+<p>I run batch-mode mysql commands like the above on the command line and in shell scripts all the time.  It's hard to diagnose what's wrong with your shell script, because you haven't shared the exact script or any error output.  I suggest you edit your original question above and provide examples of what goes wrong.</p>
+
+<p>Also when I'm troubleshooting a shell script I use the <code>-x</code> flag so I can see how it's executing each command:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">$ bash </span><span class="pun">-</span><span class="pln">x myscript</span><span class="pun">.</span><span class="pln">sh</span></code></pre>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/8055745" title="short permalink to this answer" class="short-link" id="link-post-8055745" rollapp-href="http://stackoverflow.com/a/8055745">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/8055745/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/8055745/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/8055745/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/8055745/revisions">edited <span title="2011-11-08 19:40:28Z" class="relativetime">Nov 8 '11 at 19:40</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2011-11-08 19:06:35Z" class="relativetime">Nov 8 '11 at 19:06</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/20860/bill-karwin" rollapp-href="http://stackoverflow.com/users/20860/bill-karwin"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/05845ddff9dbf10e3d47edce7032bae7" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/20860/bill-karwin" rollapp-href="http://stackoverflow.com/users/20860/bill-karwin">Bill Karwin</a><br>
+        <span class="reputation-score" title="reputation score 208439" dir="ltr">208k</span><span title="31 gold badges"><span class="badge1"></span><span class="badgecount">31</span></span><span title="286 silver badges"><span class="badge2"></span><span class="badgecount">286</span></span><span title="440 bronze badges"><span class="badge3"></span><span class="badgecount">440</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8055745" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-9867397" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Thanks for a quick response. I tired by putting the password in the command line itself. The real problem is I am putting this command in .sh file and then executing this shell script. The command in the file is not executed on command line, but the same command works perfectly fine when I execute only the command on command line.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867397_8055745" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867397_8055745"><span title="2011-11-08 19:33:50Z" class="relativetime-clean">Nov 8 '11 at 19:33</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 1 time"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869360" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy"><code>+ mysql -h dbservername -u user-name -ppassword dbname&lt;/br&gt; : No such file or directoryids.sql&lt;/br&gt; + $'\r' : command not found2:</code> This is the error message I got</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869360_8055745" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869360_8055745"><span title="2011-11-08 21:25:05Z" class="relativetime-clean">Nov 8 '11 at 21:25</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 1 time"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869418" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Ok, then I would infer that your current working directory is not where the ids.sql file is located.  Also you may have embedded newlines in your script.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/20860/bill-karwin" title="208439 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/20860/bill-karwin">Bill Karwin</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869418_8055745" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869418_8055745"><span title="2011-11-08 21:29:37Z" class="relativetime-clean">Nov 8 '11 at 21:29</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869656" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">I do have new lines embedded in my shell script after every command. All that my shell script contain are 3 command line command which I dont want to run separately so i created a shell script to make them run without my intervention and I put newline afetr every commmand. Is that is causing problem ?</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869656_8055745" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869656_8055745"><span title="2011-11-08 21:43:58Z" class="relativetime-clean">Nov 8 '11 at 21:43</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-23787039" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">+1 for "no space between -p and the password"</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1414850/gihan-de-silva" title="309 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/1414850/gihan-de-silva">Gihan De Silva</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment23787039_8055745" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment23787039_8055745"><span title="2013-05-15 05:29:31Z" class="relativetime-clean">May 15 '13 at 5:29</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-8055745" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+<script>
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk424306884",4).setZone(44) ; });                    
+            </script>
+            <div class="everyonelovesstackoverflow adzerk-vote" id="adzerk424306884"><a href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6NCwiY20iOjg0NywiY2giOjExNzgsImNyIjo1OTE2LCJkaSI6ImE3NDljZmNhZTcyZDRiMzU5ZmI1ZDAzNzk2YTIxNWE2IiwiZG0iOjEsImZjIjo4ODAyLCJmbCI6MjQ0NCwiaXAiOiI4Mi4yMDkuMjE0Ljc0Iiwia3ciOiJteXNxbCxzaGVsbCxzc2giLCJudyI6MjIsInBjIjowLCJwciI6MTU2OCwicnQiOjEsInJmIjoiaHR0cHM6Ly93d3cuZ29vZ2xlLmJ5LyIsInN0Ijo4Mjc3LCJ1ayI6InVlMS02ODU0NzMyZGYxODc0MGQ2OGQzM2RkNjQ0NGFmMjljNSIsInpuIjo0NCwidHMiOjE0MDgwODM3MjA3NzksInVyIjoiaHR0cDovL2NhcmVlcnMuc3RhY2tvdmVyZmxvdy5jb20vIn0&s=_1e-TRnA9qPNcV9StAnpjCbUeco" rel="nofollow" target="_blank" title="" rollapp-href="http://engine.adzerk.net/r?e=eyJhdiI6NDE0LCJhdCI6NCwiY20iOjg0NywiY2giOjExNzgsImNyIjo1OTE2LCJkaSI6ImE3NDljZmNhZTcyZDRiMzU5ZmI1ZDAzNzk2YTIxNWE2IiwiZG0iOjEsImZjIjo4ODAyLCJmbCI6MjQ0NCwiaXAiOiI4Mi4yMDkuMjE0Ljc0Iiwia3ciOiJteXNxbCxzaGVsbCxzc2giLCJudyI6MjIsInBjIjowLCJwciI6MTU2OCwicnQiOjEsInJmIjoiaHR0cHM6Ly93d3cuZ29vZ2xlLmJ5LyIsInN0Ijo4Mjc3LCJ1ayI6InVlMS02ODU0NzMyZGYxODc0MGQ2OGQzM2RkNjQ0NGFmMjljNSIsInpuIjo0NCwidHMiOjE0MDgwODM3MjA3NzksInVyIjoiaHR0cDovL2NhcmVlcnMuc3RhY2tvdmVyZmxvdy5jb20vIn0&amp;s=_1e-TRnA9qPNcV9StAnpjCbUeco"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/d31c8d7d3cf640a6b29d9ad71788dd4a.png" title="" alt="" border="0" width="728" height="90"></a><div class="adzerk-vote-controls" style="display:none;"><div class="adzerk-vote-option adzerk-vote-up"><div class="adzerk-vote-icon"></div></div><div class="adzerk-vote-option adzerk-vote-down"><div class="adzerk-vote-icon"></div></div></div><div class="adzerk-vote-survey" style="display:none;"><form><span>No problem. We won't show you that ad again. Why didn't you like it?</span><ul><li><label><input type="radio" value="12" name="downvoteReason">Uninteresting</label></li><li><label><input type="radio" value="13" name="downvoteReason">Misleading</label></li><li><label><input type="radio" value="14" name="downvoteReason">Offensive</label></li><li><label><input type="radio" value="15" name="downvoteReason">Repetitive</label></li></ul><a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" class="adzerk-vote-cancel" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">Oops! I didn't mean to do this.</a></form></div><img height="0px" width="0px" border="0" style="position:absolute;" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/i(1).gif"></div>
+  
+<a name="13144274" rollapp-href=""></a>
+<div id="answer-13144274" class="answer" data-answerid="13144274" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="13144274">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">18</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>Use this syntax:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">u $user </span><span class="pun">-</span><span class="pln">p$passsword </span><span class="pun">-</span><span class="typ">Bse</span><span class="pln"> </span><span class="str">"command1;command2;....;commandn"</span></code></pre>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/13144274" title="short permalink to this answer" class="short-link" id="link-post-13144274" rollapp-href="http://stackoverflow.com/a/13144274">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/13144274/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/13144274/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/13144274/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/13144274/revisions">edited <span title="2012-10-30 17:31:12Z" class="relativetime">Oct 30 '12 at 17:31</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1442874/chris-gerken" rollapp-href="http://stackoverflow.com/users/1442874/chris-gerken"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/b955899202a06e8c2e350212e351c031" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1442874/chris-gerken" rollapp-href="http://stackoverflow.com/users/1442874/chris-gerken">Chris Gerken</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">8,548</span><span title="5 gold badges"><span class="badge1"></span><span class="badgecount">5</span></span><span title="13 silver badges"><span class="badge2"></span><span class="badgecount">13</span></span><span title="32 bronze badges"><span class="badge3"></span><span class="badgecount">32</span></span>
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2012-10-30 17:13:41Z" class="relativetime">Oct 30 '12 at 17:13</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1786346/kshitij-sood" rollapp-href="http://stackoverflow.com/users/1786346/kshitij-sood"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/79421c626d8721f7a091da8df092e824" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1786346/kshitij-sood" rollapp-href="http://stackoverflow.com/users/1786346/kshitij-sood">Kshitij Sood</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">181</span><span title="1 silver badge"><span class="badge2"></span><span class="badgecount">1</span></span><span title="2 bronze badges"><span class="badge3"></span><span class="badgecount">2</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-13144274" class="comments  dno">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <tr><td></td><td></td></tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-13144274" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+
+  
+<a name="8057074" rollapp-href=""></a>
+<div id="answer-8057074" class="answer" data-answerid="8057074" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="8057074">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">7</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>All of the previous answers are great.  If it is a simple, one line sql command you wish to run, you could also use the -e option.</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">&lt;host&gt;</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u</span><span class="str">&lt;user&gt;</span><span class="pln"> </span><span class="pun">-</span><span class="pln">p</span><span class="str">&lt;password&gt;</span><span class="pln"> database </span><span class="pun">-</span><span class="pln">e \
+  </span><span class="str">"SELECT * FROM blah WHERE foo='bar';"</span></code></pre>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/8057074" title="short permalink to this answer" class="short-link" id="link-post-8057074" rollapp-href="http://stackoverflow.com/a/8057074">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/8057074/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/8057074/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/8057074/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/8057074/revisions">edited <span title="2011-11-08 23:20:34Z" class="relativetime">Nov 8 '11 at 23:20</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2011-11-08 21:07:02Z" class="relativetime">Nov 8 '11 at 21:07</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1013741/jericon" rollapp-href="http://stackoverflow.com/users/1013741/jericon"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/cd2677f88c8396c0b8c00402a7802f41" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1013741/jericon" rollapp-href="http://stackoverflow.com/users/1013741/jericon">Jericon</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">1,134</span><span title="6 silver badges"><span class="badge2"></span><span class="badgecount">6</span></span><span title="16 bronze badges"><span class="badge3"></span><span class="badgecount">16</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8057074" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-9869293" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy"><code>May be I was not clear about my problem</code></span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869293_8057074" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869293_8057074"><span title="2011-11-08 21:20:18Z" class="relativetime-clean">Nov 8 '11 at 21:20</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 3 times"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-8057074" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+
+  
+<a name="20516328" rollapp-href=""></a>
+<div id="answer-20516328" class="answer" data-answerid="20516328" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="20516328">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">5</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p><strong>How to execute an SQL script, use this syntax:</strong></p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">--</span><span class="pln">host</span><span class="pun">=</span><span class="pln"> localhost </span><span class="pun">--</span><span class="pln">user</span><span class="pun">=</span><span class="pln">root </span><span class="pun">--</span><span class="pln">password</span><span class="pun">=</span><span class="pln">xxxxxx  </span><span class="pun">-</span><span class="pln">e </span><span class="str">"source dbscript.sql"</span></code></pre>
+
+<p>If you use host as localhost you don't need to mention it. You can use this:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">--</span><span class="pln">user</span><span class="pun">=</span><span class="pln">root </span><span class="pun">--</span><span class="pln">password</span><span class="pun">=</span><span class="pln">xxxxxx  </span><span class="pun">-</span><span class="pln">e </span><span class="str">"source dbscript.sql"</span></code></pre>
+
+<p>This should work for Windows and Linux.</p>
+
+<p>If the password content contains a <code>!</code> (Exclamation mark) you should add a <code>\</code> (backslash) in front of it.</p>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/20516328" title="short permalink to this answer" class="short-link" id="link-post-20516328" rollapp-href="http://stackoverflow.com/a/20516328">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/20516328/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/20516328/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/20516328/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/20516328/revisions">edited <span title="2013-12-24 21:12:44Z" class="relativetime">Dec 24 '13 at 21:12</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/445131/eric-leschinski" rollapp-href="http://stackoverflow.com/users/445131/eric-leschinski"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/ydqLz.jpg" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/445131/eric-leschinski" rollapp-href="http://stackoverflow.com/users/445131/eric-leschinski">Eric Leschinski</a><br>
+        <span class="reputation-score" title="reputation score 14650" dir="ltr">14.7k</span><span title="8 gold badges"><span class="badge1"></span><span class="badgecount">8</span></span><span title="77 silver badges"><span class="badge2"></span><span class="badgecount">77</span></span><span title="89 bronze badges"><span class="badge3"></span><span class="badgecount">89</span></span>
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2013-12-11 10:14:42Z" class="relativetime">Dec 11 '13 at 10:14</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/2630099/milinda-bandara" rollapp-href="http://stackoverflow.com/users/2630099/milinda-bandara"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/Bqt4T.jpg" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/2630099/milinda-bandara" rollapp-href="http://stackoverflow.com/users/2630099/milinda-bandara">Milinda Bandara</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">187</span><span title="2 silver badges"><span class="badge2"></span><span class="badgecount">2</span></span><span title="8 bronze badges"><span class="badge3"></span><span class="badgecount">8</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-20516328" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-37099060" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">How to specify the database? should it be inside -e, like -e "use abc; source dbscript.sql"?</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/842420/abdul-muneer" title="75 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/842420/abdul-muneer">Abdul Muneer</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment37099060_20516328" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment37099060_20516328"><span title="2014-06-05 12:36:17Z" class="relativetime-clean">Jun 5 at 12:36</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-20516328" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+
+  
+<a name="8055836" rollapp-href=""></a>
+<div id="answer-8055836" class="answer" data-answerid="8055836" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="8055836">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">1</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>You forgot <code>-p</code> or <code>--password=</code> (the latter is better readable):</p>
+
+<blockquote>
+  <p><code>mysql -h "$server_name" "--user=$user" "--password=$password" "--database=$database_name" &lt; "filename.sql"</code></p>
+</blockquote>
+
+<p>(The quotes are unnecessary if you are sure that your credentials/names do not contain space or shell-special characters.)</p>
+
+<p>Note that the manpage, too, says that providing the credentials on the command line is insecure.  So follow Bill's advice about my.cnf.</p>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/8055836" title="short permalink to this answer" class="short-link" id="link-post-8055836" rollapp-href="http://stackoverflow.com/a/8055836">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/8055836/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/8055836/edit">improve this answer</a></div>                    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info user-hover">
+    <div class="user-action-time">
+        answered <span title="2011-11-08 19:14:38Z" class="relativetime">Nov 8 '11 at 19:14</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/855543/pointedears" rollapp-href="http://stackoverflow.com/users/855543/pointedears"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/8848318fc5e4faad82a3e87ad74d0546" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/855543/pointedears" rollapp-href="http://stackoverflow.com/users/855543/pointedears">PointedEars</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">4,983</span><span title="2 gold badges"><span class="badge1"></span><span class="badgecount">2</span></span><span title="13 silver badges"><span class="badge2"></span><span class="badgecount">13</span></span><span title="25 bronze badges"><span class="badge3"></span><span class="badgecount">25</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8055836" class="comments  dno">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <tr><td></td><td></td></tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-8055836" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+
+  
+<a name="8055799" rollapp-href=""></a>
+<div id="answer-8055799" class="answer" data-answerid="8055799" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="8055799">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">1</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<p>As stated before you can use -p to pass the password to the server.</p>
+
+<p>But I recommend this:</p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"hostaddress"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u </span><span class="str">"username"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">p </span><span class="str">"database-name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> </span><span class="str">"sqlfile.sql"</span></code></pre>
+
+<p>Notice the password is not there. It would then prompt your for the password. I would THEN type it in. So that your password doesn't get logged into the servers command line history.</p>
+
+<p>This is a basic security measure.</p>
+
+<p>If security is not a concern, I would just temporarily remove the password from the database user. Then after the import - re-add it.</p>
+
+<p>This way any other accounts you may have that share the same password would not be compromised.</p>
+
+<p>It also appears that in your shell script you are not waiting/checking to see if the file you are trying to import actually exists. The perl script may not be finished yet.</p>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/8055799" title="short permalink to this answer" class="short-link" id="link-post-8055799" rollapp-href="http://stackoverflow.com/a/8055799">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/8055799/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/8055799/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info ">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/8055799/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/8055799/revisions">edited <span title="2011-11-10 06:10:46Z" class="relativetime">Nov 10 '11 at 6:10</span></a>
+    </div>
+    <div class="user-gravatar32">
+        
+    </div>
+    <div class="user-details">
+        <br>
+        
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2011-11-08 19:12:02Z" class="relativetime">Nov 8 '11 at 19:12</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1034494/grok" rollapp-href="http://stackoverflow.com/users/1034494/grok"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/b80742b6d859d848f839c270c2543f3c" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1034494/grok" rollapp-href="http://stackoverflow.com/users/1034494/grok">Grok</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">321</span><span title="1 silver badge"><span class="badge2"></span><span class="badgecount">1</span></span><span title="7 bronze badges"><span class="badge3"></span><span class="badgecount">7</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-8055799" class="comments ">
+		    <table>
+                <tbody data-remaining-comments-count="6" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+
+
+    <tr id="comment-9867108" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">You missed the "automated" part of the question, and temporarily removing the password is a Really Bad Idea.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/855543/pointedears" title="4983 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/855543/pointedears">PointedEars</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867108_8055799" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867108_8055799"><span title="2011-11-08 19:15:52Z" class="relativetime-clean">Nov 8 '11 at 19:15</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9867203" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">I read it as "restore" and "automated" which means "automated but not forever". But like I said "if security is not a concern". I agree - it's a REALLY bad idea.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1034494/grok" title="321 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/1034494/grok">Grok</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867203_8055799" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9867203_8055799"><span title="2011-11-08 19:22:12Z" class="relativetime-clean">Nov 8 '11 at 19:22</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869203" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">I am sorry if I have created confusion. What I meant by Automated is, I have two perl scripts which are used to generate the .sql file, but the command to dump that file in to DB is not run by the shell script, but it works absolutely file if I run that command on a command line. I want to eleminate the effort of running that command on command line and run it through the shell script itself.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869203_8055799" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869203_8055799"><span title="2011-11-08 21:15:36Z" class="relativetime-clean">Nov 8 '11 at 21:15</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869353" class="comment ">
+        <td class="comment-actions">
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                <span title="number of &#39;useful comment&#39; votes received" class="cool">1</span>
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy">Vaibav: if you could put the actual shell script inside your question, I may be able to help further.</span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/1034494/grok" title="321 reputation" class="comment-user" rollapp-href="http://stackoverflow.com/users/1034494/grok">Grok</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869353_8055799" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869353_8055799"><span title="2011-11-08 21:24:35Z" class="relativetime-clean">Nov 8 '11 at 21:24</span></a></span>
+                                                                            </div>
+                    </td>
+    </tr>
+    <tr id="comment-9869437" class="comment ">
+        <td>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class=" comment-score">
+                                &nbsp;&nbsp;
+                        </td>
+                        <td>
+                                &nbsp;
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td class="comment-text">
+            <div style="display: block;" class="comment-body">
+                <span class="comment-copy"><code>perl fb_apps_frm_fb.pl</code> &lt;/br&gt; perl fb_new_spider.pl ds_fbids.txt ds_fbids.sql` &lt;/br&gt; <code>mysql -h dbservername -u username -ppassword dbname &lt; ds_fbids.sql</code></span>
+                –&nbsp;
+                    <a href="http://stackoverflow.com/users/965713/vaibhav" title="114 reputation" class="comment-user owner" rollapp-href="http://stackoverflow.com/users/965713/vaibhav">Vaibhav</a>
+                <span class="comment-date" dir="ltr"><a class="comment-link" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869437_8055799" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#comment9869437_8055799"><span title="2011-11-08 21:30:38Z" class="relativetime-clean">Nov 8 '11 at 21:30</span></a></span>
+                    <span class="edited-yes" title="this comment was edited 1 time"></span>
+                                                                            </div>
+                    </td>
+    </tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-8055799" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link  dno" title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href=""></a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link " title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">show <b>6</b> more comments</a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+
+  
+<a name="15393056" rollapp-href=""></a>
+<div id="answer-15393056" class="answer" data-answerid="15393056" itemscope="" itemtype="http://schema.org/Answer">
+    <table>
+        <tbody><tr>
+            <td class="votecell">
+                
+
+<div class="vote">
+    <input type="hidden" name="_id_" value="15393056">
+    <a class="vote-up-off" title="This answer is useful" rollapp-href="">up vote</a>
+    <span itemprop="upvoteCount" class="vote-count-post ">1</span>
+    <a class="vote-down-off" title="This answer is not useful" rollapp-href="">down vote</a>
+    
+
+
+</div>
+
+            </td>
+            
+
+
+<td class="answercell">
+    <div class="post-text" itemprop="text">
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"hostname"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u usr_name </span><span class="pun">-</span><span class="pln">pPASSWD </span><span class="str">"db_name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> sql_script_file</span></code></pre>
+
+<p>(use full path for <code>sql_script_file</code> if needed) </p>
+
+<p>If you want to redirect the out put to a file </p>
+
+<pre class="default prettyprint prettyprinted"><code><span class="pln">mysql </span><span class="pun">-</span><span class="pln">h </span><span class="str">"hostname"</span><span class="pln"> </span><span class="pun">-</span><span class="pln">u usr_name </span><span class="pun">-</span><span class="pln">pPASSWD </span><span class="str">"db_name"</span><span class="pln"> </span><span class="pun">&lt;</span><span class="pln"> sql_script_file </span><span class="pun">&gt;</span><span class="pln"> out_file</span></code></pre>
+    </div>
+    <table class="fw">
+    <tbody><tr>
+    <td class="vt">
+<div class="post-menu"><a href="http://stackoverflow.com/a/15393056" title="short permalink to this answer" class="short-link" id="link-post-15393056" rollapp-href="http://stackoverflow.com/a/15393056">share</a><span class="lsep">|</span><a href="http://stackoverflow.com/posts/15393056/edit" class="suggest-edit-post" title="" rollapp-href="http://stackoverflow.com/posts/15393056/edit">improve this answer</a></div>                    </td>
+    <td align="right" class="post-signature">
+<div class="user-info user-hover">
+    <div class="user-action-time">
+        <a href="http://stackoverflow.com/posts/15393056/revisions" title="show all edits to this post" rollapp-href="http://stackoverflow.com/posts/15393056/revisions">edited <span title="2013-03-13 18:31:36Z" class="relativetime">Mar 13 '13 at 18:31</span></a>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/1172174/gus" rollapp-href="http://stackoverflow.com/users/1172174/gus"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/5252de20e9461690ba78b00f1f3d3971" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/1172174/gus" rollapp-href="http://stackoverflow.com/users/1172174/gus">Gus</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">2,527</span><span title="1 gold badge"><span class="badge1"></span><span class="badgecount">1</span></span><span title="9 silver badges"><span class="badge2"></span><span class="badgecount">9</span></span><span title="36 bronze badges"><span class="badge3"></span><span class="badgecount">36</span></span>
+    </div>
+</div>    </td>
+            
+
+
+    <td align="right" class="post-signature">   
+       
+
+    <div class="user-info ">
+    <div class="user-action-time">
+        answered <span title="2013-03-13 18:03:57Z" class="relativetime">Mar 13 '13 at 18:03</span>
+    </div>
+    <div class="user-gravatar32">
+        <a href="http://stackoverflow.com/users/2166769/vine" rollapp-href="http://stackoverflow.com/users/2166769/vine"><div class="gravatar-wrapper-32"><img src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/11c22842079b6a38a59c52ce3b20ae57" alt=""></div></a>
+    </div>
+    <div class="user-details">
+        <a href="http://stackoverflow.com/users/2166769/vine" rollapp-href="http://stackoverflow.com/users/2166769/vine">vine</a><br>
+        <span class="reputation-score" title="reputation score " dir="ltr">11</span><span title="1 bronze badge"><span class="badge3"></span><span class="badgecount">1</span></span>
+    </div>
+</div>
+    </td>
+    </tr>
+    </tbody></table>
+</td>
+        </tr>
+        
+<tr>
+    <td class="votecell"></td>
+    <td>
+	    <div id="comments-15393056" class="comments  dno">
+		    <table>
+                <tbody data-remaining-comments-count="0" data-canpost="false" data-cansee="true" data-comments-unavailable="false" data-addlink-disabled="true">
+
+                        <tr><td></td><td></td></tr>
+                </tbody>
+		    </table>
+	    </div>
+            <div id="comments-link-15393056" data-rep="50" data-anon="true">
+
+                <a class="js-add-link comments-link disabled-link " title="Use comments to ask for more information or suggest improvements. Avoid comments like “+1” or “thanks”." rollapp-href="">add a comment</a><span class="js-link-separator dno">&nbsp;|&nbsp;</span><a class="js-show-link comments-link dno" title="expand to show all comments on this post, or add one of your own" href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" onclick="" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#"></a>
+            </div>
+    </td>
+</tr>    </tbody></table>
+</div>
+									<a name="new-answer" rollapp-href=""></a>
+						<form id="post-form" action="http://stackoverflow.com/questions/8055694/answer/submit" method="post" class="post-form">
+						    <input type="hidden" id="post-id" value="8055694">
+                            <input type="hidden" id="qualityBanWarningShown" name="qualityBanWarningShown" value="false">
+							<h2 class="space">Your Answer</h2>
+
+
+
+    
+
+<script>
+    StackExchange.ready(function() {
+        initTagRenderer("".split(" "), "".split(" "));
+         
+        prepareEditor({
+            heartbeatType: 'answer',
+            bindNavPrevention: true,
+            postfix: "",
+            onDemand: true,
+            discardSelector: ".discard-answer"
+            ,immediatelyShowMarkdownHelp:true
+        });
+        
+
+    });  
+</script>
+
+
+<div id="post-editor" class="post-editor">
+
+    <div style="position: relative;">     
+        <div class="wmd-container">
+            <div id="wmd-button-bar" class="wmd-button-bar"><ul id="wmd-button-row" class="wmd-button-row"><li id="wmd-bold-button" class="wmd-button" style="left: 0px;"><span style="background-position: 0px -20px;"></span></li><li id="wmd-italic-button" class="wmd-button" style="left: 25px;"><span style="background-position: -20px -20px;"></span></li><li id="wmd-spacer1" class="wmd-spacer" style="left: 50px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-link-button" class="wmd-button" style="left: 75px;"><span style="background-position: -40px -20px;"></span></li><li id="wmd-quote-button" class="wmd-button" style="left: 100px;"><span style="background-position: -60px -20px;"></span></li><li id="wmd-code-button" class="wmd-button" style="left: 125px;"><span style="background-position: -80px -20px;"></span></li><li id="wmd-image-button" class="wmd-button" style="left: 150px;"><span style="background-position: -100px -20px;"></span></li><li id="wmd-spacer2" class="wmd-spacer" style="left: 175px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-olist-button" class="wmd-button" style="left: 200px;"><span style="background-position: -120px -20px;"></span></li><li id="wmd-ulist-button" class="wmd-button" style="left: 225px;"><span style="background-position: -140px -20px;"></span></li><li id="wmd-heading-button" class="wmd-button" style="left: 250px;"><span style="background-position: -160px -20px;"></span></li><li id="wmd-hr-button" class="wmd-button" style="left: 275px;"><span style="background-position: -180px -20px;"></span></li><li id="wmd-spacer3" class="wmd-spacer" style="left: 300px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-undo-button" class="wmd-button" style="left: 325px;"><span style="background-position: -200px -20px;"></span></li><li id="wmd-redo-button" class="wmd-button" style="left: 350px;"><span style="background-position: -220px -20px;"></span></li></ul></div>
+            <textarea id="wmd-input" class="wmd-input" name="post-text" cols="92" rows="15" tabindex="101" data-min-length=""></textarea>
+        </div>
+    </div>
+
+    <div class="fl" style="margin-top: 8px; height:24px;">&nbsp;</div>
+    <div id="draft-saved" class="draft-saved community-option fl" style="margin-top: 8px; height:24px; display:none;">draft saved</div>
+
+    <div id="draft-discarded" class="draft-discarded community-option fl" style="margin-top: 8px; height:24px; display:none;">draft discarded</div>
+
+
+
+    <div id="wmd-preview" class="wmd-preview"></div>
+    <div></div>
+    <div class="edit-block">
+        <input id="fkey" name="fkey" type="hidden" value="8c2c35410190433f1a3bd0579b96fc64">
+        <input id="author" name="author" type="text">
+    </div>
+</div>
+							<div style="position: relative;">
+								
+            <div class="form-item new-post-login">
+        
+                <div class="new-login-form">
+                    <div class="new-login-left">
+                        <h3>Sign up or <a id="login-link" href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script%23new-answer" rollapp-href="http://stackoverflow.com/users/login?returnurl=%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script%23new-answer">log in</a></h3>
+                        <script>
+                            StackExchange.ready(function () {
+                                StackExchange.helpers.onClickDraftSave('#login-link');
+                            });
+                        </script>
+                        <div class="preferred-login google-login">
+                            <p><span class="icon"></span><span>Sign up using Google</span></p>
+                        </div>
+                        <div class="preferred-login facebook-login">
+                            <p><span class="icon"></span><span>Sign up using Facebook</span></p>
+                        </div>
+                        <div class="preferred-login stackexchange-login">
+                            <p><span class="icon"></span><span>Sign up using Stack Exchange</span></p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="manual-openid" class="manual-openid">
+                    <input type="hidden" name="use-facebook" class="use-facebook" value="false">
+                    <input type="button" class="submit-openid" value="Submit" style="display:none">
+                    <div class="new-login-right">
+                                <h3>Post as a guest</h3>
+    <div class="form-item">
+        <table>
+        <tbody><tr>
+                    <script>
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            </script>
+            <td class="vm">
+                <div>
+                    <label for="display-name">Name</label>
+                    <input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105">
+                </div>
+                <div>
+                    <label for="m-address">Email</label>
+                    <input id="m-address" name="m-address" type="text" size="30" maxlength="100" value="" tabindex="106">
+                    <span class="edit-field-overlay">required, but not shown</span>
+                </div>
+            </td>
+        </tr>
+        </tbody></table>
+    </div>
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                StackExchange.ready(
+                    function () {
+                        StackExchange.openid.initPostLogin('.new-post-login', '%2fquestions%2f8055694%2fhow-to-execute-a-mysql-command-from-a-shell-script%23new-answer');
+                    }
+                );
+            </script>
+            <noscript>
+                        &lt;h3&gt;Post as a guest&lt;/h3&gt;
+    &lt;div class="form-item"&gt;
+        &lt;table&gt;
+        &lt;tr&gt;
+                    &lt;script&gt;
+                StackExchange.ready(function () {
+                    StackExchange.helpers.bindHelpOverlayEvents($('.vm input'));
+                });
+            &lt;/script&gt;
+            &lt;td class="vm"&gt;
+                &lt;div&gt;
+                    &lt;label for="display-name"&gt;Name&lt;/label&gt;
+                    &lt;input id="display-name" name="display-name" type="text" size="30" maxlength="30" value="" tabindex="105"&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    &lt;label for="m-address"&gt;Email&lt;/label&gt;
+                    &lt;input id="m-address" name="m-address" type="text" size="30" maxlength="100" value="" tabindex="106"&gt;
+                    &lt;span class="edit-field-overlay"&gt;required, but not shown&lt;/span&gt;
+                &lt;/div&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+
+            </noscript>
+							</div>
+           
+															<div class="form-submit cbt">
+									<input id="submit-button" type="submit" value="Post Your Answer" tabindex="110">
+									<a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#" class="discard-answer dno" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script#">discard</a>
+
+<p class="privacy-policy-agreement">
+By posting your answer, you agree to the <a href="http://stackexchange.com/legal/privacy-policy" target="_blank" rollapp-href="http://stackexchange.com/legal/privacy-policy">privacy policy</a> and <a href="http://stackexchange.com/legal/terms-of-service" target="_blank" rollapp-href="http://stackexchange.com/legal/terms-of-service">terms of service</a>.</p>
+<input type="hidden" name="legalLinksShown" value="1">								</div>
+						</form>
+
+
+
+						<h2 class="bottom-notice" data-loc="1">
+Not the answer you're looking for?							Browse other questions tagged <a href="http://stackoverflow.com/questions/tagged/mysql" class="post-tag" title="show questions tagged &#39;mysql&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/mysql">mysql</a> <a href="http://stackoverflow.com/questions/tagged/shell" class="post-tag" title="show questions tagged &#39;shell&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/shell">shell</a> <a href="http://stackoverflow.com/questions/tagged/ssh" class="post-tag" title="show questions tagged &#39;ssh&#39;" rel="tag" rollapp-href="http://stackoverflow.com/questions/tagged/ssh">ssh</a>  or <a href="http://stackoverflow.com/questions/ask" rollapp-href="http://stackoverflow.com/questions/ask">ask your own question</a>.						</h2>
+			</div>
+		</div>
+				<div id="sidebar" class="show-votes">
+						    <div class="module question-stats">
+			        <table id="qinfo">
+			            <tbody><tr>
+			                <td>
+			                    <p class="label-key">asked</p>
+			                </td>
+			                <td style="padding-left: 10px">
+			                    <p class="label-key" title="2011-11-08 19:00:32Z"><b>2 years ago</b></p>
+			                </td>
+			            </tr>
+			            <tr>
+			                <td>
+			                    <p class="label-key">viewed</p>
+			                </td>
+
+			                <td style="padding-left: 10px">
+			                    <p class="label-key">
+			                        <b>51041 times</b>
+			                    </p>
+			                </td>
+			            </tr>
+			                <tr>
+			                    <td>
+			                        <p class="label-key">active</p>
+			                    </td>
+			                    <td style="padding-left: 10px">
+			                        <p class="label-key"><b><a href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?lastactivity" class="lastactivity-link" title="2013-12-24 21:12:44Z" rollapp-href="http://stackoverflow.com/questions/8055694/how-to-execute-a-mysql-command-from-a-shell-script?lastactivity">7 months ago</a></b></p>
+			                    </td>
+			                </tr>
+			        </tbody></table>
+			    </div>
+						
+			<script>
+                var ados = ados || {};ados.run = ados.run || [];
+                ados.run.push(function() { ados_add_placement(22,8277,"adzerk1617400604",[17,2221]).setZone(45) ; });                    
+            </script>
+              
+        <div id="hireme" class=" blue looking tagged">  <a href="http://careers.stackoverflow.com/?a=2YMRG&utm_source=stackoverflow.com&utm_medium=ad&utm_campaign=LargeSidebarBlueLooking" class="top" target="_blank" rollapp-href="http://careers.stackoverflow.com/?a=2YMRG&amp;utm_source=stackoverflow.com&amp;utm_medium=ad&amp;utm_campaign=LargeSidebarBlueLooking"> <span>Looking for a job?</span> </a> <ul class="jobs"> <li> <a href="http://careers.stackoverflow.com/jobs/64839/senior-php-developer-for-a-fast-growing-company-billypds?a=5gvVn2Dmg1&utm_source=stackoverflow.com&utm_medium=ad&utm_campaign=LargeSidebarBlueLooking" target="_blank" title="Senior PHP Developer for a fast growing company at BillyPDS. Click to learn more." rollapp-href="http://careers.stackoverflow.com/jobs/64839/senior-php-developer-for-a-fast-growing-company-billypds?a=5gvVn2Dmg1&amp;utm_source=stackoverflow.com&amp;utm_medium=ad&amp;utm_campaign=LargeSidebarBlueLooking"> <span class="title">Senior PHP Developer for a fast growing company</span> <span class="company">BillyPDS</span> <span class="location">Amsterdam, Netherlands</span> <span class="post-tag">php</span> <span class="post-tag">css</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/63948/frontend-developer-m-w-the-diamond-dogs-group?a=5c1JOZkXia&utm_source=stackoverflow.com&utm_medium=ad&utm_campaign=LargeSidebarBlueLooking" target="_blank" title="Frontend Developer (m/w) at the diamond:dogs|group. Click to learn more." rollapp-href="http://careers.stackoverflow.com/jobs/63948/frontend-developer-m-w-the-diamond-dogs-group?a=5c1JOZkXia&amp;utm_source=stackoverflow.com&amp;utm_medium=ad&amp;utm_campaign=LargeSidebarBlueLooking"> <span class="title">Frontend Developer (m/w)</span> <span class="company">the diamond:dogs|group</span> <span class="location">Wien, Österreich</span> <span class="post-tag">javascript</span> <span class="post-tag">jquery</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/55172/biosciences-software-developer-biosignatures-ltd?a=4tPIeIRWOD&utm_source=stackoverflow.com&utm_medium=ad&utm_campaign=LargeSidebarBlueLooking" target="_blank" title="Biosciences software developer at Biosignatures. Click to learn more." rollapp-href="http://careers.stackoverflow.com/jobs/55172/biosciences-software-developer-biosignatures-ltd?a=4tPIeIRWOD&amp;utm_source=stackoverflow.com&amp;utm_medium=ad&amp;utm_campaign=LargeSidebarBlueLooking"> <span class="title">Biosciences software developer</span> <span class="company">Biosignatures</span> <span class="location">Newcastle upon Tyne, UK</span> <span class="post-tag">c#</span> <span class="post-tag">nunit</span> </a> </li> <li> <a href="http://careers.stackoverflow.com/jobs/64421/software-engineer-maps-geo-wikimedia-foundation?a=5epoIzEyzi&utm_source=stackoverflow.com&utm_medium=ad&utm_campaign=LargeSidebarBlueLooking" target="_blank" title="Software Engineer | Maps &amp; Geo at Wikimedia Foundation. Click to learn more." rollapp-href="http://careers.stackoverflow.com/jobs/64421/software-engineer-maps-geo-wikimedia-foundation?a=5epoIzEyzi&amp;utm_source=stackoverflow.com&amp;utm_medium=ad&amp;utm_campaign=LargeSidebarBlueLooking"> <span class="title">Software Engineer | Maps &amp; Geo</span> <span class="company">Wikimedia Foundation</span> <span class="location">San Francisco, CA / remote</span> </a> </li> </ul> <img alt="" class="impression" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/5gvVn2Dmg1-5c1JOZkXia-4tPIeIRWOD-5epoIzEyzi-2YMRG" style="display:none"></div>
+			<div style="margin-bottom: 10px;">
+        
+
+<style type="text/css">
+#newsletter-ad {
+    width: 190px;
+    height: 250px;
+    overflow: hidden;
+    background: url('//cdn.sstatic.net/stackoverflow/img/newsletter-ad.png');
+    padding: 0 15px 0 15px;
+}
+#newsletter-ad-header {
+    margin-top: 60px;
+}
+#newsletter-ad ul {
+    margin: 1em 0 1em 1.5em;
+}
+#newsletter-ad ul li {
+    margin-bottom: 5px;
+}
+#newsletter-signup-container {
+    text-align: center;
+}
+#newsletter-preview-container {
+    margin-top: 10px;
+    text-align: center;
+}
+#newsletter-email-input {
+    width: 200px;
+}
+</style>
+
+<script>
+    StackExchange.ready(function () {
+        StackExchange.newsletterAd.init();
+    });
+</script>
+
+<div id="newsletter-ad">
+    <p id="newsletter-ad-header">Get the <b>weekly newsletter!</b></p>
+    <ul>
+        <li>Top questions and answers</li>
+        <li>Important announcements</li>
+        <li>Unanswered questions</li>
+    </ul>
+    <div id="newsletter-signup-container"><input id="newsletter-signup" type="button" value="Sign up for the newsletter"></div>
+    <p id="newsletter-preview-container">see an <a href="http://stackexchange.com/newsletters/newsletter?site=stackoverflow.com" id="newsletter-preview" rollapp-href="http://stackexchange.com/newsletters/newsletter?site=stackoverflow.com">example newsletter</a></p>
+</div>
+
+    </div>  
+    
+            <div class="module sidebar-linked">
+	<h4 id="h-linked">Linked</h4>
+	<div class="linked" data-tracker="lq=1">
+<div class="spacer">
+	<a href="http://stackoverflow.com/q/13649364?lq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/13649364?lq=1">
+		<div class="answer-votes answered-accepted default">0</div>
+	</a>
+	<a href="http://stackoverflow.com/questions/13649364/bash-script-not-reading-input-mysql-password?lq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/13649364/bash-script-not-reading-input-mysql-password?lq=1">BASH script not reading input mysql password</a>
+</div><div class="spacer">
+	<a href="http://stackoverflow.com/q/14216514?lq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/14216514?lq=1">
+		<div class="answer-votes  default">0</div>
+	</a>
+	<a href="http://stackoverflow.com/questions/14216514/executing-mysql-commands-in-shell-script?lq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/14216514/executing-mysql-commands-in-shell-script?lq=1">Executing MySQL commands in shell script?</a>
+</div>			</div>
+</div>
+
+				<div class="module sidebar-related">
+					<h4 id="h-related">Related</h4>
+                    <div class="related js-gps-related-questions" data-tracker="rq=1">
+                        <div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/59838?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/59838?rq=1">
+    <div class="answer-votes answered-accepted extra-large">1046
+    </div>
+</a><a href="http://stackoverflow.com/questions/59838/how-to-check-if-a-directory-exists-in-a-shell-script?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/59838/how-to-check-if-a-directory-exists-in-a-shell-script?rq=1">How to check if a directory exists in a shell script</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/305035?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/305035?rq=1">
+    <div class="answer-votes large">340
+    </div>
+</a><a href="http://stackoverflow.com/questions/305035/how-to-use-ssh-to-run-shell-script-on-a-remote-machine?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/305035/how-to-use-ssh-to-run-shell-script-on-a-remote-machine?rq=1">how to use ssh to run shell script on a remote machine?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/4565700?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/4565700?rq=1">
+    <div class="answer-votes answered-accepted large">133
+    </div>
+</a><a href="http://stackoverflow.com/questions/4565700/specify-private-ssh-key-to-use-when-executing-shell-command-with-or-without-ruby?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/4565700/specify-private-ssh-key-to-use-when-executing-shell-command-with-or-without-ruby?rq=1">Specify private SSH-key to use when executing shell command with or without Ruby?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/6959306?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/6959306?rq=1">
+    <div class="answer-votes answered-accepted default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/6959306/shell-script-ssh-behaviours?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/6959306/shell-script-ssh-behaviours?rq=1">Shell Script SSH behaviours</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/14216514?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/14216514?rq=1">
+    <div class="answer-votes default">0
+    </div>
+</a><a href="http://stackoverflow.com/questions/14216514/executing-mysql-commands-in-shell-script?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/14216514/executing-mysql-commands-in-shell-script?rq=1">Executing MySQL commands in shell script?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/15390978?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/15390978?rq=1">
+    <div class="answer-votes default">2
+    </div>
+</a><a href="http://stackoverflow.com/questions/15390978/shell-script-ssh-command-exit-status?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/15390978/shell-script-ssh-command-exit-status?rq=1">shell script ssh command exit status</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/17337008?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/17337008?rq=1">
+    <div class="answer-votes answered-accepted default">-1
+    </div>
+</a><a href="http://stackoverflow.com/questions/17337008/how-to-use-mysql-command-in-ssh?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/17337008/how-to-use-mysql-command-in-ssh?rq=1">how to use mysql command in ssh?</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/17423994?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/17423994?rq=1">
+    <div class="answer-votes answered-accepted default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/17423994/mysql-commands-running-in-shell-script-possess-an-error?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/17423994/mysql-commands-running-in-shell-script-possess-an-error?rq=1">MySQL commands running in shell script possess an error</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/18271925?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/18271925?rq=1">
+    <div class="answer-votes default">1
+    </div>
+</a><a href="http://stackoverflow.com/questions/18271925/how-to-write-and-execute-a-shell-script-to-create-a-mysql-databse-and-a-table?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/18271925/how-to-write-and-execute-a-shell-script-to-create-a-mysql-databse-and-a-table?rq=1">How to write and execute a shell script to create a mysql databse and a table</a>
+</div>
+<div class="spacer js-gps-track">
+<a href="http://stackoverflow.com/q/19469501?rq=1" title="Vote score (upvotes - downvotes)" rollapp-href="http://stackoverflow.com/q/19469501?rq=1">
+    <div class="answer-votes answered-accepted default">4
+    </div>
+</a><a href="http://stackoverflow.com/questions/19469501/shell-script-create-tunnel-for-command-execution?rq=1" class="question-hyperlink" rollapp-href="http://stackoverflow.com/questions/19469501/shell-script-create-tunnel-for-command-execution?rq=1">Shell script: Create tunnel for command execution</a>
+</div>
+
+                    </div>
+				</div>
+            
+<div id="hot-network-questions" class="module">
+    <h4>
+        <a href="http://stackexchange.com/questions?tab=hot" class="js-gps-track" data-gps-track="posts_hot_network.click({ item_type:1, location:11 })" rollapp-href="http://stackexchange.com/questions?tab=hot">
+            Hot Network Questions
+        </a>
+    </h4>
+    <ul>
+            <li>
+                <div class="favicon favicon-stackoverflow" title="Stack Overflow"></div><a href="http://stackoverflow.com/questions/25316779/on-a-nonconst-object-why-wont-c-call-the-const-version-of-a-method-with-publ" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:1 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://stackoverflow.com/questions/25316779/on-a-nonconst-object-why-wont-c-call-the-const-version-of-a-method-with-publ">
+                    On a nonconst object, why won't C++ call the const version of a method with public-const and private-nonconst overloads?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-mathematica" title="Mathematica Stack Exchange"></div><a href="http://mathematica.stackexchange.com/questions/57382/how-can-one-draw-a-network-with-nodes-and-links-in-a-grid-shape" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:387 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://mathematica.stackexchange.com/questions/57382/how-can-one-draw-a-network-with-nodes-and-links-in-a-grid-shape">
+                    How can one draw a network with nodes and links in a grid shape?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-unix" title="Unix &amp; Linux Stack Exchange"></div><a href="http://unix.stackexchange.com/questions/150249/convert-string-into-date-time-stamp-in-gawk-or-awk" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:106 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://unix.stackexchange.com/questions/150249/convert-string-into-date-time-stamp-in-gawk-or-awk">
+                    Convert string into date time stamp in gawk or awk
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-movies" title="Movies &amp; TV Stack Exchange"></div><a href="http://movies.stackexchange.com/questions/23843/why-does-batman-talk-to-himself-in-the-batvoice" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:367 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://movies.stackexchange.com/questions/23843/why-does-batman-talk-to-himself-in-the-batvoice">
+                    Why does Batman talk to himself in the batvoice?
+                </a>
+
+            </li>
+            <li>
+                <div class="favicon favicon-scifi" title="Science Fiction &amp; Fantasy Stack Exchange"></div><a href="http://scifi.stackexchange.com/questions/65656/what-is-the-flash-of-light-produced-when-the-enterprise-goes-into-warp-why-don" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:186 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://scifi.stackexchange.com/questions/65656/what-is-the-flash-of-light-produced-when-the-enterprise-goes-into-warp-why-don">
+                    What is the flash of light produced when the Enterprise goes into warp? Why don't other ships produce the same effect?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-security" title="Information Security Stack Exchange"></div><a href="http://security.stackexchange.com/questions/65200/is-it-safe-to-store-passwords-on-google-drive" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:162 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://security.stackexchange.com/questions/65200/is-it-safe-to-store-passwords-on-google-drive">
+                    Is it safe to store passwords on Google drive?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-physics" title="Physics Stack Exchange"></div><a href="http://physics.stackexchange.com/questions/130918/when-a-star-becomes-a-black-hole-does-its-gravitational-power-become-stronger" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:151 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://physics.stackexchange.com/questions/130918/when-a-star-becomes-a-black-hole-does-its-gravitational-power-become-stronger">
+                    When a star becomes a black hole, does its gravitational power become stronger?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-security" title="Information Security Stack Exchange"></div><a href="http://security.stackexchange.com/questions/65429/from-security-point-of-view-is-it-better-to-have-camera-hidden-or-visible" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:162 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://security.stackexchange.com/questions/65429/from-security-point-of-view-is-it-better-to-have-camera-hidden-or-visible">
+                    From security point of view is it better to have camera hidden or visible
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div><a href="http://puzzling.stackexchange.com/questions/2066/join-all-circles-together-with-6-lines" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:559 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://puzzling.stackexchange.com/questions/2066/join-all-circles-together-with-6-lines">
+                    Join all circles together with 6 lines
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-codereview" title="Code Review Stack Exchange"></div><a href="http://codereview.stackexchange.com/questions/60084/alternating-split-of-a-given-singly-linked-list" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:196 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://codereview.stackexchange.com/questions/60084/alternating-split-of-a-given-singly-linked-list">
+                    Alternating split of a given singly linked list
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-gardening" title="Gardening &amp; Landscaping Stack Exchange"></div><a href="http://gardening.stackexchange.com/questions/13707/what-is-this-pink-lavender-flowering-shrub" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:269 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://gardening.stackexchange.com/questions/13707/what-is-this-pink-lavender-flowering-shrub">
+                    What is this pink/lavender flowering shrub?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-electronics" title="Electrical Engineering Stack Exchange"></div><a href="http://electronics.stackexchange.com/questions/125128/why-cant-you-go-sticking-a-voltage-across-the-base-emitter-terminals-in-a-trans" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:135 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://electronics.stackexchange.com/questions/125128/why-cant-you-go-sticking-a-voltage-across-the-base-emitter-terminals-in-a-trans">
+                    Why can't you go sticking a voltage across the base-emitter terminals in a transistor?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-boardgames" title="Board &amp; Card Games Stack Exchange"></div><a href="http://boardgames.stackexchange.com/questions/18601/is-it-always-better-to-play-a-knight-immediately" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:147 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://boardgames.stackexchange.com/questions/18601/is-it-always-better-to-play-a-knight-immediately">
+                    Is it always better to play a knight immediately?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-gaming" title="Arqade"></div><a href="http://gaming.stackexchange.com/questions/180168/as-a-jungler-when-should-i-push-the-lane-after-a-gank" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:41 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://gaming.stackexchange.com/questions/180168/as-a-jungler-when-should-i-push-the-lane-after-a-gank">
+                    As a jungler when should I push the lane after a gank?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="http://english.stackexchange.com/questions/190456/is-the-phrase-infinitely-more-efficient-possible" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://english.stackexchange.com/questions/190456/is-the-phrase-infinitely-more-efficient-possible">
+                    Is the phrase "Infinitely more efficient" possible?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-travel" title="Travel Stack Exchange"></div><a href="http://travel.stackexchange.com/questions/35222/can-i-stay-in-schengen-area-after-my-visa-expires-if-i-enter-while-the-visa-is-v" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:273 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://travel.stackexchange.com/questions/35222/can-i-stay-in-schengen-area-after-my-visa-expires-if-i-enter-while-the-visa-is-v">
+                    Can I stay in Schengen area after my visa expires if I enter while the visa is valid?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-judaism" title="Mi Yodeya"></div><a href="http://judaism.stackexchange.com/questions/44550/can-i-have-a-linen-lining-in-a-wool-jacket" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:248 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://judaism.stackexchange.com/questions/44550/can-i-have-a-linen-lining-in-a-wool-jacket">
+                    Can I have a linen lining in a wool jacket?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-superuser" title="Super User"></div><a href="http://superuser.com/questions/792607/why-does-windows-think-that-my-wireless-keyboard-is-a-toaster" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:3 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://superuser.com/questions/792607/why-does-windows-think-that-my-wireless-keyboard-is-a-toaster">
+                    Why does Windows think that my wireless keyboard is a toaster?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-scifi" title="Science Fiction &amp; Fantasy Stack Exchange"></div><a href="http://scifi.stackexchange.com/questions/65626/why-was-han-solo-on-tatooine" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:186 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://scifi.stackexchange.com/questions/65626/why-was-han-solo-on-tatooine">
+                    Why was Han Solo on Tatooine?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-english" title="English Language &amp; Usage Stack Exchange"></div><a href="http://english.stackexchange.com/questions/190259/for-all-its-worth-or-for-all-its-worth" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:97 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://english.stackexchange.com/questions/190259/for-all-its-worth-or-for-all-its-worth">
+                    "For all it's worth" or "for all its worth"?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-tridion" title="Tridion Stack Exchange"></div><a href="http://tridion.stackexchange.com/questions/7545/are-smarttarget-audience-manager-profiling-and-personalization-are-same" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:485 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://tridion.stackexchange.com/questions/7545/are-smarttarget-audience-manager-profiling-and-personalization-are-same">
+                    Are SmartTarget, Audience Manager, Profiling and Personalization are same?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-physics" title="Physics Stack Exchange"></div><a href="http://physics.stackexchange.com/questions/130688/which-way-does-the-scale-tip" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:151 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://physics.stackexchange.com/questions/130688/which-way-does-the-scale-tip">
+                    Which way does the scale tip?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-rpg" title="Role-playing Games Stack Exchange"></div><a href="http://rpg.stackexchange.com/questions/45745/why-is-burying-yourself-not-such-a-great-plan" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:122 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://rpg.stackexchange.com/questions/45745/why-is-burying-yourself-not-such-a-great-plan">
+                    Why is burying yourself not such a great plan?
+                </a>
+
+            </li>
+            <li class="dno js-hidden" style="display: list-item;">
+                <div class="favicon favicon-mathoverflow" title="MathOverflow"></div><a href="http://mathoverflow.net/questions/178139/examples-of-unexpected-mathematical-images" class="js-gps-track" data-gps-track="site.switch({ item_type:11, target_site:504 }); posts_hot_network.click({ item_type:2, location:11 })" rollapp-href="http://mathoverflow.net/questions/178139/examples-of-unexpected-mathematical-images">
+                    Examples of unexpected mathematical images
+                </a>
+
+            </li>
+    </ul>
+
+        
+</div>
+		</div>
+	
+<div id="feed-link">
+    <div id="feed-link-text">
+        <a href="http://stackoverflow.com/feeds/question/8055694" title="feed of this question and its answers" rollapp-href="http://stackoverflow.com/feeds/question/8055694">
+            <span class="feed-icon"></span>question feed
+        </a>
+    </div>
+</div>	<script>
+StackExchange.ready(function(){$.get('/posts/8055694/ivc/cb81');});
+</script>
+<noscript>
+    &lt;div&gt;&lt;img src="/posts/8055694/ivc/cb81" class="dno" alt="" width="0" height="0"&gt;&lt;/div&gt;
+</noscript><div style="display:none" id="prettify-lang">default</div></div>
+
+
+
+        </div>
+    </div>
+    <div id="footer" class="categories">
+        <div class="footerwrap">
+            <div id="footer-menu">
+                <div class="top-footer-links">
+                        <a href="http://stackoverflow.com/tour" rollapp-href="http://stackoverflow.com/tour">tour</a>
+                    <a href="http://stackoverflow.com/help" rollapp-href="http://stackoverflow.com/help">help</a>
+                        <a href="http://stackoverflow.com/help/badges" rollapp-href="http://stackoverflow.com/help/badges">badges</a>
+                    <a href="http://blog.stackoverflow.com/?blb=1" rollapp-href="http://blog.stackoverflow.com/?blb=1">blog</a>
+                        <a href="http://chat.stackoverflow.com/" rollapp-href="http://chat.stackoverflow.com/">chat</a>
+                    <a href="http://data.stackexchange.com/" rollapp-href="http://data.stackexchange.com/">data</a>
+                    <a href="http://stackexchange.com/legal" rollapp-href="http://stackexchange.com/legal">legal</a>
+                    <a href="http://stackexchange.com/legal/privacy-policy" rollapp-href="http://stackexchange.com/legal/privacy-policy">privacy policy</a>
+                    <a href="http://stackexchange.com/work-here" rollapp-href="http://stackexchange.com/work-here">work here</a>
+                    <a href="http://stackexchange.com/mediakit" rollapp-href="http://stackexchange.com/mediakit">advertising info</a>
+
+                    <a onclick="StackExchange.switchMobile(&quot;on&quot;)" rollapp-href="">mobile</a>
+                    <b><a href="http://stackoverflow.com/contact" rollapp-href="http://stackoverflow.com/contact">contact us</a></b>
+                        <b><a href="http://meta.stackoverflow.com/" rollapp-href="http://meta.stackoverflow.com/">feedback</a></b>
+                    
+                </div>
+                <div id="footer-sites">
+                    <table>
+    <tbody><tr>
+            <th colspan="3">
+                Technology
+            </th>
+            <th>
+                Life / Arts
+            </th>
+            <th>
+                Culture / Recreation
+            </th>
+            <th>
+                Science
+            </th>
+            <th>
+                Other
+            </th>
+    </tr>
+    <tr>
+            <td>
+                <ol>
+                        <li><a href="http://stackoverflow.com/" title="professional and enthusiast programmers" rollapp-href="http://stackoverflow.com/">Stack Overflow</a></li>
+                        <li><a href="http://serverfault.com/" title="professional system and network administrators" rollapp-href="http://serverfault.com/">Server Fault</a></li>
+                        <li><a href="http://superuser.com/" title="computer enthusiasts and power users" rollapp-href="http://superuser.com/">Super User</a></li>
+                        <li><a href="http://webapps.stackexchange.com/" title="power users of web applications" rollapp-href="http://webapps.stackexchange.com/">Web Applications</a></li>
+                        <li><a href="http://askubuntu.com/" title="Ubuntu users and developers" rollapp-href="http://askubuntu.com/">Ask Ubuntu</a></li>
+                        <li><a href="http://webmasters.stackexchange.com/" title="pro webmasters" rollapp-href="http://webmasters.stackexchange.com/">Webmasters</a></li>
+                        <li><a href="http://gamedev.stackexchange.com/" title="professional and independent game developers" rollapp-href="http://gamedev.stackexchange.com/">Game Development</a></li>
+                        <li><a href="http://tex.stackexchange.com/" title="users of TeX, LaTeX, ConTeXt, and related typesetting systems" rollapp-href="http://tex.stackexchange.com/">TeX - LaTeX</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://programmers.stackexchange.com/" title="professional programmers interested in conceptual questions about software development" rollapp-href="http://programmers.stackexchange.com/">Programmers</a></li>
+                        <li><a href="http://unix.stackexchange.com/" title="users of Linux, FreeBSD and other Un*x-like operating systems." rollapp-href="http://unix.stackexchange.com/">Unix &amp; Linux</a></li>
+                        <li><a href="http://apple.stackexchange.com/" title="power users of Apple hardware and software" rollapp-href="http://apple.stackexchange.com/">Ask Different (Apple)</a></li>
+                        <li><a href="http://wordpress.stackexchange.com/" title="WordPress developers and administrators" rollapp-href="http://wordpress.stackexchange.com/">WordPress Development</a></li>
+                        <li><a href="http://gis.stackexchange.com/" title="cartographers, geographers and GIS professionals" rollapp-href="http://gis.stackexchange.com/">Geographic Information Systems</a></li>
+                        <li><a href="http://electronics.stackexchange.com/" title="electronics and electrical engineering professionals, students, and enthusiasts" rollapp-href="http://electronics.stackexchange.com/">Electrical Engineering</a></li>
+                        <li><a href="http://android.stackexchange.com/" title="enthusiasts and power users of the Android operating system" rollapp-href="http://android.stackexchange.com/">Android Enthusiasts</a></li>
+                        <li><a href="http://security.stackexchange.com/" title="Information security professionals" rollapp-href="http://security.stackexchange.com/">Information Security</a></li>
+                            </ol></td><td><ol>
+                        <li><a href="http://dba.stackexchange.com/" title="database professionals who wish to improve their database skills and learn from others in the community" rollapp-href="http://dba.stackexchange.com/">Database Administrators</a></li>
+                        <li><a href="http://drupal.stackexchange.com/" title="Drupal developers and administrators" rollapp-href="http://drupal.stackexchange.com/">Drupal Answers</a></li>
+                        <li><a href="http://sharepoint.stackexchange.com/" title="SharePoint enthusiasts" rollapp-href="http://sharepoint.stackexchange.com/">SharePoint</a></li>
+                        <li><a href="http://ux.stackexchange.com/" title="user experience researchers and experts" rollapp-href="http://ux.stackexchange.com/">User Experience</a></li>
+                        <li><a href="http://mathematica.stackexchange.com/" title="users of Mathematica" rollapp-href="http://mathematica.stackexchange.com/">Mathematica</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#technology" class="more" rollapp-href="http://stackexchange.com/sites#technology">
+                                more (14)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://photo.stackexchange.com/" title="professional, enthusiast and amateur photographers" rollapp-href="http://photo.stackexchange.com/">Photography</a></li>
+                        <li><a href="http://scifi.stackexchange.com/" title="science fiction and fantasy enthusiasts" rollapp-href="http://scifi.stackexchange.com/">Science Fiction &amp; Fantasy</a></li>
+                        <li><a href="http://graphicdesign.stackexchange.com/" title="Graphic Design professionals, students, and enthusiasts" rollapp-href="http://graphicdesign.stackexchange.com/">Graphic Design</a></li>
+                        <li><a href="http://cooking.stackexchange.com/" title="professional and amateur chefs" rollapp-href="http://cooking.stackexchange.com/">Seasoned Advice (cooking)</a></li>
+                        <li><a href="http://diy.stackexchange.com/" title="contractors and serious DIYers" rollapp-href="http://diy.stackexchange.com/">Home Improvement</a></li>
+                        <li><a href="http://money.stackexchange.com/" title="people who want to be financially literate" rollapp-href="http://money.stackexchange.com/">Personal Finance &amp; Money</a></li>
+                        <li><a href="http://academia.stackexchange.com/" title="academics and those enrolled in higher education" rollapp-href="http://academia.stackexchange.com/">Academia</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#lifearts" class="more" rollapp-href="http://stackexchange.com/sites#lifearts">
+                                more (10)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://english.stackexchange.com/" title="linguists, etymologists, and serious English language enthusiasts" rollapp-href="http://english.stackexchange.com/">English Language &amp; Usage</a></li>
+                        <li><a href="http://skeptics.stackexchange.com/" title="scientific skepticism" rollapp-href="http://skeptics.stackexchange.com/">Skeptics</a></li>
+                        <li><a href="http://judaism.stackexchange.com/" title="those who base their lives on Jewish law and tradition and anyone interested in learning more" rollapp-href="http://judaism.stackexchange.com/">Mi Yodeya (Judaism)</a></li>
+                        <li><a href="http://travel.stackexchange.com/" title="road warriors and seasoned travelers" rollapp-href="http://travel.stackexchange.com/">Travel</a></li>
+                        <li><a href="http://christianity.stackexchange.com/" title="committed Christians, experts in Christianity and those interested in learning more" rollapp-href="http://christianity.stackexchange.com/">Christianity</a></li>
+                        <li><a href="http://gaming.stackexchange.com/" title="passionate videogamers on all platforms" rollapp-href="http://gaming.stackexchange.com/">Arqade (gaming)</a></li>
+                        <li><a href="http://bicycles.stackexchange.com/" title="people who build and repair bicycles, people who train cycling, or commute on bicycles" rollapp-href="http://bicycles.stackexchange.com/">Bicycles</a></li>
+                        <li><a href="http://rpg.stackexchange.com/" title="gamemasters and players of tabletop, paper-and-pencil role-playing games" rollapp-href="http://rpg.stackexchange.com/">Role-playing Games</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#culturerecreation" class="more" rollapp-href="http://stackexchange.com/sites#culturerecreation">
+                                more (21)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://math.stackexchange.com/" title="people studying math at any level and professionals in related fields" rollapp-href="http://math.stackexchange.com/">Mathematics</a></li>
+                        <li><a href="http://stats.stackexchange.com/" title="people interested in statistics, machine learning, data analysis, data mining, and data visualization" rollapp-href="http://stats.stackexchange.com/">Cross Validated (stats)</a></li>
+                        <li><a href="http://cstheory.stackexchange.com/" title="theoretical computer scientists and researchers in related fields" rollapp-href="http://cstheory.stackexchange.com/">Theoretical Computer Science</a></li>
+                        <li><a href="http://physics.stackexchange.com/" title="active researchers, academics and students of physics" rollapp-href="http://physics.stackexchange.com/">Physics</a></li>
+                        <li><a href="http://mathoverflow.net/" title="professional mathematicians" rollapp-href="http://mathoverflow.net/">MathOverflow</a></li>
+                    
+                        <li>
+                            <a href="http://stackexchange.com/sites#science" class="more" rollapp-href="http://stackexchange.com/sites#science">
+                                more (7)
+                            </a>
+                        </li>
+                </ol>
+            </td>
+            <td>
+                <ol>
+                        <li><a href="http://stackapps.com/" title="apps, scripts, and development with the Stack Exchange API" rollapp-href="http://stackapps.com/">Stack Apps</a></li>
+                        <li><a href="http://meta.stackexchange.com/" title="meta-discussion of the Stack Exchange family of Q&amp;A websites" rollapp-href="http://meta.stackexchange.com/">Meta Stack Exchange</a></li>
+                        <li><a href="http://area51.stackexchange.com/" title="proposing new sites in the Stack Exchange network" rollapp-href="http://area51.stackexchange.com/">Area 51</a></li>
+                        <li><a href="http://careers.stackoverflow.com/" rollapp-href="http://careers.stackoverflow.com/">Stack Overflow Careers</a></li>
+                    
+                </ol>
+            </td>
+    </tr>
+</tbody></table>
+                </div>
+            </div>
+
+            <div id="copyright">
+                site design / logo © 2014 stack exchange inc; user contributions licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/" rel="license" rollapp-href="http://creativecommons.org/licenses/by-sa/3.0/">cc by-sa 3.0</a> 
+                with <a href="http://blog.stackoverflow.com/2009/06/attribution-required/" rel="license" rollapp-href="http://blog.stackoverflow.com/2009/06/attribution-required/">attribution required</a>
+            </div>
+            <div id="svnrev">
+                rev 2014.8.14.1780
+            </div>
+            
+        </div>
+    </div>
+    <noscript>
+        &lt;div id="noscript-warning"&gt;Stack Overflow works best with JavaScript enabled&lt;img src="http://pixel.quantserve.com/pixel/p-c1rF4kxgLUzNc.gif" alt="" class="dno"&gt;&lt;/div&gt;
+    </noscript>
+<script>var p = "http", d = "static"; if (document.location.protocol == "https:") { p += "s"; d = "engine"; } var z = document.createElement("script"); z.type = "text/javascript"; z.async = true; z.src = p + "://" + d + ".adzerk.net/ados.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(z, s);</script>
+<script>
+    var ados = ados || {};
+    ados.run = ados.run || [];
+    ados.run.push(function () { ados_setKeywords('mysql,shell,ssh');; ados_load(); });         
+</script>
+
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m);
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        ga('create', 'UA-5620270-1');        
+        
+        ga('set', 'dimension2', '|mysql|shell|ssh|');         
+        ga('send', 'pageview');
+        var _qevents = _qevents || [],
+            _comscore = _comscore || [];
+        (function () {
+            var ssl='https:'==document.location.protocol,
+                s=document.getElementsByTagName('script')[0],
+                qc=document.createElement('script');
+            qc.async=true;
+            qc.src=(ssl?'https://secure':'http://edge')+'.quantserve.com/quant.js';
+            s.parentNode.insertBefore(qc, s);
+            var sc=document.createElement('script');
+            sc.async=true;
+            sc.src=(ssl?'https://sb':'http://b') + '.scorecardresearch.com/beacon.js';
+            s.parentNode.insertBefore(sc, s);
+        })();
+        _comscore.push({ c1: "2", c2: "17440561" });
+        _qevents.push({ qacct: "p-c1rF4kxgLUzNc" });
+    </script>        
+    
+    
+<img width="1" height="1" src="./How to execute a MySQL command from a shell script  - Stack Overflow_files/foo"></body></html>
