@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import javax.sql.DataSource;
 
 import com.beans.Booking;
 import com.beans.HistoryEnrty;
+import com.beans.ScheduleEntry;
 import com.beans.Venue;
 import com.beans.VenueDistanceComp;
 import com.constants.BookingStatus;
@@ -28,7 +30,7 @@ import com.utils.LocationUtil;
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?)";
-	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
+	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues WHERE in_booking_system = true ORDER BY ABS(latitude-?), ABS(longitude-?)";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user, new_places, new_time) VALUES(?, ?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
@@ -44,6 +46,12 @@ public class VenuesDAO {
 	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
 	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";
 	
+	private static final String ADD_DAY_SCHEDULE_QUERY = "INSERT INTO venue_schedule(venue_id, day, open_time, close_time) VALUES(?, ?, ?, ?)";
+	private static final String UPDATE_DAY_SCHEDULE_QUERY = "UPDATE venue_schedule set open_time = ?, close_time = ? WHERE day = ? AND venue_id = ?";
+	private static final String GET_VENUE_SCHEDULE_QUERY = "SELECT v.day as day_id, v.open_time, v.close_time, w.name as day FROM venue_schedule v, week_days w WHERE w.id = v.day and venue_id = ?";	
+	
+	private static final String SWITCH_IN_SYSTEM_QUERY = "UPDATE venues set in_booking_system = ? WHERE id = ?";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -53,8 +61,7 @@ public class VenuesDAO {
 			dataSource = (DataSource)envContext.lookup("jdbc/bronimesto");
 		} catch (NamingException e) {
 			e.printStackTrace();
-		}
-				
+		}				
 	}
 	
 	public static List<Venue> getVenues(Double lat, Double lng, Integer limit) {
@@ -473,6 +480,95 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		
+		return result;
+	}
+	
+	public static Map<String, Object> setVenueSchedule(int venueId, ScheduleEntry[] schedule) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Map<Object, Object> existingSchedule = getVenueSchedule(venueId);
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			for(ScheduleEntry daySchedule: schedule) {
+				Integer dayId = daySchedule.getDayId();
+				if(dayId == null) {
+					dayId = 0;
+				}
+				if(existingSchedule.containsKey(dayId)) {
+					// Update the schedule for specified day.					
+					ps = con.prepareStatement(UPDATE_DAY_SCHEDULE_QUERY);
+					ps.setString(1, daySchedule.getOpenTime());
+					ps.setString(2, daySchedule.getCloseTime());
+					ps.setInt(3, dayId);
+					ps.setInt(4, venueId);
+					ps.executeUpdate();					
+				} else {	
+					// Set the schedule for specified day.
+					ps = con.prepareStatement(ADD_DAY_SCHEDULE_QUERY);
+					ps.setInt(1, venueId);
+					ps.setInt(2, dayId);				
+					ps.setString(3, daySchedule.getOpenTime());
+					ps.setString(4, daySchedule.getCloseTime());
+					ps.executeUpdate();
+				}
+				result.put(String.valueOf(dayId), daySchedule.getOpenTime() + " - " + daySchedule.getCloseTime());
+			}
+			result.put("status", "success");
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<Object, Object> getVenueSchedule(int venueId) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_VENUE_SCHEDULE_QUERY);
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Integer day_id = rs.getInt("day_id");
+				ScheduleEntry se = new ScheduleEntry(venueId, day_id, rs.getString("day"), rs.getString("open_time"), rs.getString("closeTime"));
+				result.put(day_id, se);
+			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}	
+		return result;
+	}
+	
+	public static Map<Object, Object> switchInSystem(int venueId, boolean inSystemStatus) {
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(SWITCH_IN_SYSTEM_QUERY);
+			ps.setBoolean(1, inSystemStatus);
+			ps.setInt(2, venueId);
+			ps.executeUpdate();
+			result.put("status", "success");
+			result.put("venue_id", venueId);
+			result.put("inSystem", inSystemStatus);
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
 		return result;
 	}
 	

@@ -116,6 +116,14 @@ public class Venue {
 		this.adminUser = adminUser;
 	}
 	
+	public void setInBookingSystem(boolean inBookingSystem) {
+		this.inBookingSystem = inBookingSystem;
+	}
+	
+	public boolean getInBookingSystem() {
+		return inBookingSystem;
+	}
+	
 	public Venue() {
 		// TODO Auto-generated constructor stub
 	}
@@ -133,4 +141,6 @@ public class Venue {
 	private boolean hasFreeSeats;
 	private double distance;
 	private String adminUser;
+	private boolean inBookingSystem;
+	
 }
