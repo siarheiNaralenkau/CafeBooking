@@ -1,6 +1,8 @@
 CREATE TABLE `tables` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`venue_id` INT(11) NOT NULL DEFAULT '0',
+	`x_pos` INT(11) NOT NULL DEFAULT '0',
+	`y_pos` INT(11) NOT NULL DEFAULT '0',
 	`places` INT(11) NOT NULL DEFAULT '0',
 	`number` INT(11) NOT NULL DEFAULT '0',
 	`position_notes` INT(11) NOT NULL DEFAULT '1',

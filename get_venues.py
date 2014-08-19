@@ -21,6 +21,7 @@ explore_url = 'https://api.foursquare.com/v2/venues/explore?ll=' + GOMEL_CENTER 
     '&radius=' + RADIUS + \
     '&section={0}' + \
     '&limit=' + LIMIT + \
+    '&venuePhotos=1' + \
     '&offset={1}' + \
     '&client_id=' + CLIENT_ID + \
     '&client_secret=' + CLIENT_SECRET + \
@@ -72,6 +73,7 @@ def get_address(venue):
         address = ''
     return address
 
+
 def get_city(venue):
     if "city" in venue["location"]:
         city = venue["location"]["city"]
@@ -79,12 +81,28 @@ def get_city(venue):
         city = ''
     return city
 
+
 def get_country(venue):
     if "country" in venue["location"]:
         country = venue["location"]["country"]
     else:
         country = ''
     return country
+
+
+def get_venue_photos(venue_id):
+    result = []
+    photos_url = 'https://api.foursquare.com/v2/venues/' + venue_id + '/photos?limit=10' + '&client_id=' + CLIENT_ID + \
+                 '&client_secret=' + CLIENT_SECRET + '&v=' + VERSION
+    req = requests.get(photos_url)
+    json_result = req.json()
+    photos = json_result["response"]["photos"]["items"]
+    if len(photos) > 0:
+        for photo in photos:
+            photo_url = photo["prefix"] + str(photo["width"]) + "x" + str(photo["height"]) + photo["suffix"]
+            photo_uid = photo["id"]
+            result.append({"uid": photo_uid, "venue_id": venue_id, "url": photo_url})
+    return result
 
 # Connect to mysql and add a venue there
 conn = pymysql.connect(host='localhost', port=3306, user='admin', passwd='qwerty12Q', db='bronimesto', charset="utf8")
@@ -96,6 +114,7 @@ conn.commit()
 
 # Get a list of queries for adding venues
 to_insert = []
+photos_to_insert = []
 v_ids = []
 for s in SECTIONS:
     venues = get_venues_by_type(s, DEFAULT_OFFSET)
@@ -109,6 +128,9 @@ for s in SECTIONS:
             query = VENUE_INSERT.format(venue["id"], venue["name"], phone, address, city, country,
                                         venue["location"]["lat"], venue["location"]["lng"],
                                         venue["categories"][0]["name"], 1)
+            venue_photos = get_venue_photos(venue["id"])
+            photos_to_insert += venue_photos
+
             to_insert.append(query)
             v_ids.append(venue["id"])
 
@@ -116,6 +138,15 @@ for s in SECTIONS:
 for query in to_insert:
     cursor.execute(query)
     conn.commit()
+
+# Save venue's photos
+print("Amount of photos to insert: {0}".format(len(photos_to_insert)))
+for photo in photos_to_insert:
+    p_query = "INSERT INTO venue_photos(uid, venue_id, url) VALUES('" + photo["uid"] + "','" + photo["venue_id"] + "','" + photo["url"] + "')"
+    cursor.execute(p_query)
+    conn.commit()
+print("Completed!")
+
 conn.close()
 
 

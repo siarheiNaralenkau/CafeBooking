@@ -13,6 +13,7 @@ CREATE TABLE `venues` (
 	`admin_user` VARCHAR(100) NULL DEFAULT NULL,
 	`in_booking_system` TINYINT(1) NOT NULL DEFAULT '0',
 	`tables_amount` INT(11) NULL DEFAULT NULL,
+	`icon_url` VARCHAR(75) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
