@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `venue_photos`;
+
 CREATE TABLE `venue_photos` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`uid` VARCHAR(35) NOT NULL DEFAULT '0',

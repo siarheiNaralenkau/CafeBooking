@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `tables`;
+
 CREATE TABLE `tables` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`venue_id` INT(11) NOT NULL DEFAULT '0',
