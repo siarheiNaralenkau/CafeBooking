@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `bookings`;
+
 CREATE TABLE `bookings` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`venue_id` INT(11) NOT NULL DEFAULT '0',

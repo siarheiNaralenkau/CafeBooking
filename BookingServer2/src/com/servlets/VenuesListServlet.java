@@ -20,13 +20,16 @@ import com.google.gson.Gson;
  * lng - longutude - Default is center of Gomel for now
  * limit - Max amount of venues to return
  * Example:
- * http://localhost:8080/BookingServer2/venues_list?responseType=json&lat=50&lng=30&limit=50
+ * http://localhost:8080/BookingServer2/venues_list?responseType=json&lat=50&lng=30&limit=10
  */ 
 public class VenuesListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;  	
 		
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		request.setCharacterEncoding("UTF-8");
+		
+		disableCaching(response);
+		
 		Double lat = null, lng = null;
 		Integer limit = null;
 		String responseType = "json";
@@ -52,7 +55,13 @@ public class VenuesListServlet extends HttpServlet {
 			request.setAttribute("venues", nearestVenues);
 			forwardToList(request, response);
 		}		
-	}		
+	}	
+	
+	private void disableCaching(HttpServletResponse response) {
+		response.setHeader("Cache-control", "no-cache, no-store");
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Expires", "-1");
+	}
 	
 	protected void forwardToList(HttpServletRequest request, HttpServletResponse response) {
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/list_venues.jsp");

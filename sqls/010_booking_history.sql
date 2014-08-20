@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `booking_history`;
+
 CREATE TABLE `booking_history` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
 	`booking_id` INT(11) NOT NULL DEFAULT '0',

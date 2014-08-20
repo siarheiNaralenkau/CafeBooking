@@ -13,8 +13,8 @@ SECTIONS = ['food', 'drinks', 'coffee']
 LIMIT = '50'
 DEFAULT_OFFSET = 0
 VENUE_INSERT = u"INSERT INTO venues(unique_id, name, phone, address, city, country," \
-               "latitude, longitude, category, has_free_seats) VALUES('{0}', '{1}'," \
-               "'{2}', '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9})"
+               "latitude, longitude, category, has_free_seats, icon_url) VALUES('{0}', '{1}'," \
+               "'{2}', '{3}', '{4}', '{5}', {6}, {7}, '{8}', {9}, '{10}')"
 DELETE_VENUES = 'DELETE FROM venues'
 
 explore_url = 'https://api.foursquare.com/v2/venues/explore?ll=' + GOMEL_CENTER + \
@@ -123,11 +123,13 @@ for s in SECTIONS:
         address = get_address(venue)
         city = get_city(venue)
         country = get_country(venue)
+        icon = venue["categories"][0]["icon"]
+        icon_url = icon["prefix"] + "64" + icon["suffix"]
 
         if venue["id"] not in v_ids:
             query = VENUE_INSERT.format(venue["id"], venue["name"], phone, address, city, country,
                                         venue["location"]["lat"], venue["location"]["lng"],
-                                        venue["categories"][0]["name"], 1)
+                                        venue["categories"][0]["name"], 1, icon_url)
             venue_photos = get_venue_photos(venue["id"])
             photos_to_insert += venue_photos
 

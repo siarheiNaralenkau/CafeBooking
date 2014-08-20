@@ -1,9 +1,10 @@
+DROP TABLE IF EXISTS `table_position_notes`;
+
 CREATE TABLE `table_position_notes` (
 	`id` INT(11) NOT NULL,
 	`position_notes` VARCHAR(50) NOT NULL,
 	PRIMARY KEY (`id`)
 )
-COMMENT='Stores details about venue\'s table position.'
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB;
 
