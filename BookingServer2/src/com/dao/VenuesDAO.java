@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import com.beans.HistoryEnrty;
 import com.beans.ScheduleEntry;
 import com.beans.Venue;
 import com.beans.VenueDistanceComp;
+import com.beans.VenueTable;
 import com.constants.BookingStatus;
 import com.constants.Consts;
 import com.utils.LocationUtil;
@@ -31,7 +31,7 @@ import com.utils.LocationUtil;
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?)";
-	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues WHERE in_booking_system = true ORDER BY ABS(latitude-?), ABS(longitude-?)";
+	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user, new_places, new_time) VALUES(?, ?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
@@ -51,7 +51,7 @@ public class VenuesDAO {
 	private static final String GET_VENUE_SCHEDULE_QUERY = "SELECT v.day as day_id, v.open_time, v.close_time, w.name as day FROM venue_schedule v, week_days w WHERE w.id = v.day and venue_id = ?";		
 	private static final String SWITCH_IN_SYSTEM_QUERY = "UPDATE venues set in_booking_system = ? WHERE id = ?";
 	private static final String ADD_TABLE_QUERY = "INSERT INTO tables(venue_id, x_pos, y_pos, places, number, position_notes, photo_url) "
-			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";	
+			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";		
 		
 	private static DataSource dataSource;
 	
@@ -92,7 +92,7 @@ public class VenuesDAO {
 			while(rs.next()) {
 				Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
 						rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
-						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"));
+						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"), rs.getString("icon_url"));
 				LocationUtil.calcDistance(v, sLat, sLng);
 				venues.add(v);
 			}
@@ -610,6 +610,43 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		
+		return result;
+	}
+	
+	public static Map<String, Object> getVenueTables(Integer venueId, boolean freeOnly, Integer positionNotes) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<VenueTable> tables = new ArrayList<VenueTable>();
+		try {
+			con = dataSource.getConnection();
+			StringBuilder query = new StringBuilder();
+			query.append("SELECT * FROM tables WHERE venue_id = ?");
+			if(freeOnly) {
+				query.append(" AND (booked_places=0 OR booked_time>NOW() + INTERVAL 1 DAY)");
+			}
+			if(positionNotes != null) {
+				query.append(" AND position_notes = " + positionNotes);
+			}
+			ps = con.prepareStatement(query.toString());
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				int posNotes = rs.getInt("position_notes");
+				String sPosNotes = Consts.POSITION_NOTES.get(posNotes);
+				VenueTable table = new VenueTable(rs.getInt("id"), rs.getInt("venue_id"), rs.getInt("x_pos"), rs.getInt("y_pos"), rs.getInt("places"), rs.getInt("number"),
+						sPosNotes, rs.getBoolean("is_free"), rs.getInt("booked_places"), rs.getTimestamp("booked_time"), rs.getString("photo_url"));
+				tables.add(table);
+			}
+			result.put("status", "success");
+			result.put("tables", tables);
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
 		return result;
 	}
 	

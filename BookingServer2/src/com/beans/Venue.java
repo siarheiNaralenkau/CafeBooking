@@ -4,7 +4,7 @@ public class Venue {
 
 	public Venue(long id, String uniqueId, String name, String phone,
 			String address, String city, String country, double lat,
-			double lng, String category, boolean hasFreeSeats) {
+			double lng, String category, boolean hasFreeSeats, String iconUrl) {
 		super();
 		this.id = id;
 		this.uniqueId = uniqueId;
@@ -17,11 +17,12 @@ public class Venue {
 		this.lng = lng;
 		this.category = category;
 		this.hasFreeSeats = hasFreeSeats;
+		this.iconUrl = iconUrl;
 	}
 	
 	public Venue(long id, String uniqueId, String name, String phone,
 			String address, String city, String country, double lat,
-			double lng, String category, boolean hasFreeSeats, String adminUser) {
+			double lng, String category, boolean hasFreeSeats, String adminUser, String iconUrl) {
 		super();
 		this.id = id;
 		this.uniqueId = uniqueId;
@@ -35,6 +36,7 @@ public class Venue {
 		this.category = category;
 		this.hasFreeSeats = hasFreeSeats;
 		this.adminUser = adminUser;
+		this.iconUrl = iconUrl;
 	}
 	
 	public long getId() {
@@ -124,6 +126,14 @@ public class Venue {
 		return inBookingSystem;
 	}
 	
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
+	}
+	
+	public String getIconUrl() {
+		return iconUrl;
+	}
+	
 	public Venue() {
 		// TODO Auto-generated constructor stub
 	}
@@ -142,5 +152,5 @@ public class Venue {
 	private double distance;
 	private String adminUser;
 	private boolean inBookingSystem;
-	
+	private String iconUrl;
 }
