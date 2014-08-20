@@ -32,6 +32,7 @@ public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?)";
 	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
+	private static final String UNSORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY name";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user) VALUES(?, ?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, action_user, new_places, new_time) VALUES(?, ?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
@@ -70,33 +71,45 @@ public class VenuesDAO {
 		List<Venue> venues = new ArrayList<Venue>();
 		Connection con = null;
 		PreparedStatement ps = null;
+		boolean isSorted = true;
 		try {
 			con = dataSource.getConnection();
-			String query = new String(SORTED_COORDS_QUERY);
-			if(limit != null) {
-				query += " LIMIT ?";
+			String query;
+			if(sLat == null || sLng == null) {
+				query = UNSORTED_COORDS_QUERY;
+				isSorted = false;
+				if(limit != null) {
+					query += " LIMIT ?";
+				}
+				ps = con.prepareStatement(query);
+				if(limit != null) {
+					ps.setInt(1, limit);
+				}
+			} else {			
+				query = new String(SORTED_COORDS_QUERY);
+				if(limit != null) {
+					query += " LIMIT ?";
+				}
+				ps = con.prepareStatement(query);			 
+				ps.setDouble(1, sLat);
+				ps.setDouble(2, sLng);
+				if(limit != null) {
+					ps.setInt(3, limit);
+				}
 			}
-			ps = con.prepareStatement(query);
-			if(sLat == null ) {
-				sLat = Consts.DEFAULT_LAT;  			
-			} 
-			if(sLng == null) {
-				sLng = Consts.DEFAULT_LNG;
-			} 
-			ps.setDouble(1, sLat);
-			ps.setDouble(2, sLng);
-			if(limit != null) {
-				ps.setInt(3, limit);
-			}		
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
 						rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
 						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"), rs.getString("icon_url"));
-				LocationUtil.calcDistance(v, sLat, sLng);
+				if(isSorted) {
+					LocationUtil.calcDistance(v, sLat, sLng);
+				}
 				venues.add(v);
 			}
-			Collections.sort(venues, new VenueDistanceComp());
+			if(isSorted) {
+				Collections.sort(venues, new VenueDistanceComp());
+			}
 		} catch (SQLException e) { 
 			System.out.println("Error: " + e.getMessage());
 		} finally {
