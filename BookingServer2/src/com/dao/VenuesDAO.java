@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -44,14 +45,14 @@ public class VenuesDAO {
 	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
 	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";
 	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
-	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";
-	
+	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";	
 	private static final String ADD_DAY_SCHEDULE_QUERY = "INSERT INTO venue_schedule(venue_id, day, open_time, close_time) VALUES(?, ?, ?, ?)";
 	private static final String UPDATE_DAY_SCHEDULE_QUERY = "UPDATE venue_schedule set open_time = ?, close_time = ? WHERE day = ? AND venue_id = ?";
-	private static final String GET_VENUE_SCHEDULE_QUERY = "SELECT v.day as day_id, v.open_time, v.close_time, w.name as day FROM venue_schedule v, week_days w WHERE w.id = v.day and venue_id = ?";	
-	
+	private static final String GET_VENUE_SCHEDULE_QUERY = "SELECT v.day as day_id, v.open_time, v.close_time, w.name as day FROM venue_schedule v, week_days w WHERE w.id = v.day and venue_id = ?";		
 	private static final String SWITCH_IN_SYSTEM_QUERY = "UPDATE venues set in_booking_system = ? WHERE id = ?";
-	
+	private static final String ADD_TABLE_QUERY = "INSERT INTO tables(venue_id, x_pos, y_pos, places, number, position_notes, photo_url) "
+			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";	
+		
 	private static DataSource dataSource;
 	
 	static {		
@@ -569,6 +570,46 @@ public class VenuesDAO {
 		} finally {
 			closeConnection(con, ps);
 		}
+		return result;
+	}
+	
+	public static Map<String, Object> addTable(Integer venueId, Integer xPos, Integer yPos, Integer places, Integer number, Integer positionNotes, String photoUrl) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(ADD_TABLE_QUERY);
+			ps.setInt(1, venueId);
+			if(xPos != null) {
+				ps.setInt(2, xPos);
+			} else {
+				ps.setNull(2, Types.INTEGER);
+			}
+			if(yPos != null) {
+				ps.setInt(3, yPos);
+			} else {
+				ps.setNull(3, Types.INTEGER);
+			}
+			ps.setInt(4, places);
+			if(number != null) {
+				ps.setInt(5, number);
+			} else {
+				ps.setNull(5, Types.INTEGER);
+			}
+			ps.setInt(6, positionNotes);
+			ps.setString(7, photoUrl);
+			ps.executeUpdate();
+			result.put("status", "success");
+			result.put("message", "Table with " + places + " places added to venue");
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		
 		return result;
 	}
 	
