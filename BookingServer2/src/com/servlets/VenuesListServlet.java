@@ -21,6 +21,8 @@ import com.google.gson.Gson;
  * limit - Max amount of venues to return
  * Example:
  * http://localhost:8080/BookingServer2/venues_list?responseType=json&lat=50&lng=30&limit=10
+ * http://bronimesto.by:8080/BookingServer2/venues_list?lat=52.45852&lng=31.018&limit=10 - 10 nearest venues to my home
+ * http://bronimesto.by:8080/BookingServer2/venues_list?limit=10 - 10 nearest venues to Lenin's square.
  */ 
 public class VenuesListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;  	
