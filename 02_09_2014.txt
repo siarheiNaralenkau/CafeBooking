@@ -1,8 +1,8 @@
 1) Null pointer fails:
-	http://bronimesto.by:8080/BookingServer2/get_venue_bookings?actionUser=admin&venueId=1
-	http://bronimesto.by:8080/BookingServer2/get_pending_bookings?actionUser=admin&venueId=1
-	http://bronimesto.by:8080/BookingServer2/get_history?actionUser=admin&venueId=1
-2) Убрать параметр Admin User.
-3) Venue Details: Картинки
-4) План заведения(json). Добавить/Получить
-5) В Booking request - добавить # столика
+	http://bronimesto.by:8080/BookingServer2/get_venue_bookings?actionUser=admin&venueId=1 - Ok
+	http://bronimesto.by:8080/BookingServer2/get_pending_bookings?actionUser=admin&venueId=1 - Ok
+	http://bronimesto.by:8080/BookingServer2/get_history?actionUser=admin&venueId=1 - Ok
+2) Убрать параметр Admin User. Ok.
+3) Venue Details: Картинки - Ok
+4) План заведения(json). Добавить/Получить Ok
+5) В Booking request - добавить # столика Ok

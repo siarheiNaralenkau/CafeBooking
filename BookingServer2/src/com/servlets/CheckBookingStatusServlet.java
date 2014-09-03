@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 /**
  * Check the status of specified booking
  * Example:
- * http://localhost:8080/BookingServer2/check_booking_status?userName=Sergey&bookingId=2
+ * http://localhost:8080/BookingServer2/check_booking_status?bookingId=2
  */
 public class CheckBookingStatusServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -43,7 +43,7 @@ public class CheckBookingStatusServlet extends HttpServlet {
 			long nowTime = now.getTime();
 			// If booking was not approved during 20 minutes since creation - cancel it.			
 			if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && bStatus == BookingStatus.PENDING.getValue()) {
-				VenuesDAO.updateStatus(bookingId, BookingStatus.CANCELLED.getValue(), userName);
+				VenuesDAO.updateStatus(bookingId, BookingStatus.CANCELLED.getValue());
 				bStatus = BookingStatus.CANCELLED.getValue(); 
 			}
 			responseMap.put("status", bStatus);

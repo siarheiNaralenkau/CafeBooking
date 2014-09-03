@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,14 +13,15 @@ import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
 /**
- * Disable or enable booking places in specified venue
- * Should be called by venue admin if there are no free places in venue
- * Example:
- * http://localhost:8080/BookingServer2/switch_venue_status?venueId=1&enableBooking=false
+ * Servlet implementation class UploadVenuePlanServlet
+ * Example
+ * http://bronimesto.by:8080/BookingServer2/upload_venue_plan?venueId=1&venuePlan=someJson
+ * http://localhost:8080/BookingServer2/upload_venue_plan?venueId=100&venuePlan={someJson}
  */
-public class SwitchVenueStatusServlet extends HttpServlet {
+@WebServlet("/upload_venue_plan")
+public class UploadVenuePlanServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-              
+       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
@@ -27,13 +29,14 @@ public class SwitchVenueStatusServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");
-				
+		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		boolean enableBooking = Boolean.valueOf(request.getParameter("enableBooking"));
-		Map<String, Object> qResult = VenuesDAO.switchVenueStatus(venueId, enableBooking);
+		String venuePlan = request.getParameter("venuePlan");
+		
+		Map<String, Object> result = VenuesDAO.setVenuePlan(venueId, venuePlan);
 		
 		Gson gson = new Gson();
-		String jsonResult = gson.toJson(qResult);			
+		String jsonResult = gson.toJson(result);	
 		response.getWriter().write(jsonResult);
 	}
 

@@ -18,11 +18,11 @@ import com.google.gson.Gson;
  * Venue admin user can Approve, Reject, or Delete booking.
  * Requests examples
  *  -- Approve booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=2&actionUser=admin
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=2
  * -- Cancel booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=3&actionUser=Sergey
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=3
  * -- Reject booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=4&actionUser=admin
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=4
  */
 
 @WebServlet("/ChangeBookingStatusServlet")
@@ -33,10 +33,9 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");		
 		int bookingId = Integer.valueOf(request.getParameter("bookingId"));
-		int newStatus = Integer.valueOf(request.getParameter("newStatus"));
-		String actionUser = request.getParameter("actionUser");
+		int newStatus = Integer.valueOf(request.getParameter("newStatus"));		
 		
-		Map<String, Object> result = VenuesDAO.updateStatus(bookingId, newStatus, actionUser);
+		Map<String, Object> result = VenuesDAO.updateStatus(bookingId, newStatus);
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);			
 		response.getWriter().write(jsonResult);

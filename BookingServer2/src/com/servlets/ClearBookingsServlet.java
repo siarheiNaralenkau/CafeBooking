@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Servlet deletes old bookings for specified venue.
  * Should be called only by venue's admin user.
  * Example:
- * http://localhost:8080/BookingServer2/clear_bookings?actionUser=admin&venueId=1
+ * http://localhost:8080/BookingServer2/clear_bookings?venueId=1
  */
 public class ClearBookingsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,9 +28,8 @@ public class ClearBookingsServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");
 		
-		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		String actionUser = request.getParameter("actionUser");
-		Map<String, Object> result = VenuesDAO.clearBookings(actionUser, venueId);
+		int venueId = Integer.valueOf(request.getParameter("venueId"));		
+		Map<String, Object> result = VenuesDAO.clearBookings(venueId);
 		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);	

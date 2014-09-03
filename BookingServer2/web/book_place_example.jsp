@@ -36,6 +36,10 @@
 			<textarea rows="5" cols="60" id="notes" name="notes"></textarea>
 		</div>
 		<div>
+			<label for="tableNumber">№ столика</label>
+			<input type="text" id="tableNumber" name="tableNumber"/>
+		</div>
+		<div>
 			<input type="submit" value="Забронировать"/> 
 		</div>
 	</form>

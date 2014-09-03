@@ -31,6 +31,7 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String PLACES = "places";
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
+	private static final String TABLE_NUMBER = "tableNumber";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -41,6 +42,7 @@ public class BookPlaceServlet extends HttpServlet {
 		response.setContentType("application/json;charset=utf-8");
 		String sBookingTime = "";
 		String sVenueId;
+		Integer tableNumber = null;
 		int venueId = 0;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -59,8 +61,14 @@ public class BookPlaceServlet extends HttpServlet {
 			String notes = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);
-			}		
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes);
+			}
+			if(request.getParameterMap().containsKey(TABLE_NUMBER)) {
+				String sTableNumber = request.getParameter(TABLE_NUMBER);
+				if(sTableNumber != null && !sTableNumber.isEmpty()) {
+					tableNumber = Integer.valueOf(request.getParameter(TABLE_NUMBER));
+				}
+			}
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumber);
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	
 			response.getWriter().write(jsonResult);

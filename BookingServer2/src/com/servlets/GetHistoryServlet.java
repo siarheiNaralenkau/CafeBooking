@@ -22,10 +22,9 @@ public class GetHistoryServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");
-		String actionUser = request.getParameter("actionUser");
+		response.setContentType("application/json;charset=utf-8");		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		Map<String, Object> bookingHistory = VenuesDAO.getBookingHistory(actionUser, venueId);
+		Map<String, Object> bookingHistory = VenuesDAO.getBookingHistory(venueId);
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(bookingHistory);	
 		response.getWriter().write(jsonResult);

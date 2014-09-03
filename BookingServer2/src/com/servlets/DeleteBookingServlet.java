@@ -15,7 +15,7 @@ import com.google.gson.Gson;
  * Deletes a specified booking
  * Probably should be called by adming when the visitors have already left the venue.
  * Example: 
- * http://localhost:8080/BookingServer2/delete_booking?actionUser=admin&bookingId=33
+ * http://localhost:8080/BookingServer2/delete_booking?bookingId=33
  */
 public class DeleteBookingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -26,10 +26,9 @@ public class DeleteBookingServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");		
-		String actionUser = request.getParameter("actionUser");
+		response.setContentType("application/json;charset=utf-8");				
 		int bookingId = Integer.valueOf(request.getParameter("bookingId"));
-		Map<String, Object> result = VenuesDAO.deleteBooking(actionUser, bookingId);
+		Map<String, Object> result = VenuesDAO.deleteBooking(bookingId);
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);	
 		response.getWriter().write(jsonResult);

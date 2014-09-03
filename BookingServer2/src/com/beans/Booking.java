@@ -13,6 +13,7 @@ public class Booking {
 	private int status;
 	private String notes;
 	private Timestamp bookingCreated;
+	private Integer tableNumber;
 	
 	public int getId() {
 		return id;
@@ -85,7 +86,15 @@ public class Booking {
 	public void setBookingCreated(Timestamp bookingCreated) {
 		this.bookingCreated = bookingCreated;
 	}
+	
+	public Integer getTableNumber() {
+		return tableNumber;
+	}
 
+	public void setTableNumber(Integer tableNumber) {
+		this.tableNumber = tableNumber;
+	}
+	
 	public Booking() {
 		
 	}

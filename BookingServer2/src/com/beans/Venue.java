@@ -18,26 +18,7 @@ public class Venue {
 		this.category = category;
 		this.hasFreeSeats = hasFreeSeats;
 		this.iconUrl = iconUrl;
-	}
-	
-	public Venue(long id, String uniqueId, String name, String phone,
-			String address, String city, String country, double lat,
-			double lng, String category, boolean hasFreeSeats, String adminUser, String iconUrl) {
-		super();
-		this.id = id;
-		this.uniqueId = uniqueId;
-		this.name = name;
-		this.phone = phone;
-		this.address = address;
-		this.city = city;
-		this.country = country;
-		this.lat = lat;
-		this.lng = lng;
-		this.category = category;
-		this.hasFreeSeats = hasFreeSeats;
-		this.adminUser = adminUser;
-		this.iconUrl = iconUrl;
-	}
+	}		
 	
 	public long getId() {
 		return id;
@@ -110,14 +91,7 @@ public class Venue {
 	}
 	public void setDistance(double distance) {
 		this.distance = distance;
-	}	
-	public String getAdminUser() {
-		return adminUser;
-	}
-	public void setAdminUser(String adminUser) {
-		this.adminUser = adminUser;
-	}
-	
+	}			
 	public void setInBookingSystem(boolean inBookingSystem) {
 		this.inBookingSystem = inBookingSystem;
 	}
@@ -149,8 +123,7 @@ public class Venue {
 	private double lng;
 	private String category;
 	private boolean hasFreeSeats;
-	private double distance;
-	private String adminUser;
+	private double distance;	
 	private boolean inBookingSystem;
 	private String iconUrl;
 }

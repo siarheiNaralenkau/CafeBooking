@@ -16,6 +16,9 @@ CREATE TABLE `venues` (
 	`in_booking_system` TINYINT(1) NOT NULL DEFAULT '0',
 	`tables_amount` INT(11) NULL DEFAULT NULL,
 	`icon_url` VARCHAR(75) NULL DEFAULT NULL,
+	`open_time` VARCHAR(10) NULL DEFAULT '10:00',
+	`close_time` VARCHAR(10) NULL DEFAULT '24:00',
+	`plan` TEXT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
