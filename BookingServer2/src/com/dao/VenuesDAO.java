@@ -122,7 +122,7 @@ public class VenuesDAO {
 		return venues;
 	}
 	
-	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, Integer tableNumber) {
+	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		int qResult = 0;
 		Connection con = null;
@@ -136,11 +136,7 @@ public class VenuesDAO {
 			ps.setTimestamp(4, new Timestamp(bookingTime.getTime()));
 			ps.setByte(5, places);
 			ps.setString(6, notes);
-			if(tableNumber == null) {
-				ps.setNull(7, Types.INTEGER);
-			} else {
-				ps.setInt(7, tableNumber);
-			}
+			ps.setString(7, tableNumbers);
 			qResult = ps.executeUpdate();
 			if(qResult > 0) {
 				result.put("status", "success");
@@ -219,10 +215,14 @@ public class VenuesDAO {
 			if(rs.next()) {
 				booking = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
 						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
-				int tableNumber = rs.getInt("table_no");
-				if(tableNumber != 0) {
-					booking.setTableNumber(tableNumber);
+				String sTableNumbers = rs.getString("table_no");				
+				List<Integer> tableNumbers = new ArrayList<Integer>();
+				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
+					for(String sNum : sTableNumbers.split(",")) {
+						tableNumbers.add(Integer.valueOf(sNum));
+					}				
 				}
+				booking.setTableNumbers(tableNumbers);				
 			}
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
@@ -320,10 +320,14 @@ public class VenuesDAO {
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
 						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
-				int tableNumber = rs.getInt("table_no");
-				if(tableNumber != 0) {
-					b.setTableNumber(tableNumber);
+				String sTableNumbers = rs.getString("table_no");
+				List<Integer> bookedTables = new ArrayList<Integer>();
+				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
+					for(String sNum: sTableNumbers.split(",")) {
+						bookedTables.add(Integer.valueOf(sNum));
+					}				
 				}
+				b.setTableNumbers(bookedTables);				
 				pendingBookings.add(b);
 			}
 			result.put("status", "success");
@@ -378,9 +382,12 @@ public class VenuesDAO {
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
 						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
-				int tableNumber = rs.getInt("table_no");
-				if(tableNumber != 0) {
-					b.setTableNumber(tableNumber);
+				String sTableNumbers = rs.getString("table_no");
+				List<Integer> bookedTables = new ArrayList<Integer>();
+				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
+					for(String sNum : sTableNumbers.split(",")) {
+						bookedTables.add(Integer.valueOf(sNum));
+					}
 				}
 				bookings.add(b);
 			}

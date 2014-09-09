@@ -1,6 +1,7 @@
 package com.beans;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Booking {
 
@@ -13,7 +14,7 @@ public class Booking {
 	private int status;
 	private String notes;
 	private Timestamp bookingCreated;
-	private Integer tableNumber;
+	private List<Integer> tableNumbers;
 	
 	public int getId() {
 		return id;
@@ -87,12 +88,12 @@ public class Booking {
 		this.bookingCreated = bookingCreated;
 	}
 	
-	public Integer getTableNumber() {
-		return tableNumber;
+	public List<Integer> getTableNumbers() {
+		return tableNumbers;
 	}
 
-	public void setTableNumber(Integer tableNumber) {
-		this.tableNumber = tableNumber;
+	public void setTableNumbers(List<Integer> tableNumbers) {
+		this.tableNumbers = tableNumbers;
 	}
 	
 	public Booking() {

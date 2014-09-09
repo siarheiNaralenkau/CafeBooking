@@ -19,7 +19,7 @@ import com.google.gson.Gson;
  * Puts a booking request in some cafe, restaurant, bar or club.
  * Requires POST request.
  * Example:
- * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumber=1
+ * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3
  */
 
 public class BookPlaceServlet extends HttpServlet {
@@ -31,7 +31,7 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String PLACES = "places";
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
-	private static final String TABLE_NUMBER = "tableNumber";
+	private static final String TABLE_NUMBERS = "tableNumbers";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -41,8 +41,7 @@ public class BookPlaceServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("application/json;charset=utf-8");
 		String sBookingTime = "";
-		String sVenueId;
-		Integer tableNumber = null;
+		String sVenueId;		
 		int venueId = 0;
 		try {
 			request.setCharacterEncoding("UTF-8");
@@ -59,16 +58,14 @@ public class BookPlaceServlet extends HttpServlet {
 			Date bookingDate = sdf.parse(sBookingTime);
 			byte places = Byte.valueOf(request.getParameter(PLACES));
 			String notes = "";
+			String tableNumbers = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);
 			}
-			if(request.getParameterMap().containsKey(TABLE_NUMBER)) {
-				String sTableNumber = request.getParameter(TABLE_NUMBER);
-				if(sTableNumber != null && !sTableNumber.isEmpty()) {
-					tableNumber = Integer.valueOf(request.getParameter(TABLE_NUMBER));
-				}
+			if(request.getParameterMap().containsKey(TABLE_NUMBERS)) {
+				tableNumbers = request.getParameter(TABLE_NUMBERS);				
 			}
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumber);
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers);
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	
 			response.getWriter().write(jsonResult);
