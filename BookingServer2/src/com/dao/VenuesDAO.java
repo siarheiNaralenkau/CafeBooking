@@ -128,27 +128,33 @@ public class VenuesDAO {
 		Connection con = null;
 		PreparedStatement ps = null;		
 		try {
-			con = dataSource.getConnection();
-			ps = con.prepareStatement(BOOK_QUERY);
-			ps.setInt(1, venue_id);
-			ps.setString(2, visitorName);
-			ps.setString(3, visitorPhone);
-			ps.setTimestamp(4, new Timestamp(bookingTime.getTime()));
-			ps.setByte(5, places);
-			ps.setString(6, notes);
-			ps.setString(7, tableNumbers);
-			qResult = ps.executeUpdate();
-			if(qResult > 0) {
-				result.put("status", "success");
-				result.put("places_booked", places);
-				ps = con.prepareStatement(GET_LAST_AUTOINCREMENT);
-				ResultSet rs = ps.executeQuery();
-				if(rs.next()) {
-					int bookingId = rs.getInt("NEW_ID");
-					writeHistory(con, bookingId, (byte)1);
-					result.put("bookingId", bookingId);
-				}				
-			} 
+			Venue v = getVenueById(venue_id);
+			if(v == null) {
+				result.put("status", "failure");
+				result.put("error", "There is no venue with id " + venue_id);
+			} else {
+				con = dataSource.getConnection();
+				ps = con.prepareStatement(BOOK_QUERY);
+				ps.setInt(1, venue_id);
+				ps.setString(2, visitorName);
+				ps.setString(3, visitorPhone);
+				ps.setTimestamp(4, new Timestamp(bookingTime.getTime()));
+				ps.setByte(5, places);
+				ps.setString(6, notes);
+				ps.setString(7, tableNumbers);
+				qResult = ps.executeUpdate();
+				if(qResult > 0) {
+					result.put("status", "success");
+					result.put("places_booked", places);
+					ps = con.prepareStatement(GET_LAST_AUTOINCREMENT);
+					ResultSet rs = ps.executeQuery();
+					if(rs.next()) {
+						int bookingId = rs.getInt("NEW_ID");
+						writeHistory(con, bookingId, (byte)1);
+						result.put("bookingId", bookingId);
+					}				
+				} 
+			}
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
@@ -317,18 +323,25 @@ public class VenuesDAO {
 			ps = con.prepareStatement(PENDING_BOOKINGS_QUERY);
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
+			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
 						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
-				String sTableNumbers = rs.getString("table_no");
-				List<Integer> bookedTables = new ArrayList<Integer>();
-				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
-					for(String sNum: sTableNumbers.split(",")) {
-						bookedTables.add(Integer.valueOf(sNum));
-					}				
+				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
+				long createdTime = b.getBookingCreated().getTime();
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {					
+					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
+				} else {
+					String sTableNumbers = rs.getString("table_no");
+					List<Integer> bookedTables = new ArrayList<Integer>();
+					if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
+						for(String sNum: sTableNumbers.split(",")) {
+							bookedTables.add(Integer.valueOf(sNum));
+						}				
+					}
+					b.setTableNumbers(bookedTables);				
+					pendingBookings.add(b);
 				}
-				b.setTableNumbers(bookedTables);				
-				pendingBookings.add(b);
 			}
 			result.put("status", "success");
 			result.put("pendingBookings", pendingBookings);			
@@ -379,9 +392,10 @@ public class VenuesDAO {
 			ps = con.prepareStatement(query);
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
+			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));				
 				String sTableNumbers = rs.getString("table_no");
 				List<Integer> bookedTables = new ArrayList<Integer>();
 				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
@@ -389,7 +403,15 @@ public class VenuesDAO {
 						bookedTables.add(Integer.valueOf(sNum));
 					}
 				}
-				bookings.add(b);
+				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
+				long createdTime = b.getBookingCreated().getTime();
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {
+					b.setStatus(BookingStatus.REJECTED.getValue());
+					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
+				}
+				if(b.getStatus() == filterStatus || filterStatus == Consts.STATUS_ALL) {
+					bookings.add(b);
+				}
 			}
 			result.put("status", "success");
 			result.put("venueId", venueId);
