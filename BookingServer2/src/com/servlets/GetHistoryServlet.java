@@ -21,8 +21,8 @@ public class GetHistoryServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");		
+//		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
 		Map<String, Object> bookingHistory = VenuesDAO.getBookingHistory(venueId);
 		Gson gson = new Gson();

@@ -26,8 +26,8 @@ public class CheckBookingStatusServlet extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Map<String, Object> responseMap = new HashMap<String, Object>();
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");
+//		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");
 		
 		int bookingId = Integer.valueOf(request.getParameter("bookingId"));
 		Booking booking = VenuesDAO.getBookingById(bookingId);		

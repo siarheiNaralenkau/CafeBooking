@@ -27,8 +27,8 @@ public class SetScheduleServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json;charset=utf-8");	
+//		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");	
 		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
 		String sSchedule = request.getParameter("schedule");
