@@ -1,6 +1,8 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,11 +45,10 @@ public class BookPlaceServlet extends HttpServlet {
 		String sBookingTime = "";
 		String sVenueId;		
 		int venueId = 0;
-		try {
-			request.setCharacterEncoding("UTF-8");
+		try {			
 			sVenueId = request.getParameter(VENUE_ID);
 			venueId = Integer.valueOf(sVenueId);
-			String visitorName = request.getParameter(VISITOR_NAME);
+			String visitorName = URLDecoder.decode(request.getParameter(VISITOR_NAME), "UTF-8");			
 			String visitorPhone = request.getParameter(VISITOR_PHONE);
 			// Booking time in format "DD-MM-YYYY HH:mm".
 			sBookingTime = request.getParameter(BOOKING_TIME);
@@ -60,7 +61,7 @@ public class BookPlaceServlet extends HttpServlet {
 			String notes = "";
 			String tableNumbers = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
-				notes = request.getParameter(NOTES);
+				notes = URLDecoder.decode(request.getParameter(NOTES), "UTF-8");
 			}
 			if(request.getParameterMap().containsKey(TABLE_NUMBERS)) {
 				tableNumbers = request.getParameter(TABLE_NUMBERS);				
