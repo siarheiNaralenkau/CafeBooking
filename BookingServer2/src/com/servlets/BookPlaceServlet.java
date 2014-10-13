@@ -48,7 +48,8 @@ public class BookPlaceServlet extends HttpServlet {
 		try {			
 			sVenueId = request.getParameter(VENUE_ID);
 			venueId = Integer.valueOf(sVenueId);
-			String visitorName = URLDecoder.decode(request.getParameter(VISITOR_NAME), "UTF-8");			
+			String visitorName = request.getParameter(VISITOR_NAME);
+			System.out.println("Visitor name: " + visitorName);
 			String visitorPhone = request.getParameter(VISITOR_PHONE);
 			// Booking time in format "DD-MM-YYYY HH:mm".
 			sBookingTime = request.getParameter(BOOKING_TIME);
@@ -61,7 +62,8 @@ public class BookPlaceServlet extends HttpServlet {
 			String notes = "";
 			String tableNumbers = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
-				notes = URLDecoder.decode(request.getParameter(NOTES), "UTF-8");
+				notes = request.getParameter(NOTES);
+				System.out.println("Notes: " + notes);
 			}
 			if(request.getParameterMap().containsKey(TABLE_NUMBERS)) {
 				tableNumbers = request.getParameter(TABLE_NUMBERS);				
