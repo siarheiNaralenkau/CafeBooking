@@ -7,7 +7,7 @@
         type="javax.sql.DataSource" 
         username="admin" 
         password="qwerty12Q"
-        driverClassName="com.mysql.jdbc.Driver"        
+        driverClassName="com.mysql.jdbc.Driver"                
         url="jdbc:mysql://localhost:3306/bronimesto"
         maxActive="10" 
         maxIdle="4" />
