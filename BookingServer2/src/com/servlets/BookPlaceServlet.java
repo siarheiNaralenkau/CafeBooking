@@ -1,7 +1,6 @@
 package com.servlets;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,8 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.BasicConfigurator;
 /**
  * Puts a booking request in some cafe, restaurant, bar or club.
  * Requires POST request.
@@ -33,9 +30,7 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String PLACES = "places";
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
-	private static final String TABLE_NUMBERS = "tableNumbers";	
-	
-	static Logger logger = Logger.getLogger(BookPlaceServlet.class);
+	private static final String TABLE_NUMBERS = "tableNumbers";			
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -48,8 +43,7 @@ public class BookPlaceServlet extends HttpServlet {
 		String sVenueId;		
 		int venueId = 0;
 		try {			
-			sVenueId = request.getParameter(VENUE_ID);
-			logger.debug("Booking Venue Id: " + sVenueId);
+			sVenueId = request.getParameter(VENUE_ID);			
 			venueId = Integer.valueOf(sVenueId);
 			String visitorName = request.getParameter(VISITOR_NAME);
 			System.out.println("Visitor name: " + visitorName);
