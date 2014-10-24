@@ -22,8 +22,7 @@ public class VenueDetailsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
 		

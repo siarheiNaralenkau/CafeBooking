@@ -28,8 +28,7 @@ public class SwitchInSystemStatusServlet extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");	
+		response.setContentType("application/json; charset=UTF-8");	
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
 		boolean inSystemStatus = Boolean.valueOf(request.getParameter("inSystem"));		
 		Map<Object, Object> result = VenuesDAO.switchInSystem(venueId, inSystemStatus);

@@ -35,8 +35,7 @@ public class UpdateBookingServlet extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		if(!request.getParameterMap().containsKey("places") && !request.getParameterMap().containsKey("bookingTime")) {

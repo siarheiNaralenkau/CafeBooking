@@ -24,8 +24,7 @@ public class SetVenueAdminServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
 		String venueAdmin = request.getParameter("venueAdmin");

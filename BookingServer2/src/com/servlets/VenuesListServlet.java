@@ -28,8 +28,6 @@ public class VenuesListServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;  	
 		
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-//		request.setCharacterEncoding("UTF-8");
-		
 		disableCaching(response);
 		
 		Double lat = null, lng = null;
@@ -49,7 +47,7 @@ public class VenuesListServlet extends HttpServlet {
 		}
 		List<Venue> nearestVenues = VenuesDAO.getVenues(lat, lng, limit);									
 		if(responseType.equals("json")) {
-			response.setContentType("application/json");
+			response.setContentType("application/json; charset=UTF-8");
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(nearestVenues);			
 			response.getWriter().write(jsonResult);

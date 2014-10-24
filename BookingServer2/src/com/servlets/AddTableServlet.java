@@ -36,8 +36,7 @@ public class AddTableServlet extends HttpServlet {
 
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		
 		Integer venueId = Integer.valueOf(request.getParameter(VENUE_ID));
 		Integer places = Integer.valueOf(request.getParameter(PLACES));

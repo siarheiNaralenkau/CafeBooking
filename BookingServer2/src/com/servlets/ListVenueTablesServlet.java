@@ -30,8 +30,7 @@ public class ListVenueTablesServlet extends HttpServlet {
 	private static final String POSITION_NOTES = "positionNotes";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		
 		Integer venueId = Integer.valueOf(request.getParameter(VENUE_ID));
 		boolean freeOnly = false;

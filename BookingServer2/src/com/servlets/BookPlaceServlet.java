@@ -1,10 +1,15 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,16 +42,21 @@ public class BookPlaceServlet extends HttpServlet {
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {	
-		request.setCharacterEncoding("UTF-8");
-		response.setContentType("application/json");
+		response.setContentType("application/json; charset=UTF-8");
 		String sBookingTime = "";
 		String sVenueId;		
 		int venueId = 0;
 		try {			
+			Logger logger = Logger.getLogger(BookPlaceServlet.class.getName());
 			sVenueId = request.getParameter(VENUE_ID);			
-			venueId = Integer.valueOf(sVenueId);
-			String visitorName = request.getParameter(VISITOR_NAME);
-			System.out.println("Visitor name: " + visitorName);
+			venueId = Integer.valueOf(sVenueId);	
+			String tomcatHome = System.getProperty("catalina.base");			
+			Handler fileHandler = new FileHandler(tomcatHome + "/logs/bronimesto.log");			
+			Handler consoleHandler = new ConsoleHandler();			
+			logger.addHandler(fileHandler);
+			logger.addHandler(consoleHandler);			
+			String visitorName = request.getParameter(VISITOR_NAME);														
+			logger.info("Visitor name before decoding: " + visitorName);			
 			String visitorPhone = request.getParameter(VISITOR_PHONE);
 			// Booking time in format "DD-MM-YYYY HH:mm".
 			sBookingTime = request.getParameter(BOOKING_TIME);
@@ -66,6 +76,7 @@ public class BookPlaceServlet extends HttpServlet {
 				tableNumbers = request.getParameter(TABLE_NUMBERS);				
 			}
 			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers);
+			result.put("Person name", visitorName);
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	
 			response.getWriter().write(jsonResult);
