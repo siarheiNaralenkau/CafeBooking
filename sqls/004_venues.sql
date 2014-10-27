@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS `venues`;
-
 CREATE TABLE `venues` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`rating` DECIMAL(4,2) NULL DEFAULT '0.00',
+	`free_tables_amount` INT(11) NULL DEFAULT '0',
 	`unique_id` VARCHAR(35) NULL DEFAULT NULL,
 	`name` VARCHAR(100) NULL DEFAULT NULL,
 	`phone` VARCHAR(25) NULL DEFAULT NULL,
@@ -19,6 +19,10 @@ CREATE TABLE `venues` (
 	`open_time` VARCHAR(10) NULL DEFAULT '10:00',
 	`close_time` VARCHAR(10) NULL DEFAULT '24:00',
 	`plan` TEXT NULL,
+	`cuisine` VARCHAR(50) NULL DEFAULT NULL,
+	`has_wifi` TINYINT(1) NULL DEFAULT NULL,
+	`take_credic_carts` TINYINT(1) NULL DEFAULT NULL,
+	`has_outdoors_seats` TINYINT(1) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
