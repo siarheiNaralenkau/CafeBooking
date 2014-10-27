@@ -1,6 +1,7 @@
-CREATE TABLE `booking_status` (
-	`id` TINYINT(4) NOT NULL,
-	`status` VARCHAR(10) NOT NULL,
+CREATE TABLE `users` (
+	`id` INT(11) NOT NULL AUTO_INCREMENT,
+	`username` VARCHAR(50) NOT NULL,
+	`password` VARCHAR(20) NOT NULL,
 	PRIMARY KEY (`id`)
 )
 COLLATE='utf8_general_ci'
