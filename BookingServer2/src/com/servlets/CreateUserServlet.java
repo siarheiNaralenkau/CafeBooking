@@ -39,7 +39,7 @@ public class CreateUserServlet extends HttpServlet {
 		if(!request.getParameterMap().containsKey(E_MAIL)) {
 			result.put("status", "failure");
 			result.put("error", "Не указано имя пользователя!");
-		} else if(!request.getParameterMap().containsKey("PASSWORD")) {
+		} else if(!request.getParameterMap().containsKey(PASSWORD)) {
 			result.put("status", "failure");
 			result.put("error", "Не задан пароль!");
 		} else {
@@ -49,10 +49,10 @@ public class CreateUserServlet extends HttpServlet {
 				name = request.getParameter(NAME);
 			}
 			if(request.getParameterMap().containsKey(SURNAME)) {
-				name = request.getParameter(SURNAME);
+				surname = request.getParameter(SURNAME);
 			}
 			if(request.getParameterMap().containsKey(PHONE)) {
-				name = request.getParameter(PHONE);
+				phone = request.getParameter(PHONE);
 			}
 			result = UserDAO.registerUser(name, surname, eMail, phone, password);
 		}
