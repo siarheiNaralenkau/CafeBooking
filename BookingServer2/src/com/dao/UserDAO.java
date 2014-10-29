@@ -21,6 +21,8 @@ public class UserDAO {
 	private static final String CHANGE_PASSWORD_SQL = "UPDATE users SET password = ? WHERE email = ?";
 	private static final String GET_PASSWORD_SQL = "SELECT password from users where email = ?";
 	private static final String CHECK_PASSWORD_SQL = "SELECT id, password FROM users WHERE email = ?";
+	private static final String ADD_BONUS_SCORES_SQL = "UPDATE users set bonus_scores = bonus_scores + ? WHERE id = ?";
+	private static final String REMOVE_BONUS_SCORES_SQL = "UPDATE users set bonus_scores = bonus_scores - ? WHERE id = ?";
 	
 	static {		
 		try {
@@ -145,6 +147,46 @@ public class UserDAO {
 				result.put("status", "failure");
 				result.put("error", "Пользователь " + username + " не существует");
 			}
+		} catch(SQLException e) {			
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> addScores(int userId, int scores) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(ADD_BONUS_SCORES_SQL);
+			ps.setInt(1, scores);
+			ps.setInt(2, userId);
+			ps.executeUpdate();			
+			result.put("status", "success");			
+		} catch(SQLException e) {			
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> removeScores(int userId, int scores) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(REMOVE_BONUS_SCORES_SQL);
+			ps.setInt(1, scores);
+			ps.setInt(2, userId);
+			ps.executeUpdate();			
+			result.put("status", "success");			
 		} catch(SQLException e) {			
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
