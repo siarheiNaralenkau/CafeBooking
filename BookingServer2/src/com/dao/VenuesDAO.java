@@ -56,7 +56,9 @@ public class VenuesDAO {
 	private static final String SET_VENUE_PLAN_QUERY = "UPDATE venues set plan = ? WHERE id = ?";
 	private static final String VENUE_DETAILS_QUERY = "SELECT unique_id, open_time, close_time, plan FROM venues where id = ?";
 	private static final String VENUE_PHOTOS_QUERY = "SELECT url FROM venue_photos WHERE venue_id = ?";
-		
+	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
+	
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -732,6 +734,77 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		return result;
+	}
+	
+	public static Map<String, List<Venue>> getGroupedVenues() {
+		Map<String, List<Venue>> result = new HashMap<String, List<Venue>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(VENUES_BY_CATEGORY_SQL);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				String category = rs.getString("category");
+				Venue v = new Venue();
+				v.setId(rs.getInt("id"));
+				v.setName(rs.getString("name"));
+				if(result.containsKey(category)) {
+					result.get(category).add(v);
+				} else {
+					List<Venue> venuesOfCategory = new ArrayList<Venue>();
+					venuesOfCategory.add(v);
+					result.put(category, venuesOfCategory);
+				}
+			}
+		} catch(SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}	
+	
+	public static Venue getVenueForEdit(int venueId) {
+		Venue venue = new Venue();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_VENUE_QUERY);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				venue.setId(rs.getInt("id"));
+				venue.setRating(rs.getFloat("rating"));
+				venue.setFreeTablesAmount(rs.getInt("free_tables_amount"));
+				venue.setUniqueId(rs.getString("unique_id"));
+				venue.setName(rs.getString("name"));
+				venue.setPhone(rs.getString("phone"));
+				venue.setAddress(rs.getString("address"));
+				venue.setCity(rs.getString("city"));
+				venue.setCountry(rs.getString("country"));
+				venue.setLat(rs.getFloat("latitude"));
+				venue.setLng(rs.getFloat("longitude"));
+				venue.setCategory(rs.getString("category"));
+				venue.setHasFreeSeats(rs.getBoolean("has_free_seats"));
+				venue.setAdminUser(rs.getString("admin_user"));
+				venue.setInBookingSystem(rs.getBoolean("in_booking_system"));
+				venue.setTablesAmount(rs.getInt("tables_amount"));
+				venue.setIconUrl(rs.getString("icon_url"));
+				venue.setOpenTime(rs.getString("open_time"));
+				venue.setCloseTime(rs.getString("close_time"));
+				venue.setPlan(rs.getString("plan"));
+				venue.setCuisine(rs.getString("cuisine"));
+				venue.setHasWifi(rs.getBoolean("has_wifi"));
+				venue.setTakeCreditCards(rs.getBoolean("take_credic_carts"));
+				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
+			}
+		} catch(SQLException e) {
+			
+		} finally {
+			closeConnection(con, ps);
+		}
+		return venue;
 	}
 	
 	private static void closeConnection(Connection con, PreparedStatement ps) {

@@ -112,7 +112,97 @@ public class Venue {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public float getRating() {
+		return rating;
+	}
+
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+
+	public int getFreeTablesAmount() {
+		return freeTablesAmount;
+	}
+
+	public void setFreeTablesAmount(int freeTablesAmount) {
+		this.freeTablesAmount = freeTablesAmount;
+	}
+
+	public String getAdminUser() {
+		return adminUser;
+	}
+
+	public void setAdminUser(String adminUser) {
+		this.adminUser = adminUser;
+	}
+
+	public int getTablesAmount() {
+		return tablesAmount;
+	}
+
+	public void setTablesAmount(int tablesAmount) {
+		this.tablesAmount = tablesAmount;
+	}
+
+	public String getOpenTime() {
+		return openTime;
+	}
+
+	public void setOpenTime(String openTime) {
+		this.openTime = openTime;
+	}
+
+	public String getCloseTime() {
+		return closeTime;
+	}
+
+	public void setCloseTime(String closeTime) {
+		this.closeTime = closeTime;
+	}
+
+	public String getPlan() {
+		return plan;
+	}
+
+	public void setPlan(String plan) {
+		this.plan = plan;
+	}
+
+	public String getCuisine() {
+		return cuisine;
+	}
+
+	public void setCuisine(String cuisine) {
+		this.cuisine = cuisine;
+	}
+
+	public boolean isHasWifi() {
+		return hasWifi;
+	}
+
+	public void setHasWifi(boolean hasWifi) {
+		this.hasWifi = hasWifi;
+	}
+
+	public boolean isTakeCreditCards() {
+		return takeCreditCards;
+	}
+
+	public void setTakeCreditCards(boolean takeCreditCards) {
+		this.takeCreditCards = takeCreditCards;
+	}
+
+	public boolean isHasOutdoorsSeats() {
+		return hasOutdoorsSeats;
+	}
+
+	public void setHasOutdoorsSeats(boolean hasOutdoorsSeats) {
+		this.hasOutdoorsSeats = hasOutdoorsSeats;
+	}
+
 	private long id;
+	private float rating;
+	private int freeTablesAmount;	
 	private String uniqueId;
 	private String name;
 	private String phone;
@@ -123,7 +213,17 @@ public class Venue {
 	private double lng;
 	private String category;
 	private boolean hasFreeSeats;
-	private double distance;	
+	private String adminUser;	
 	private boolean inBookingSystem;
+	private int tablesAmount;
 	private String iconUrl;
+	private String openTime;
+	private String closeTime;
+	private String plan;
+	private String cuisine;
+	private boolean hasWifi;
+	private boolean takeCreditCards;
+	private boolean hasOutdoorsSeats;
+	
+	private double distance;
 }
