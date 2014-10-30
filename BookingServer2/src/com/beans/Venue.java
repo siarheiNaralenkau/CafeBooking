@@ -1,5 +1,7 @@
 package com.beans;
 
+import java.util.List;
+
 public class Venue {
 
 	public Venue(long id, String uniqueId, String name, String phone,
@@ -200,6 +202,14 @@ public class Venue {
 		this.hasOutdoorsSeats = hasOutdoorsSeats;
 	}
 
+	public List<VenuePhoto> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<VenuePhoto> photos) {
+		this.photos = photos;
+	}
+
 	private long id;
 	private float rating;
 	private int freeTablesAmount;	
@@ -224,6 +234,7 @@ public class Venue {
 	private boolean hasWifi;
 	private boolean takeCreditCards;
 	private boolean hasOutdoorsSeats;
+	private List<VenuePhoto> photos;
 	
 	private double distance;
 }

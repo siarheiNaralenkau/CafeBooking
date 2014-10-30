@@ -1,3 +1,4 @@
+<%@page import="com.beans.VenuePhoto"%>
 <%@page import="com.beans.Venue"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -14,6 +15,7 @@
 	<%
 		Venue venue = (Venue)request.getAttribute("venue");
 	%>
+	<div>
 	<form method="post" action="./save_venue_changes">	
 			
 		<input type="hidden" name="venueId" value="<%=venue.getId()%>"/>
@@ -164,5 +166,23 @@
 		</table>
 		<input type="submit" value="Сохранить">
 	</form>
+	</div>
+	<div id="venuePhotos">
+		<table>
+			<tbody>
+			<tr>
+				<%
+					List<VenuePhoto> photos = venue.getPhotos();
+					for(VenuePhoto photo: photos) {					
+				%>
+				<td width="100px" height="100px">
+					<img width="100px" height="100px" src="<%=photo.getUrl()%>" data-id="<%=photo.getId()%>">
+					<a href="./delete_venue_photo?photoId=<%=photo.getId()%>&venueId=<%=venue.getId()%>">Удалить</a>
+				</td>
+				<% } %>
+			</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>

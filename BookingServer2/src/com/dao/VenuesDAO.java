@@ -24,6 +24,7 @@ import com.beans.HistoryEnrty;
 import com.beans.ScheduleEntry;
 import com.beans.Venue;
 import com.beans.VenueDistanceComp;
+import com.beans.VenuePhoto;
 import com.beans.VenueTable;
 import com.constants.BookingStatus;
 import com.constants.Consts;
@@ -61,7 +62,8 @@ public class VenuesDAO {
 	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, has_free_seats = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
 			+ "has_outdoors_seats = ?, category = ? WHERE id = ?";
-	
+	private static final String GET_VENUE_PHOTOS_SQL = "SELECT id, url FROM venue_photos WHERE venue_id = ?";
+	private static final String DELETE_VENUE_PHOTO_SQL = "DELETE FROM venue_photos WHERE id = ?";
 	
 	private static DataSource dataSource;
 	
@@ -780,10 +782,11 @@ public class VenuesDAO {
 			ResultSet rs = ps.executeQuery();
 			ResultSetMetaData rsMeta = rs.getMetaData();		
 			if(rs.next()) {
+				String venueUid = rs.getString("unique_id");
 				venue.setId(rs.getInt("id"));
 				venue.setRating(rs.getFloat("rating"));
 				venue.setFreeTablesAmount(rs.getInt("free_tables_amount"));
-				venue.setUniqueId(rs.getString("unique_id"));
+				venue.setUniqueId(venueUid);
 				venue.setName(rs.getString("name"));
 				venue.setPhone(rs.getString("phone"));
 				venue.setAddress(rs.getString("address"));
@@ -804,6 +807,9 @@ public class VenuesDAO {
 				venue.setHasWifi(rs.getBoolean("has_wifi"));
 				venue.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
 				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
+				
+				List<VenuePhoto> photos = getVenuePhotos(con, venueUid);
+				venue.setPhotos(photos);
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -843,6 +849,38 @@ public class VenuesDAO {
 			e.printStackTrace();
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static List<VenuePhoto> getVenuePhotos(Connection con, String venueUid) throws SQLException {
+		PreparedStatement ps = con.prepareStatement(GET_VENUE_PHOTOS_SQL);;
+		List<VenuePhoto> photos = new ArrayList<VenuePhoto>();		
+		ps.setString(1, venueUid);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()) {
+			photos.add(new VenuePhoto(rs.getInt("id"), rs.getString("url")));
+		}
+		rs.close();
+		ps.close();
+		return photos;
+	}
+	
+	public static boolean deleteVenuePhoto(int photoId) {
+		boolean result;
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(DELETE_VENUE_PHOTO_SQL);
+			ps.setInt(1, photoId);
+			ps.executeUpdate();
+			result = true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+			result = false;
 		} finally {
 			closeConnection(con, ps);
 		}
