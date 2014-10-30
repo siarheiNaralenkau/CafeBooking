@@ -3,6 +3,7 @@ package com.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -57,6 +58,9 @@ public class VenuesDAO {
 	private static final String VENUE_DETAILS_QUERY = "SELECT unique_id, open_time, close_time, plan FROM venues where id = ?";
 	private static final String VENUE_PHOTOS_QUERY = "SELECT url FROM venue_photos WHERE venue_id = ?";
 	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
+	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, has_free_seats = ?, admin_user = ?, "
+			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
+			+ "has_outdoors_seats = ?, category = ? WHERE id = ?";
 	
 	
 	private static DataSource dataSource;
@@ -772,7 +776,9 @@ public class VenuesDAO {
 		try {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(GET_VENUE_QUERY);
+			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
+			ResultSetMetaData rsMeta = rs.getMetaData();		
 			if(rs.next()) {
 				venue.setId(rs.getInt("id"));
 				venue.setRating(rs.getFloat("rating"));
@@ -796,15 +802,51 @@ public class VenuesDAO {
 				venue.setPlan(rs.getString("plan"));
 				venue.setCuisine(rs.getString("cuisine"));
 				venue.setHasWifi(rs.getBoolean("has_wifi"));
-				venue.setTakeCreditCards(rs.getBoolean("take_credic_carts"));
+				venue.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
 				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
 			}
 		} catch(SQLException e) {
-			
+			e.printStackTrace();
 		} finally {
 			closeConnection(con, ps);
 		}
 		return venue;
+	}
+	
+	public static Map<String, Object> updateVenue(int venueId, String name, String phone, String address, 
+			boolean hasFreeSeats, String adminUser, int tablesAmount, String iconUrl, String openTime, 
+			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(UPDATE_VENUE_SQL);
+			ps.setString(1, name);
+			ps.setString(2, phone);
+			ps.setString(3, address);
+			ps.setBoolean(4, hasFreeSeats);
+			ps.setString(5, adminUser);
+			ps.setInt(6, tablesAmount);
+			ps.setString(7, iconUrl);
+			ps.setString(8, openTime);
+			ps.setString(9, closeTime);
+			ps.setString(10, cuisine);
+			ps.setBoolean(11, hasWifi);
+			ps.setBoolean(12, takeCreditCards);
+			ps.setBoolean(13, hasOutdoorsSeats);
+			ps.setString(14, category);
+			ps.setInt(15, venueId);
+			ps.executeUpdate();
+			result.put("status", "success");
+		} catch(SQLException e) {
+			e.printStackTrace();
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
 	
 	private static void closeConnection(Connection con, PreparedStatement ps) {
