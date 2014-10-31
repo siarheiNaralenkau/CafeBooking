@@ -210,6 +210,14 @@ public class Venue {
 		this.photos = photos;
 	}
 
+	public String getAdminPassword() {
+		return adminPassword;
+	}
+
+	public void setAdminPassword(String adminPassword) {
+		this.adminPassword = adminPassword;
+	}
+
 	private long id;
 	private float rating;
 	private int freeTablesAmount;	
@@ -224,6 +232,7 @@ public class Venue {
 	private String category;
 	private boolean hasFreeSeats;
 	private String adminUser;	
+	private String adminPassword;
 	private boolean inBookingSystem;
 	private int tablesAmount;
 	private String iconUrl;

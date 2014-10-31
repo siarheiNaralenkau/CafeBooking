@@ -61,7 +61,7 @@ public class VenuesDAO {
 	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
 	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, has_free_seats = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
-			+ "has_outdoors_seats = ?, category = ? WHERE id = ?";
+			+ "has_outdoors_seats = ?, category = ?, admin_password = ? WHERE id = ?";
 	private static final String GET_VENUE_PHOTOS_SQL = "SELECT id, url FROM venue_photos WHERE venue_id = ?";
 	private static final String DELETE_VENUE_PHOTO_SQL = "DELETE FROM venue_photos WHERE id = ?";
 	
@@ -807,7 +807,7 @@ public class VenuesDAO {
 				venue.setHasWifi(rs.getBoolean("has_wifi"));
 				venue.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
 				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
-				
+				venue.setAdminPassword(rs.getString("admin_password"));
 				List<VenuePhoto> photos = getVenuePhotos(con, venueUid);
 				venue.setPhotos(photos);
 			}
@@ -821,7 +821,7 @@ public class VenuesDAO {
 	
 	public static Map<String, Object> updateVenue(int venueId, String name, String phone, String address, 
 			boolean hasFreeSeats, String adminUser, int tablesAmount, String iconUrl, String openTime, 
-			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category) {
+			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category, String adminPassword) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -842,7 +842,8 @@ public class VenuesDAO {
 			ps.setBoolean(12, takeCreditCards);
 			ps.setBoolean(13, hasOutdoorsSeats);
 			ps.setString(14, category);
-			ps.setInt(15, venueId);
+			ps.setString(15, adminPassword);
+			ps.setInt(16, venueId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {

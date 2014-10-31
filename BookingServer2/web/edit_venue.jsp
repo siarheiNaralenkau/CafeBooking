@@ -103,7 +103,7 @@
 					<td>
 						<div class="field_div">
 							<label for="adminPassword">Пароль администратора:</label>
-							<input type="password" name="adminPassword" id="adminPassword"/>
+							<input type="text" name="adminPassword" id="adminPassword" value="<%=venue.getAdminPassword()%>"/>
 						</div>
 					</td>
 				</tr>
