@@ -173,13 +173,14 @@
 			<tr>
 				<%
 					List<VenuePhoto> photos = venue.getPhotos();
+					if(photos != null && photos.size() > 0) {
 					for(VenuePhoto photo: photos) {					
 				%>
 				<td width="100px" height="100px">
 					<img width="100px" height="100px" src="<%=photo.getUrl()%>" data-id="<%=photo.getId()%>">
 					<a href="./delete_venue_photo?photoId=<%=photo.getId()%>&venueId=<%=venue.getId()%>">Удалить</a>
 				</td>
-				<% } %>
+				<% } } %>
 			</tr>
 			</tbody>
 		</table>
