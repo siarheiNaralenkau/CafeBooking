@@ -21,8 +21,9 @@ CREATE TABLE `venues` (
 	`plan` TEXT NULL,
 	`cuisine` VARCHAR(50) NULL DEFAULT NULL,
 	`has_wifi` TINYINT(1) NULL DEFAULT NULL,
-	`take_credic_carts` TINYINT(1) NULL DEFAULT NULL,
+	`take_credit_cards` TINYINT(1) NULL DEFAULT NULL,
 	`has_outdoors_seats` TINYINT(1) NULL DEFAULT NULL,
+	`admin_password` VARCHAR(12) NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
