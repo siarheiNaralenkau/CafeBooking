@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 /**
  * Servlet implementation class CreateUserServlet
+ * http://localhost:8080/BookingServer2/create_user
  */
 @WebServlet("/create_user")
 public class CreateUserServlet extends HttpServlet {

@@ -23,6 +23,8 @@ public class UserDAO {
 	private static final String CHECK_PASSWORD_SQL = "SELECT id, password FROM users WHERE email = ?";
 	private static final String ADD_BONUS_SCORES_SQL = "UPDATE users set bonus_scores = bonus_scores + ? WHERE id = ?";
 	private static final String REMOVE_BONUS_SCORES_SQL = "UPDATE users set bonus_scores = bonus_scores - ? WHERE id = ?";
+	private static final String CREATE_REVIEW_SQL = "INSERT INTO reviews(venue_id, user_id, mark_food, mark_service, mark_atmosphere, mark_price_quality, "
+			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	static {		
 		try {
@@ -187,6 +189,33 @@ public class UserDAO {
 			ps.setInt(2, userId);
 			ps.executeUpdate();			
 			result.put("status", "success");			
+		} catch(SQLException e) {			
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> createReview(int venueId, int userId, float markFood, float markService, float markAtmosphere, float markPriceQuality,
+			String comentsGood, String comentsBad) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();	
+			ps = con.prepareStatement(CREATE_REVIEW_SQL);
+			ps.setInt(1, venueId);
+			ps.setInt(2, userId);
+			ps.setFloat(3, markFood);
+			ps.setFloat(4, markService);
+			ps.setFloat(5, markAtmosphere);
+			ps.setFloat(6, markPriceQuality);
+			ps.setString(7, comentsGood);
+			ps.setString(8, comentsBad);
+			ps.executeUpdate();
+			result.put("status", "success");
 		} catch(SQLException e) {			
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
