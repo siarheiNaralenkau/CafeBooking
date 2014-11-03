@@ -215,6 +215,8 @@ public class UserDAO {
 			ps.setString(7, comentsGood);
 			ps.setString(8, comentsBad);
 			ps.executeUpdate();
+			
+			// Update venue rating			
 			result.put("status", "success");
 		} catch(SQLException e) {			
 			result.put("status", "failure");

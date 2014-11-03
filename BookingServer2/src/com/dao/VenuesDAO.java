@@ -3,7 +3,6 @@ package com.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -55,15 +54,15 @@ public class VenuesDAO {
 	private static final String SWITCH_IN_SYSTEM_QUERY = "UPDATE venues set in_booking_system = ? WHERE id = ?";
 	private static final String ADD_TABLE_QUERY = "INSERT INTO tables(venue_id, x_pos, y_pos, places, number, position_notes, photo_url) "
 			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";		
-	private static final String SET_VENUE_PLAN_QUERY = "UPDATE venues set plan = ? WHERE id = ?";
-	private static final String VENUE_DETAILS_QUERY = "SELECT unique_id, open_time, close_time, plan FROM venues where id = ?";
-	private static final String VENUE_PHOTOS_QUERY = "SELECT url FROM venue_photos WHERE venue_id = ?";
+	private static final String SET_VENUE_PLAN_QUERY = "UPDATE venues set plan = ? WHERE id = ?";	
 	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
 	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, has_free_seats = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
 			+ "has_outdoors_seats = ?, category = ?, admin_password = ? WHERE id = ?";
 	private static final String GET_VENUE_PHOTOS_SQL = "SELECT id, url FROM venue_photos WHERE venue_id = ?";
 	private static final String DELETE_VENUE_PHOTO_SQL = "DELETE FROM venue_photos WHERE id = ?";
+	private static final String GET_VENUE_RATING_SQL = "SELECT AVG((mark_food + mark_service + mark_atmosphere + mark_price_quality)/4) as rating FROM reviews WHERE venue_id = ?";
+	private static final String GET_AVG_PAYMENT_SQL = "SELECT FLOOR(AVG(SPENT_MONEY)) as avg_payment FROM bookings WHERE venue_id = ?";
 	
 	private static DataSource dataSource;
 	
@@ -75,6 +74,20 @@ public class VenuesDAO {
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}				
+	}
+	
+	private static void closeConnection(Connection con, PreparedStatement ps) {
+		try {
+			if(ps != null) { 
+				ps.close();
+			}
+			if (con != null) {
+				con.close();
+			}
+		} catch (SQLException e) {
+			System.out.println("Unable to close connection!");
+			System.out.println(e.getMessage());
+		}			
 	}
 	
 	public static List<Venue> getVenues(Double lat, Double lng, Integer limit) {
@@ -708,30 +721,41 @@ public class VenuesDAO {
 		PreparedStatement ps = null;
 		try {
 			con = dataSource.getConnection();
-			ps = con.prepareStatement(VENUE_DETAILS_QUERY);
+			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
-			ResultSet venueRs = ps.executeQuery();
-			if(!venueRs.next()) {
-				result.put("status", "failure");
-				result.put("error", "Venue with id: " + venueId + " doesn't exist");
-			} else {
-				String venueUID = venueRs.getString("unique_id");
+			ResultSet rs = ps.executeQuery();			
+			if(rs.next()) {
+				Venue venue = new Venue();
+				String venueUid = rs.getString("unique_id");
+				venue.setId(rs.getInt("id"));
+				venue.setRating(rs.getFloat("rating"));
+				venue.setFreeTablesAmount(rs.getInt("free_tables_amount"));
+				venue.setUniqueId(venueUid);
+				venue.setName(rs.getString("name"));
+				venue.setPhone(rs.getString("phone"));
+				venue.setAddress(rs.getString("address"));
+				venue.setCity(rs.getString("city"));
+				venue.setCountry(rs.getString("country"));
+				venue.setLat(rs.getFloat("latitude"));
+				venue.setLng(rs.getFloat("longitude"));
+				venue.setCategory(rs.getString("category"));
+				venue.setHasFreeSeats(rs.getBoolean("has_free_seats"));				
+				venue.setTablesAmount(rs.getInt("tables_amount"));
+				venue.setIconUrl(rs.getString("icon_url"));
+				venue.setOpenTime(rs.getString("open_time"));
+				venue.setCloseTime(rs.getString("close_time"));
+				venue.setPlan(rs.getString("plan"));
+				venue.setCuisine(rs.getString("cuisine"));
+				venue.setHasWifi(rs.getBoolean("has_wifi"));
+				venue.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
+				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));				
+				List<VenuePhoto> photos = getVenuePhotos(con, venueUid);
+				venue.setPhotos(photos);
+				venue.setRating(getVenueRating(con, venueId));
+				venue.setAvgPayment(getVenueAvgPayment(con, venueId));
 				result.put("status", "success");
-				result.put("venueUID", venueUID);
-				result.put("open_time", venueRs.getString("open_time"));
-				result.put("close_time", venueRs.getString("close_time"));
-				result.put("plan", venueRs.getString("plan"));
-				venueRs.close();
-				List<String> photoURLs = new ArrayList<String>();
-				ps = con.prepareStatement(VENUE_PHOTOS_QUERY);
-				ps.setString(1, venueUID);
-				ResultSet photosRs = ps.executeQuery();
-				while(photosRs.next()) {
-					photoURLs.add(photosRs.getString("url"));
-				}
-				result.put("photos", photoURLs);
-				photosRs.close();
-			}
+				result.put("venue", venue);
+			}			
 		} catch(SQLException e) {
 			System.out.println("Error: " + e.getMessage());
 			result.put("status", "failure");
@@ -779,8 +803,7 @@ public class VenuesDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
-			ResultSet rs = ps.executeQuery();
-			ResultSetMetaData rsMeta = rs.getMetaData();		
+			ResultSet rs = ps.executeQuery();					
 			if(rs.next()) {
 				String venueUid = rs.getString("unique_id");
 				venue.setId(rs.getInt("id"));
@@ -869,6 +892,28 @@ public class VenuesDAO {
 		return photos;
 	}
 	
+	public static Float getVenueRating(Connection con, int venueId) throws SQLException {
+		Float rating = null;
+		PreparedStatement ps = con.prepareStatement(GET_VENUE_RATING_SQL);
+		ps.setInt(1, venueId);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			rating = rs.getFloat("rating");
+		}
+		return rating;
+	}
+	
+	public static Integer getVenueAvgPayment(Connection con, int venueId) throws SQLException {
+		Integer avgPayment = null;
+		PreparedStatement ps = con.prepareStatement(GET_AVG_PAYMENT_SQL);
+		ps.setInt(1, venueId);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next()) {
+			avgPayment = rs.getInt("avg_payment");
+		}
+		return avgPayment;
+	}
+	
 	public static boolean deleteVenuePhoto(int photoId) {
 		boolean result;
 		Connection con = null;
@@ -886,19 +931,6 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		return result;
-	}
-	
-	private static void closeConnection(Connection con, PreparedStatement ps) {
-		try {
-			if(ps != null) { 
-				ps.close();
-			}
-			if (con != null) {
-				con.close();
-			}
-		} catch (SQLException e) {
-			System.out.println("Unable to close connection!");
-			System.out.println(e.getMessage());
-		}			
-	}
+	}		
+		
 }

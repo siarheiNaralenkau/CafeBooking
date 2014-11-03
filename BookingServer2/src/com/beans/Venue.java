@@ -111,14 +111,13 @@ public class Venue {
 	}
 	
 	public Venue() {
-		// TODO Auto-generated constructor stub
 	}
 	
-	public float getRating() {
+	public Float getRating() {
 		return rating;
 	}
 
-	public void setRating(float rating) {
+	public void setRating(Float rating) {
 		this.rating = rating;
 	}
 
@@ -218,8 +217,16 @@ public class Venue {
 		this.adminPassword = adminPassword;
 	}
 
+	public Integer getAvgPayment() {
+		return avgPayment;
+	}
+
+	public void setAvgPayment(Integer avgPayment) {
+		this.avgPayment = avgPayment;
+	}
+
 	private long id;
-	private float rating;
+	private Float rating;
 	private int freeTablesAmount;	
 	private String uniqueId;
 	private String name;
@@ -243,6 +250,7 @@ public class Venue {
 	private boolean hasWifi;
 	private boolean takeCreditCards;
 	private boolean hasOutdoorsSeats;
+	private Integer avgPayment;
 	private List<VenuePhoto> photos;
 	
 	private double distance;
