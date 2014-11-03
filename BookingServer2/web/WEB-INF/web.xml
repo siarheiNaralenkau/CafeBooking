@@ -8,11 +8,7 @@
     <welcome-file>default.html</welcome-file>
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  <servlet>
-    <servlet-name>VenuesList</servlet-name>
-    <servlet-class>com.servlets.VenuesListServlet</servlet-class>
-  </servlet>
+  </welcome-file-list>  
   <servlet>
     <servlet-name>BookPlace</servlet-name>
     <servlet-class>com.servlets.BookPlaceServlet</servlet-class>
@@ -52,11 +48,7 @@
   <servlet>
     <servlet-name>ClearBookings</servlet-name>
     <servlet-class>com.servlets.ClearBookingsServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>VenuesList</servlet-name>
-    <url-pattern>/venues_list</url-pattern>
-  </servlet-mapping>
+  </servlet>  
   <servlet-mapping>
     <servlet-name>BookPlace</servlet-name>
     <url-pattern>/book_place</url-pattern>

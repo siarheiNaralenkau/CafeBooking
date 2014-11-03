@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 /**
  * Servlet implementation class CreateReviewServlet
+ * http://localhost:8080/BookingServer2/create_review
  */
 @WebServlet("/create_review")
 public class CreateReviewServlet extends HttpServlet {

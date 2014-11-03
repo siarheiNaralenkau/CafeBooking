@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Venue {
 
-	public Venue(long id, String uniqueId, String name, String phone,
+	public Venue(int id, String uniqueId, String name, String phone,
 			String address, String city, String country, double lat,
 			double lng, String category, boolean hasFreeSeats, String iconUrl) {
 		super();
@@ -22,10 +22,10 @@ public class Venue {
 		this.iconUrl = iconUrl;
 	}		
 	
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getUniqueId() {
@@ -225,7 +225,7 @@ public class Venue {
 		this.avgPayment = avgPayment;
 	}
 
-	private long id;
+	private int id;
 	private Float rating;
 	private int freeTablesAmount;	
 	private String uniqueId;

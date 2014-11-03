@@ -24,6 +24,7 @@ import com.beans.ScheduleEntry;
 import com.beans.Venue;
 import com.beans.VenueDistanceComp;
 import com.beans.VenuePhoto;
+import com.beans.VenueRatingComp;
 import com.beans.VenueTable;
 import com.constants.BookingStatus;
 import com.constants.Consts;
@@ -32,8 +33,9 @@ import com.utils.LocationUtil;
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?)";
-	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
-	private static final String UNSORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY name";
+//	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
+//	private static final String UNSORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY name";
+	private static final String VENUES_LIST_SQL = "SELECT * FROM venues";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status) VALUES(?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, new_places, new_time) VALUES(?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
@@ -90,49 +92,35 @@ public class VenuesDAO {
 		}			
 	}
 	
-	public static List<Venue> getVenues(Double lat, Double lng, Integer limit) {
-		Double sLat = lat, sLng = lng;
+	public static List<Venue> getVenues(Double lat, Double lng, Integer limit, Boolean hasFreeTables, Boolean ratingOrder, 
+			Boolean hasWifi, Boolean takeCreditCards, Boolean hasOutdoorsPlaces, String type, String cuisine) {		
 		List<Venue> venues = new ArrayList<Venue>();
 		Connection con = null;
-		PreparedStatement ps = null;
-		boolean isSorted = true;
+		PreparedStatement ps = null;		
 		try {
 			con = dataSource.getConnection();
-			String query;
-			if(sLat == null || sLng == null) {
-				query = UNSORTED_COORDS_QUERY;
-				isSorted = false;
-				if(limit != null) {
-					query += " LIMIT ?";
-				}
-				ps = con.prepareStatement(query);
-				if(limit != null) {
-					ps.setInt(1, limit);
-				}
-			} else {			
-				query = new String(SORTED_COORDS_QUERY);
-				if(limit != null) {
-					query += " LIMIT ?";
-				}
-				ps = con.prepareStatement(query);			 
-				ps.setDouble(1, sLat);
-				ps.setDouble(2, sLng);
-				if(limit != null) {
-					ps.setInt(3, limit);
-				}
-			}
+			String query = VENUES_LIST_SQL;
+			query += applyVenueFilters(hasFreeTables, hasWifi, takeCreditCards, hasOutdoorsPlaces, type, cuisine);	
+			System.out.println("Get venues query:\n" + query);
+			ps = con.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				Venue v = new Venue(rs.getLong("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
+				Venue v = new Venue(rs.getInt("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
 						rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
 						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"), rs.getString("icon_url"));
-				if(isSorted) {
-					LocationUtil.calcDistance(v, sLat, sLng);
+				v.setRating(getVenueRating(con, v.getId()));
+				if(lat != null && lng != null) {
+					LocationUtil.calcDistance(v, lat, lng);
 				}
 				venues.add(v);
 			}
-			if(isSorted) {
+			if(ratingOrder) {
+				Collections.sort(venues, new VenueRatingComp());				
+			} else if (lat != null && lng != null) {
 				Collections.sort(venues, new VenueDistanceComp());
+			}
+			if(limit != null) {
+				venues = venues.subList(0, limit);
 			}
 		} catch (SQLException e) { 
 			System.out.println("Error: " + e.getMessage());
@@ -142,6 +130,41 @@ public class VenuesDAO {
 		
 		return venues;
 	}
+	
+	/*
+	 * Add filters to venue. 
+	 */
+	private static String applyVenueFilters(boolean hasFreeTables, 
+			boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsPlaces, String type, String cuisine) {
+		String filter = "";
+		List<String> filters = new ArrayList<String>();
+		if(hasFreeTables) {
+			filters.add("has_free_seats = true");
+		}
+		if(hasWifi) {
+			filters.add("has_wifi = true");
+		}
+		if(takeCreditCards) {
+			filters.add("take_credic_carts = true");
+		}
+		if(hasOutdoorsPlaces) {
+			filters.add("has_outdoors_seats = true");
+		}
+		if(type != null) {
+			filters.add("category = '" + type + "'");
+		}
+		if(cuisine != null) {
+			filters.add("cuisine = '" + cuisine + "'");
+		}
+		
+		if(filters.size() > 0) {
+			filter += " WHERE " + filters.get(0);
+			for(int i = 1; i < filters.size(); i++) {
+				filter += " AND " + filters.get(i);
+			}
+		}
+		return filter;
+	}		
 	
 	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers) {
 		Map<String, Object> result = new HashMap<String, Object>();

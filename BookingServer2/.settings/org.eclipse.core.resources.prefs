@@ -1,6 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/com/dao/UserDAO.java=UTF-8
 encoding//src/com/servlets/CreateUserServlet.java=UTF-8
-encoding//src/com/servlets/EditTablesLoginServlet.java=UTF-8
 encoding//src/com/servlets/RestorePasswordServlet.java=UTF-8
 encoding//web/index.jsp=UTF-8
