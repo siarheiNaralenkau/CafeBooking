@@ -33,8 +33,6 @@ import com.utils.LocationUtil;
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?)";
-//	private static final String SORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY ABS(latitude-?), ABS(longitude-?)";
-//	private static final String UNSORTED_COORDS_QUERY = "SELECT * FROM venues ORDER BY name";
 	private static final String VENUES_LIST_SQL = "SELECT * FROM venues";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status) VALUES(?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, new_places, new_time) VALUES(?, ?, ?, ?)";
@@ -58,7 +56,7 @@ public class VenuesDAO {
 			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";		
 	private static final String SET_VENUE_PLAN_QUERY = "UPDATE venues set plan = ? WHERE id = ?";	
 	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
-	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, has_free_seats = ?, admin_user = ?, "
+	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
 			+ "has_outdoors_seats = ?, category = ?, admin_password = ? WHERE id = ?";
 	private static final String GET_VENUE_PHOTOS_SQL = "SELECT id, url FROM venue_photos WHERE venue_id = ?";
@@ -866,7 +864,7 @@ public class VenuesDAO {
 	}
 	
 	public static Map<String, Object> updateVenue(int venueId, String name, String phone, String address, 
-			boolean hasFreeSeats, String adminUser, int tablesAmount, String iconUrl, String openTime, 
+			String adminUser, int tablesAmount, String iconUrl, String openTime, 
 			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category, String adminPassword) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
@@ -876,20 +874,19 @@ public class VenuesDAO {
 			ps = con.prepareStatement(UPDATE_VENUE_SQL);
 			ps.setString(1, name);
 			ps.setString(2, phone);
-			ps.setString(3, address);
-			ps.setBoolean(4, hasFreeSeats);
-			ps.setString(5, adminUser);
-			ps.setInt(6, tablesAmount);
-			ps.setString(7, iconUrl);
-			ps.setString(8, openTime);
-			ps.setString(9, closeTime);
-			ps.setString(10, cuisine);
-			ps.setBoolean(11, hasWifi);
-			ps.setBoolean(12, takeCreditCards);
-			ps.setBoolean(13, hasOutdoorsSeats);
-			ps.setString(14, category);
-			ps.setString(15, adminPassword);
-			ps.setInt(16, venueId);
+			ps.setString(3, address);			
+			ps.setString(4, adminUser);
+			ps.setInt(5, tablesAmount);
+			ps.setString(6, iconUrl);
+			ps.setString(7, openTime);
+			ps.setString(8, closeTime);
+			ps.setString(9, cuisine);
+			ps.setBoolean(10, hasWifi);
+			ps.setBoolean(11, takeCreditCards);
+			ps.setBoolean(12, hasOutdoorsSeats);
+			ps.setString(13, category);
+			ps.setString(14, adminPassword);
+			ps.setInt(15, venueId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {

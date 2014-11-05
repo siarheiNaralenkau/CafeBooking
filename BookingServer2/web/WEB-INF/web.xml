@@ -1,94 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>BookingServer2</display-name>
+  
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>  
-  <servlet>
-    <servlet-name>BookPlace</servlet-name>
-    <servlet-class>com.servlets.BookPlaceServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ChangeBookingStatus</servlet-name>
-    <servlet-class>com.servlets.ChangeBookingStatusServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CheckBookingStatus</servlet-name>
-    <servlet-class>com.servlets.CheckBookingStatusServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SwitchVenueStatus</servlet-name>
-    <servlet-class>com.servlets.SwitchVenueStatusServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>GetHistory</servlet-name>
-    <servlet-class>com.servlets.GetHistoryServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>DeleteBooking</servlet-name>
-    <servlet-class>com.servlets.DeleteBookingServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>GetPendingBookings</servlet-name>
-    <servlet-class>com.servlets.GetPendingBookingsServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>GetVenueBookings</servlet-name>
-    <servlet-class>com.servlets.GetVenueBookingsServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SetVenueAdmin</servlet-name>
-    <servlet-class>com.servlets.SetVenueAdminServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ClearBookings</servlet-name>
-    <servlet-class>com.servlets.ClearBookingsServlet</servlet-class>
-  </servlet>  
-  <servlet-mapping>
-    <servlet-name>BookPlace</servlet-name>
-    <url-pattern>/book_place</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ChangeBookingStatus</servlet-name>
-    <url-pattern>/change_booking_status</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CheckBookingStatus</servlet-name>
-    <url-pattern>/check_booking_status</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SwitchVenueStatus</servlet-name>
-    <url-pattern>/switch_venue_status</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GetHistory</servlet-name>
-    <url-pattern>/get_history</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DeleteBooking</servlet-name>
-    <url-pattern>/delete_booking</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GetPendingBookings</servlet-name>
-    <url-pattern>/get_pending_bookings</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GetVenueBookings</servlet-name>
-    <url-pattern>/get_venue_bookings</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SetVenueAdmin</servlet-name>
-    <url-pattern>/set_venue_admin</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ClearBookings</servlet-name>
-    <url-pattern>/clear_bookings</url-pattern>
-  </servlet-mapping>
+    <welcome-file>index.html</welcome-file>    
+    <welcome-file>index.jsp</welcome-file>    
+  </welcome-file-list>          
+    
   <filter>
     <filter-name>Set Character Encoding</filter-name>
     <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
@@ -97,6 +15,7 @@
       <param-value>UTF-8</param-value>
     </init-param>
   </filter>
+  
   <filter-mapping>
     <filter-name>Set Character Encoding</filter-name>
     <url-pattern>/*</url-pattern>

@@ -48,11 +48,7 @@
 							<input type="number" name="tablesAmount" id="tablesAmount" value="<%=venue.getTablesAmount()%>"/>
 						</div>	
 					</td>
-					<td>
-						<div class="field_div">
-							<label for="hasFreeSeats">Есть свободные места:</label>
-							<input type="checkbox" name="hasFreeSeats" id="hasFreeSeats" onclick="updateCheckBox(this)" value="<%=venue.isHasFreeSeats()%>" <%=venue.isHasFreeSeats() ? "checked='checked'" : ""%>/>
-						</div>	
+					<td>							
 					</td>
 				</tr>
 				<tr>
