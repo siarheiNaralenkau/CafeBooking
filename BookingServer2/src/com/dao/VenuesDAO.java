@@ -959,5 +959,58 @@ public class VenuesDAO {
 		}
 		return result;
 	}		
-		
+
+	public static Map<String, Object> checkAdmin(String adminUser, String adminPassword, int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			con = dataSource.getConnection();
+			ps = con.prepareStatement("SELECT admin_user, admin_password FROM venues WHERE id = ?");
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				if(!adminUser.equals(rs.getString("admin_user"))) {
+					result.put("status", "failure");
+					result.put("error", "Incorrect admin login");
+				} else if(!adminPassword.equals(rs.getString("admin_padssword"))) {
+					result.put("status", "failure");
+					result.put("error", "Incorrect admin password");
+				} else {
+					result.put("status", "success");
+				}
+			} else {
+				result.put("status", "failure");
+				result.put("error", "No venue with id: " + venueId);
+			}
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();			
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;		
+	}
+	
+	public static Map<String, Object> setFreeTables(int venueId, int freeTables) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			con = dataSource.getConnection();
+			ps = con.prepareStatement("UPDATE venues SET free_tables_amount = ? WHERE id = ?");
+			ps.setInt(1, freeTables);
+			ps.setInt(2, venueId);
+			ps.executeUpdate();
+			result.put("status", "success");
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();			
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;	
+	}
 }
