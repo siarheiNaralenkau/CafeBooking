@@ -1,0 +1,76 @@
+﻿"*" - Отмечены обязательные параметры запроса
+1) Создание пользователя
+	URL: http://bronimesto.by:8080/BookingServer2/create_user
+	Тип запроса: POST
+	Параметры: 
+		name
+		surname
+		email *
+		password *
+		phone
+		
+2) Вход пользователя в приложение
+	URL: http://bronimesto.by:8080/BookingServer2/client_login
+	Тип запроса: POST
+	Параметры:
+		username *
+		password *
+	Возвращает:
+		json:
+			status(success/failute)
+			userId - Id авторизованного пользователя(если status = success)
+			error - Сообщение об ошибке(если status = failure)
+			
+3) Изменение пароля пользователя
+	URL: http://bronimesto.by:8080/BookingServer2/client_login
+	Тип запроса: POST
+	Параметры:
+		email *
+		newPassword *
+		
+4) Восстановление забытого пароля
+	URL: http://bronimesto.by:8080/BookingServer2/restore_password
+	Тип запроса: POST
+	Параметры:
+		email * - Имя пользователя(email куда выслать пароль)
+	Возвращает:
+		status - (success/failure)
+		password - забытый пароль
+		
+5) Добавление пользователю бонусных баллов(После регистрации, от суммы заказа, после создания отзыва,...)
+	URL: http://bronimesto.by:8080/BookingServer2/add_bonus_scores
+	Тип запроса: POST
+	Параметры: 
+		userId *
+		scores *
+		
+6) Расходование(вычитание) бонусных баллов
+	URL: http://bronimesto.by:8080/BookingServer2/remove_bonus_scores
+	Тип запроса: POST
+	Параметры: 
+		userId *
+		scores *
+		
+7) Создание отзыва о заведениии
+	URL: http://bronimesto.by:8080/BookingServer2/create_review
+	Тип запроса: POST
+	Параметры: 
+		venueId *
+		userId *
+		markFood *
+		markService *
+		markAtmosphere *
+		markPriceQuality *
+		commentsGood
+		commentsBad
+	
+8) Детальная информация о пользователе(пользовательский личный кабинет)
+	URL: http://bronimesto.by:8080/BookingServer2/user_details
+	Тип запроса: GET
+	Параметры: 
+		userId *
+	Возвращает:
+		json, содержащий данные о пользователе и список его заказов в различных заведениях.
+
+		
+		
