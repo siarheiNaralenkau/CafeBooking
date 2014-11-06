@@ -36,7 +36,8 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String PLACES = "places";
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
-	private static final String TABLE_NUMBERS = "tableNumbers";			
+	private static final String TABLE_NUMBERS = "tableNumbers";	
+	private static final String USER_ID = "userId";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -47,17 +48,12 @@ public class BookPlaceServlet extends HttpServlet {
 		String sBookingTime = "";
 		String sVenueId;		
 		int venueId = 0;
+		Integer userId = null;
 		try {			
 			Logger logger = Logger.getLogger(BookPlaceServlet.class.getName());
 			sVenueId = request.getParameter(VENUE_ID);			
-			venueId = Integer.valueOf(sVenueId);	
-			String tomcatHome = System.getProperty("catalina.base");			
-			Handler fileHandler = new FileHandler(tomcatHome + "/logs/bronimesto.log");			
-			Handler consoleHandler = new ConsoleHandler();			
-			logger.addHandler(fileHandler);
-			logger.addHandler(consoleHandler);			
-			String visitorName = request.getParameter(VISITOR_NAME);														
-			logger.info("Visitor name before decoding: " + visitorName);			
+			venueId = Integer.valueOf(sVenueId);										
+			String visitorName = request.getParameter(VISITOR_NAME);																				
 			String visitorPhone = request.getParameter(VISITOR_PHONE);
 			// Booking time in format "DD-MM-YYYY HH:mm".
 			sBookingTime = request.getParameter(BOOKING_TIME);
@@ -70,13 +66,15 @@ public class BookPlaceServlet extends HttpServlet {
 			String notes = "";
 			String tableNumbers = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
-				notes = request.getParameter(NOTES);
-				System.out.println("Notes: " + notes);
+				notes = request.getParameter(NOTES);				
 			}
 			if(request.getParameterMap().containsKey(TABLE_NUMBERS)) {
 				tableNumbers = request.getParameter(TABLE_NUMBERS);				
 			}
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers);
+			if(request.getParameterMap().containsKey(USER_ID)) {
+				userId = Integer.valueOf(request.getParameter(USER_ID));
+			}
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId);
 			result.put("Person name", visitorName);
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	

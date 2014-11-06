@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.naming.Context;
@@ -25,6 +27,10 @@ public class UserDAO {
 	private static final String REMOVE_BONUS_SCORES_SQL = "UPDATE users set bonus_scores = bonus_scores - ? WHERE id = ?";
 	private static final String CREATE_REVIEW_SQL = "INSERT INTO reviews(venue_id, user_id, mark_food, mark_service, mark_atmosphere, mark_price_quality, "
 			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
+	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.visitor_contact_name, b.visitor_contact_phone, "
+			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, notes, booking_created, "
+			+ "table_no from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	
 	static {		
 		try {
@@ -221,6 +227,53 @@ public class UserDAO {
 		} catch(SQLException e) {			
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> getUserDetails(int userId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_USER_DETAILS_SQL);
+			ps.setInt(1, userId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				result.put("name", rs.getString("name"));
+				result.put("surname", rs.getString("surname"));
+				result.put("email", rs.getString("email"));
+				result.put("phone", rs.getString("phone"));
+				result.put("bonus_scores", rs.getInt("bonus_scores"));				
+				ps.close();
+				List<Map<String, Object>> userBookings = new ArrayList<Map<String, Object>>();
+				ps = con.prepareStatement(GET_USER_BOOKINGS_SQL);				
+				ps.setInt(1, userId);
+				ResultSet rsBookings = ps.executeQuery();
+				while(rsBookings.next()) {
+					Map<String, Object> bookingData = new HashMap<String, Object>();
+					bookingData.put("venue_name", rsBookings.getString("venue_name"));
+					bookingData.put("visitor_contact_name", rsBookings.getString("visitor_contact_name"));
+					bookingData.put("visitor_contact_phone", rsBookings.getString("visitor_contact_phone"));
+					bookingData.put("spent_money", rsBookings.getInt("spent_money"));
+					bookingData.put("booking_time", rsBookings.getTimestamp("booking_time"));
+					bookingData.put("places_amount", rsBookings.getInt("places_amount"));
+					bookingData.put("booking_status", rsBookings.getString("booking_status"));
+					bookingData.put("notes", rsBookings.getString("notes"));
+					bookingData.put("booking_created", rsBookings.getTimestamp("booking_created"));
+					bookingData.put("table_no", rsBookings.getString("table_no"));
+					
+					userBookings.add(bookingData);
+				}
+				result.put("bookings", userBookings);
+			}
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();
 		} finally {
 			closeConnection(con, ps);
 		}
