@@ -12,7 +12,6 @@ CREATE TABLE `venues` (
 	`longitude` FLOAT NULL DEFAULT NULL,
 	`category` VARCHAR(60) NULL DEFAULT NULL,
 	`has_free_seats` TINYINT(1) NULL DEFAULT NULL,
-	`admin_user` VARCHAR(100) NULL DEFAULT NULL,
 	`in_booking_system` TINYINT(1) NOT NULL DEFAULT '0',
 	`tables_amount` INT(11) NULL DEFAULT NULL,
 	`icon_url` VARCHAR(75) NULL DEFAULT NULL,
@@ -21,9 +20,10 @@ CREATE TABLE `venues` (
 	`plan` TEXT NULL,
 	`cuisine` VARCHAR(50) NULL DEFAULT NULL,
 	`has_wifi` TINYINT(1) NULL DEFAULT NULL,
-	`take_credit_cards` TINYINT(1) NULL DEFAULT NULL,
 	`has_outdoors_seats` TINYINT(1) NULL DEFAULT NULL,
-	`admin_password` VARCHAR(12) NULL,
+	`take_credit_cards` TINYINT(1) NULL DEFAULT '0',
+	`admin_password` VARCHAR(20) NULL DEFAULT 'admin',
+	`admin_user` VARCHAR(100) NULL DEFAULT 'admin',
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
