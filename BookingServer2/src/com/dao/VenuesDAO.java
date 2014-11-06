@@ -64,6 +64,11 @@ public class VenuesDAO {
 	private static final String GET_VENUE_RATING_SQL = "SELECT AVG((mark_food + mark_service + mark_atmosphere + mark_price_quality)/4) as rating FROM reviews WHERE venue_id = ?";
 	private static final String GET_AVG_PAYMENT_SQL = "SELECT FLOOR(AVG(SPENT_MONEY)) as avg_payment FROM bookings WHERE venue_id = ?";
 	
+	private static final String VENUE_LOADING_SQL = "SELECT tables_amount, free_tables_amount, free_tables_amount/tables_amount as loading FROM venues WHERE id = ?";
+	private static final String VENUE_BOOKINGS_SQL = "SELECT b.id, b.user_id, b.visitor_contact_name, b.visitor_contact_phone, b.spent_money, "
+			+ "b.booking_time, b.places_amount, b.notes, b.booking_created, b.table_no, bs.status FROM bookings b, booking_status bs "
+			+ "where bs.id = b.status AND venue_id = ? ORDER BY b.booking_created desc";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -1004,6 +1009,55 @@ public class VenuesDAO {
 			ps.setInt(2, venueId);
 			ps.executeUpdate();
 			result.put("status", "success");
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();			
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;	
+	}
+	
+	public static Map<String, Object> getVenueStatus(int venueId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {			
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(VENUE_LOADING_SQL);
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				result.put("status", "success");
+				result.put("tables_amount", rs.getInt("tables_amount"));
+				result.put("free_tables_amount", rs.getInt("free_tables_amount"));
+				result.put("loading", rs.getFloat("loading"));			
+				
+				ps.close();
+				ps = con.prepareStatement(VENUE_BOOKINGS_SQL);
+				ps.setInt(1, venueId);
+				rs = ps.executeQuery();
+				List<Map<String, Object>> bookings = new ArrayList<Map<String,Object>>();			
+				while(rs.next()) {
+					Map<String, Object> booking = new HashMap<String, Object>();
+					booking.put("id", rs.getInt("id"));
+					booking.put("user_id", rs.getInt("user_id"));
+					booking.put("visitor_contact_name", rs.getString("visitor_contact_name"));
+					booking.put("visitor_contact_phone", rs.getString("visitor_contact_phone"));
+					booking.put("spent_money", rs.getInt("spent_money"));
+					booking.put("booking_time", rs.getTimestamp("booking_time"));
+					booking.put("places_amount", rs.getInt("places_amount"));
+					booking.put("notes", rs.getString("notes"));
+					booking.put("booking_created", rs.getTimestamp("booking_created"));
+					booking.put("booked_table_numbers", rs.getString("table_no"));
+					booking.put("status", rs.getString("status"));
+					bookings.add(booking);
+				}
+			} else {
+				result.put("status", "failure");
+				result.put("error", "No venue with id: " + venueId);
+			}
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
