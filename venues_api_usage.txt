@@ -33,4 +33,16 @@
 		status(success/failure)
 		error(Если статус = failure) - Сообщение об ошибке
 		
+3) Информация о заведении для администратора
+	URL: http://bronimesto.by:8080/BookingServer2/get_venue_status
+	Тип запроса: POST
+	Параметры:
+		venueId - Id заведения
+	Возвращает - json
+		status(success/failure)
+		tables_amount - общее количество столиков
+		free_tables_amount - количество свободных столиков
+		loading - загрузка заведения(0.00 - 1.00)
+		bookings - список броней для заведения.
+		
 		

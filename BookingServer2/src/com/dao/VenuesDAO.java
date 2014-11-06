@@ -978,7 +978,7 @@ public class VenuesDAO {
 				if(!adminUser.equals(rs.getString("admin_user"))) {
 					result.put("status", "failure");
 					result.put("error", "Incorrect admin login");
-				} else if(!adminPassword.equals(rs.getString("admin_padssword"))) {
+				} else if(!adminPassword.equals(rs.getString("admin_password"))) {
 					result.put("status", "failure");
 					result.put("error", "Incorrect admin password");
 				} else {
@@ -1054,6 +1054,7 @@ public class VenuesDAO {
 					booking.put("status", rs.getString("status"));
 					bookings.add(booking);
 				}
+				result.put("bookings", bookings);
 			} else {
 				result.put("status", "failure");
 				result.put("error", "No venue with id: " + venueId);
