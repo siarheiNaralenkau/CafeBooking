@@ -35,4 +35,11 @@ function updateCheckBox(el) {
 	} else {
 		el.value = "false";
 	}
+};
+
+function setVenueIcon(el) {
+	var img = el.parentNode.childNodes[1];
+	var newIconUrl = $(img).attr("src");
+	$("#iconUrl").val(newIconUrl);
+	$("#venueIcon").attr("src", newIconUrl);
 }

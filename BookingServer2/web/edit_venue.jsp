@@ -131,7 +131,8 @@
 					<td>
 						<div class="field_div">
 							<label for="iconUrl">Эмблема заведения:</label>
-							<input type="url" name="iconUrl" id="iconUrl" value="<%=venue.getIconUrl()%>"/>
+							<input type="hidden" name="iconUrl" id="iconUrl" value="<%=venue.getIconUrl()%>"/>
+							<img id="venueIcon" width="100px" height="100px" src="<%=venue.getIconUrl()%>"/>
 						</div>
 					</td>
 					<td>
@@ -178,6 +179,7 @@
 				%>
 				<td width="100px" height="100px">
 					<img width="100px" height="100px" src="<%=photo.getUrl()%>" data-id="<%=photo.getId()%>">
+					<a href="#" onclick="setVenueIcon(this)">Установить как эмблему</a>
 					<a href="./delete_venue_photo?photoId=<%=photo.getId()%>&venueId=<%=venue.getId()%>">Удалить</a>
 				</td>
 				<% } } %>
