@@ -35,6 +35,7 @@ public class SaveVenueChangesServlet extends HttpServlet {
 	private static final String HAS_OUTDOORS_SEATS = "hasOutdoorsSeats";
 	private static final String CATEGORY = "category";
 	private static final String ADMIN_PASSWORD = "adminPassword";
+	private static final String AVG_PAYMENT = "avgCheck";
        
     public SaveVenueChangesServlet() {
         super();
@@ -56,9 +57,10 @@ public class SaveVenueChangesServlet extends HttpServlet {
 		boolean hasOutdoorsSeats = Boolean.valueOf(request.getParameter(HAS_OUTDOORS_SEATS));
 		String category = request.getParameter(CATEGORY);
 		String adminPassword = request.getParameter(ADMIN_PASSWORD);
+		String avgPayment = request.getParameter(AVG_PAYMENT);
 		Map<String, Object> updateResult = VenuesDAO.updateVenue(venueId, name, phone, address, 
 				adminUser, tablesAmount, iconURL, openTime, closeTime, cuisine, hasWiFi, takeCreditCards, 
-				hasOutdoorsSeats, category, adminPassword);
+				hasOutdoorsSeats, category, adminPassword, avgPayment);
 		if(updateResult.get("status").equals("success")) {
 			// Redirect to venuesList.
 			ServletContext servletContext = getServletContext();

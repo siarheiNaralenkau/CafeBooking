@@ -58,7 +58,7 @@ public class VenuesDAO {
 	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
 	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
-			+ "has_outdoors_seats = ?, category = ?, admin_password = ? WHERE id = ?";
+			+ "has_outdoors_seats = ?, category = ?, admin_password = ?, avg_check = ? WHERE id = ?";
 	private static final String GET_VENUE_PHOTOS_SQL = "SELECT id, url FROM venue_photos WHERE venue_id = ?";
 	private static final String DELETE_VENUE_PHOTO_SQL = "DELETE FROM venue_photos WHERE id = ?";
 	private static final String GET_VENUE_RATING_SQL = "SELECT AVG((mark_food + mark_service + mark_atmosphere + mark_price_quality)/4) as rating FROM reviews WHERE venue_id = ?";
@@ -785,7 +785,7 @@ public class VenuesDAO {
 				List<VenuePhoto> photos = getVenuePhotos(con, venueUid);
 				venue.setPhotos(photos);
 				venue.setRating(getVenueRating(con, venueId));
-				venue.setAvgPayment(getVenueAvgPayment(con, venueId));
+				venue.setAvgPayment(rs.getString("avg_check"));
 				result.put("status", "success");
 				result.put("venue", venue);
 			}			
@@ -864,6 +864,7 @@ public class VenuesDAO {
 				venue.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
 				venue.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
 				venue.setAdminPassword(rs.getString("admin_password"));
+				venue.setAvgPayment(rs.getString("avg_check"));
 				List<VenuePhoto> photos = getVenuePhotos(con, venueUid);
 				venue.setPhotos(photos);
 			}
@@ -877,7 +878,7 @@ public class VenuesDAO {
 	
 	public static Map<String, Object> updateVenue(int venueId, String name, String phone, String address, 
 			String adminUser, int tablesAmount, String iconUrl, String openTime, 
-			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category, String adminPassword) {
+			String closeTime, String cuisine, boolean hasWifi, boolean takeCreditCards, boolean hasOutdoorsSeats, String category, String adminPassword, String avgPayment) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -898,7 +899,8 @@ public class VenuesDAO {
 			ps.setBoolean(12, hasOutdoorsSeats);
 			ps.setString(13, category);
 			ps.setString(14, adminPassword);
-			ps.setInt(15, venueId);
+			ps.setString(15, avgPayment);
+			ps.setInt(16, venueId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {

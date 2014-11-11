@@ -217,11 +217,11 @@ public class Venue {
 		this.adminPassword = adminPassword;
 	}
 
-	public Integer getAvgPayment() {
+	public String getAvgPayment() {
 		return avgPayment;
 	}
 
-	public void setAvgPayment(Integer avgPayment) {
+	public void setAvgPayment(String avgPayment) {
 		this.avgPayment = avgPayment;
 	}
 
@@ -250,8 +250,8 @@ public class Venue {
 	private boolean hasWifi;
 	private boolean takeCreditCards;
 	private boolean hasOutdoorsSeats;
-	private Integer avgPayment;
 	private List<VenuePhoto> photos;
+	private String avgPayment;		
 	
 	private double distance;
 }

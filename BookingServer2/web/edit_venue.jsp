@@ -47,8 +47,12 @@
 							<label for="tablesAmount">Количество столиков:</label>
 							<input type="number" name="tablesAmount" id="tablesAmount" value="<%=venue.getTablesAmount()%>"/>
 						</div>	
-					</td>
-					<td>							
+					</td>					
+					<td>
+						<div class="field_div">
+							<label for="avgCheck">Средний чек:</label>
+							<input type="text" name="avgCheck" id="avgCheck" value="<%=venue.getAvgPayment()%>"/>
+						</div>					
 					</td>
 				</tr>
 				<tr>

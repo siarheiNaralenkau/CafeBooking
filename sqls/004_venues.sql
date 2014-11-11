@@ -24,6 +24,7 @@ CREATE TABLE `venues` (
 	`take_credit_cards` TINYINT(1) NULL DEFAULT '0',
 	`admin_password` VARCHAR(20) NULL DEFAULT 'admin',
 	`admin_user` VARCHAR(100) NULL DEFAULT 'admin',
+	`avg_check` VARCHAR(30) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `unique_id` (`unique_id`)
 )
