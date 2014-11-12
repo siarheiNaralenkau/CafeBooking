@@ -900,7 +900,7 @@ public class VenuesDAO {
 			ps.setString(13, category);
 			ps.setString(14, adminPassword);
 			ps.setString(15, avgPayment);
-			ps.setInt(16, venueId);
+			ps.setInt(1, venueId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {
