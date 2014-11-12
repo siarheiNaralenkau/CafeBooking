@@ -22,6 +22,7 @@ public class RemoveBonusScoresServlet extends HttpServlet {
        
 	private static final String SCORES = "scores";
 	private static final String USER_ID = "userId";
+	private static final String VENUE_ID = "venueId";
 	
     public RemoveBonusScoresServlet() {
         super();
@@ -40,8 +41,9 @@ public class RemoveBonusScoresServlet extends HttpServlet {
 		
 		int userId = Integer.valueOf(request.getParameter(USER_ID));
 		int scores = Integer.valueOf(request.getParameter(SCORES));
+		int venueId = Integer.valueOf(request.getParameter(VENUE_ID));
 						
-		Map<String, Object> result = UserDAO.removeScores(userId, scores);
+		Map<String, Object> result = UserDAO.removeScores(userId, venueId, scores);
 		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);		

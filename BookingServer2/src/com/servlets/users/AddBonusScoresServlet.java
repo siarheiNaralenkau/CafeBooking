@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 /**
  * Servlet implementation class AddBonusScoresServlet
  * http://bronimesto.by:8080/BookingServer2/add_bonus_scores?userId=2&scores=5
+ * For post requests checking in Simple rest client: Header = Content-Type: application/x-www-form-urlencoded
  */
 @WebServlet("/add_bonus_scores") 
 public class AddBonusScoresServlet extends HttpServlet {
@@ -22,6 +23,7 @@ public class AddBonusScoresServlet extends HttpServlet {
     
 	private static final String SCORES = "scores";
 	private static final String USER_ID = "userId";
+	private static final String VENUE_ID = "venueId";
 	
     public AddBonusScoresServlet() {
         super();
@@ -39,10 +41,11 @@ public class AddBonusScoresServlet extends HttpServlet {
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");
 		
-		int userId = Integer.valueOf(request.getParameter(USER_ID));
+		int userId = Integer.valueOf(request.getParameter(USER_ID));		
 		int scores = Integer.valueOf(request.getParameter(SCORES));
+		int venueId = Integer.valueOf(request.getParameter(VENUE_ID));
 						
-		Map<String, Object> result = UserDAO.addScores(userId, scores);
+		Map<String, Object> result = UserDAO.addScores(userId, venueId, scores);
 		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);		

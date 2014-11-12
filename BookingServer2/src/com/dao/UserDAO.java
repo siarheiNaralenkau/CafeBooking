@@ -31,6 +31,9 @@ public class UserDAO {
 	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.visitor_contact_name, b.visitor_contact_phone, "
 			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, notes, booking_created, "
 			+ "table_no from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
+	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
+	private static final String GET_BONUS_HISTORY_SQL = "SELECT bh.scores_change, bh.change_time, v.name FROM bonus_history bh, venues v "
+			+ "WHERE bh.venue_id = v.id AND bh.user_id = ? ORDER BY bh.change_time DESC";
 	
 	static {		
 		try {
@@ -164,7 +167,7 @@ public class UserDAO {
 		return result;
 	}
 	
-	public static Map<String, Object> addScores(int userId, int scores) {
+	public static Map<String, Object> addScores(int userId, int venueId, int scores) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -174,7 +177,8 @@ public class UserDAO {
 			ps.setInt(1, scores);
 			ps.setInt(2, userId);
 			ps.executeUpdate();			
-			result.put("status", "success");			
+			result.put("status", "success");
+			updateBonusHistory(con, userId, venueId, scores);
 		} catch(SQLException e) {			
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
@@ -184,7 +188,7 @@ public class UserDAO {
 		return result;
 	}
 	
-	public static Map<String, Object> removeScores(int userId, int scores) {
+	public static Map<String, Object> removeScores(int userId, int venueId, int scores) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -194,7 +198,8 @@ public class UserDAO {
 			ps.setInt(1, scores);
 			ps.setInt(2, userId);
 			ps.executeUpdate();			
-			result.put("status", "success");			
+			result.put("status", "success");
+			updateBonusHistory(con, userId, venueId, -scores);
 		} catch(SQLException e) {			
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
@@ -280,6 +285,35 @@ public class UserDAO {
 		return result;
 	}
 	
+	public static Map<String, Object> getBonusHistory(int userId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_BONUS_HISTORY_SQL);
+			ps.setInt(1, userId);
+			ResultSet rs = ps.executeQuery();
+			result.put("status", "success");
+			List<Map<String, Object>> bonusHistory = new ArrayList<Map<String,Object>>();
+			while(rs.next()) {
+				Map<String, Object> historyEntry = new HashMap<String, Object>();
+				historyEntry.put("scores_change", rs.getInt("scores_change"));
+				historyEntry.put("change_time", rs.getTimestamp("change_time"));
+				historyEntry.put("venue_name", rs.getString("name"));
+				bonusHistory.add(historyEntry);
+			}
+			result.put("bonus_history", bonusHistory);
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
 	private static boolean checkUser(Connection con, String email) throws SQLException {
 		boolean userExists = false;
 		PreparedStatement ps = con.prepareStatement(CHECK_USER_PRESENSE_SQL);
@@ -292,4 +326,12 @@ public class UserDAO {
 		return userExists;
 	}
 	
+	private static void updateBonusHistory(Connection con, int userId, int venueId, int scoresChange) throws SQLException {
+		PreparedStatement ps = con.prepareStatement(UPDATE_BONUS_HISTORY);
+		ps.setInt(1, userId);
+		ps.setInt(2, venueId);
+		ps.setInt(3, scoresChange);
+		ps.executeUpdate();
+		ps.close();
+	}
 }

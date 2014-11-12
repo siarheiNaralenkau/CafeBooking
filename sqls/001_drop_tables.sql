@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `bonus_history`;
 DROP TABLE IF EXISTS `reviews`;
 DROP TABLE IF EXISTS `booking_history`;
 DROP TABLE IF EXISTS `bookings`;
