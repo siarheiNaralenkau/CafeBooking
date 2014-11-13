@@ -49,8 +49,7 @@ public class BookPlaceServlet extends HttpServlet {
 		String sVenueId;		
 		int venueId = 0;
 		Integer userId = null;
-		try {			
-			Logger logger = Logger.getLogger(BookPlaceServlet.class.getName());
+		try {						
 			sVenueId = request.getParameter(VENUE_ID);			
 			venueId = Integer.valueOf(sVenueId);										
 			String visitorName = request.getParameter(VISITOR_NAME);																				

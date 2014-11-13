@@ -41,6 +41,7 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 	private static final String BOOKING_ID = "bookingId";
 	private static final String NEW_STATUS = "newStatus";
 	private static final String VISITOR = "visitor";
+	private static final String USER_ID = "userId";
            
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");		
@@ -68,9 +69,15 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 				}
 			}
 		} else if(request.getParameterMap().containsKey(VISITOR)) {
-			// Only user, who created booking, can change it status to cancelled.			
+			// Only user, who created booking, can change it status to cancelled.						
 			String visitorName = request.getParameter(VISITOR);
 			if(visitorName.equals(booking.getVisitorName()) && newStatus == BookingStatus.CANCELLED.getValue() ) {
+				result = VenuesDAO.updateStatus(bookingId, newStatus);
+			}
+ 		} else if(request.getParameterMap().containsKey(USER_ID)) {
+			// Only user, who created booking, can change it status to cancelled.						
+			int userId = Integer.valueOf(request.getParameter(USER_ID));
+			if(userId == booking.getUserId() && newStatus == BookingStatus.CANCELLED.getValue() ) {
 				result = VenuesDAO.updateStatus(bookingId, newStatus);
 			}
  		} else {

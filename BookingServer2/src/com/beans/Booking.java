@@ -15,6 +15,7 @@ public class Booking {
 	private String notes;
 	private Timestamp bookingCreated;
 	private List<Integer> tableNumbers;
+	private int userId;
 	
 	public int getId() {
 		return id;
@@ -113,6 +114,14 @@ public class Booking {
 		this.status = status;
 		this.notes = notes;
 		this.bookingCreated = bookingCreated;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 }
