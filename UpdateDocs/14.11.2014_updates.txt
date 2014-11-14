@@ -1,0 +1,13 @@
+1) Update booking status
+
+URL: http://bronimesto.by:8080/BookingServer2/change_booking_status
+Params:
+	adminUser - Venue admin
+	adminPassword - Venue admin password
+	bookingId - Booking identifier
+	newStatus - New status of booking(1-Pending, 2 - Approved, 3 - Cancelled by user,4 - Rejected by admin, 6 - Closed) 
+	visitor - Visitor contact name
+	userId - Visitor identifier(For registered users).
+
+Admin can only approve or reject pending bookings.
+User can only cancel Approved or Pending bookings.
