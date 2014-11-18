@@ -29,8 +29,8 @@ public class UserDAO {
 			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
 	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.visitor_contact_name, b.visitor_contact_phone, "
-			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, notes, booking_created, "
-			+ "table_no from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
+			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, b.notes, b.booking_created, "
+			+ "b.table_no, b.visitor_spent_money from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
 	private static final String GET_BONUS_HISTORY_SQL = "SELECT bh.scores_change, bh.change_time, v.name FROM bonus_history bh, venues v "
 			+ "WHERE bh.venue_id = v.id AND bh.user_id = ? ORDER BY bh.change_time DESC";
@@ -270,7 +270,7 @@ public class UserDAO {
 					bookingData.put("notes", rsBookings.getString("notes"));
 					bookingData.put("booking_created", rsBookings.getTimestamp("booking_created"));
 					bookingData.put("table_no", rsBookings.getString("table_no"));
-					
+					bookingData.put("visitor_spent_money", rsBookings.getInt("visitor_spent_money"));
 					userBookings.add(bookingData);
 				}
 				result.put("bookings", userBookings);

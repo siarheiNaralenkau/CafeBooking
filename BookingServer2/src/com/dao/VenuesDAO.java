@@ -469,6 +469,8 @@ public class VenuesDAO {
 					}
 				}
 				b.setUserId(rs.getInt("user_id"));
+				b.setSpentMoney(rs.getInt("spent_money"));
+				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
 				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {

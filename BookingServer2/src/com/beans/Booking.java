@@ -16,6 +16,8 @@ public class Booking {
 	private Timestamp bookingCreated;
 	private List<Integer> tableNumbers;
 	private int userId;
+	private int spentMoney;
+	private int visitorSpentMoney;
 	
 	public int getId() {
 		return id;
@@ -122,6 +124,22 @@ public class Booking {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
+	}
+
+	public int getSpentMoney() {
+		return spentMoney;
+	}
+
+	public void setSpentMoney(int spentMoney) {
+		this.spentMoney = spentMoney;
+	}
+
+	public int getVisitorSpentMoney() {
+		return visitorSpentMoney;
+	}
+
+	public void setVisitorSpentMoney(int visitorSpentMoney) {
+		this.visitorSpentMoney = visitorSpentMoney;
 	}
 
 }
