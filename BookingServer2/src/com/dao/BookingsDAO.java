@@ -15,6 +15,7 @@ public class BookingsDAO {
 	private static DataSource dataSource;
 	
 	private static final String SET_BOOKING_SPENT_SQL = "UPDATE bookings SET status=6, spent_money = ? WHERE id = ?";
+	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ? WHERE id = ?";
 	
 	static {		
 		try {
@@ -52,6 +53,27 @@ public class BookingsDAO {
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static Map<String, Object> setVisitorSpent(int spentMoney, int bookingId) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(SET_VISITOR_SPENT_SQL);
+			ps.setInt(1, spentMoney);
+			ps.setInt(2, bookingId);
+			ps.executeUpdate();
+			result.put("status", "success");
+		}  catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
 			e.printStackTrace();

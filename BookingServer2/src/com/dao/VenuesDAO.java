@@ -111,6 +111,15 @@ public class VenuesDAO {
 				Venue v = new Venue(rs.getInt("id"), rs.getString("unique_id"), rs.getString("name"), rs.getString("phone"),
 						rs.getString("address"), rs.getString("city"), rs.getString("country"), rs.getDouble("latitude"),
 						rs.getDouble("longitude"), rs.getString("category"), rs.getBoolean("has_free_seats"), rs.getString("icon_url"));
+				v.setFreeTablesAmount(rs.getInt("free_tables_amount"));
+				v.setTablesAmount(rs.getInt("tables_amount"));
+				v.setOpenTime(rs.getString("open_time"));
+				v.setCloseTime(rs.getString("close_time"));
+				v.setCuisine(rs.getString("cuisine"));
+				v.setHasWifi(rs.getBoolean("has_wifi"));
+				v.setTakeCreditCards(rs.getBoolean("take_credit_cards"));
+				v.setHasOutdoorsSeats(rs.getBoolean("has_outdoors_seats"));
+				v.setAvgPayment(rs.getString("avg_check"));
 				v.setRating(getVenueRating(con, v.getId()));
 				if(lat != null && lng != null) {
 					LocationUtil.calcDistance(v, lat, lng);
@@ -148,7 +157,7 @@ public class VenuesDAO {
 			filters.add("has_wifi = true");
 		}
 		if(takeCreditCards) {
-			filters.add("take_credic_carts = true");
+			filters.add("take_credit_cards = true");
 		}
 		if(hasOutdoorsPlaces) {
 			filters.add("has_outdoors_seats = true");
@@ -460,6 +469,8 @@ public class VenuesDAO {
 					}
 				}
 				b.setUserId(rs.getInt("user_id"));
+				b.setSpentMoney(rs.getInt("spent_money"));
+				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
 				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {

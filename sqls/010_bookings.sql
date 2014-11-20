@@ -11,6 +11,7 @@ CREATE TABLE `bookings` (
 	`notes` VARCHAR(300) NULL DEFAULT '0',
 	`booking_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`table_no` VARCHAR(30) NULL DEFAULT NULL,
+	`visitor_spent_money` INT(11) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	INDEX `fk_venue` (`venue_id`),
 	INDEX `fk_status` (`status`),
