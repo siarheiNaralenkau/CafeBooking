@@ -45,8 +45,7 @@ public class VenuesDAO {
 	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue();
 	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ?";
 	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
-	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";
-	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
+	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";	
 	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";	
 	private static final String ADD_DAY_SCHEDULE_QUERY = "INSERT INTO venue_schedule(venue_id, day, open_time, close_time) VALUES(?, ?, ?, ?)";
 	private static final String UPDATE_DAY_SCHEDULE_QUERY = "UPDATE venue_schedule set open_time = ?, close_time = ? WHERE day = ? AND venue_id = ?";
@@ -419,29 +418,7 @@ public class VenuesDAO {
 		}
 		return result;
 	}
-	
-	public static Map<String, Object> deleteBooking(int bookingId) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		Connection con = null;
-		PreparedStatement ps = null;
-		try {					
-			con = dataSource.getConnection();
-			ps = con.prepareStatement(DELETE_BOOKING_QUERY);
-			ps.setInt(1, bookingId);
-			ps.executeUpdate();
-			result.put("status", "success");
-			result.put("bookingId", bookingId);
-			result.put("newBookingStatus", BookingStatus.DELETED.getValue());			
-		} catch(SQLException e) {
-			System.out.println("Error: " + e.getMessage());
-			result.put("status", "failure");
-			result.put("error", e.getMessage());
-		} finally {
-			closeConnection(con, ps);
-		}
-		
-		return result;
-	}	
+			
 	
 	public static Map<String, Object> getBookingsForVenue(int venueId, int filterStatus) {
 		Map<String, Object> result = new HashMap<String, Object>();

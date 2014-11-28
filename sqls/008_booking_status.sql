@@ -12,7 +12,7 @@ INSERT INTO `booking_status` (`id`, `status`) VALUES (1, 'pending');
 INSERT INTO `booking_status` (`id`, `status`) VALUES (2, 'approved');
 INSERT INTO `booking_status` (`id`, `status`) VALUES (3, 'cancelled');
 INSERT INTO `booking_status` (`id`, `status`) VALUES (4, 'rejected');
-INSERT INTO `booking_status` (`id`, `status`) VALUES (5, 'deleted');
-INSERT INTO `booking_status` (`id`, `status`) VALUES (6, 'closed');
+INSERT INTO `booking_status` (`id`, `status`) VALUES (5, 'closed');
+INSERT INTO `booking_status` (`id`, `status`) VALUES (6, 'expired');
 
 
