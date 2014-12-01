@@ -142,4 +142,14 @@ public class Booking {
 		this.visitorSpentMoney = visitorSpentMoney;
 	}
 
+	public String tableNumbersString() {
+		StringBuilder result = new StringBuilder();
+		for(int i = 0; i < tableNumbers.size(); i++) {
+			result.append(tableNumbers.get(i));
+			if(i < tableNumbers.size() - 1) {
+				result.append(",");
+			}
+		}
+		return result.toString();
+	}
 }

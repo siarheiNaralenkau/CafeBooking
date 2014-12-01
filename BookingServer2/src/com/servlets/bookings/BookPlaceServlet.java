@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bronimesto.mgr.BookingManager;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
+import com.utils.GCMUtil;
 
 /**
  * Puts a booking request in some cafe, restaurant, bar or club.
@@ -77,6 +79,10 @@ public class BookPlaceServlet extends HttpServlet {
 			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId);
 			result.put("Person name", visitorName);
 			result.put("UserId", userId);
+			
+			// Send push notification to device for venue
+			BookingManager.notifyBookingCreated(Integer.valueOf(result.get("bookingId").toString()));
+			
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	
 			response.getWriter().write(jsonResult);
