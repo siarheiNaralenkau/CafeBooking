@@ -5,10 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.bronimesto.mgr.BookingManager;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
-import com.utils.GCMUtil;
 
 /**
  * Puts a booking request in some cafe, restaurant, bar or club.
@@ -40,7 +35,7 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
 	private static final String TABLE_NUMBERS = "tableNumbers";	
-	private static final String USER_ID = "userId";
+	private static final String USER_ID = "userId";		
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);

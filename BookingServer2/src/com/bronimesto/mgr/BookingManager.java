@@ -29,6 +29,7 @@ public class BookingManager {
 					.addData("notes", booking.getNotes())
 					.addData("tableNumbers", booking.tableNumbersString())
 					.addData("userId", String.valueOf(booking.getUserId()))
+					.addData("status", "Pending")
 					.build();
 			try {
 				MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);
@@ -38,4 +39,50 @@ public class BookingManager {
 			}
 		}
 	}
+	
+	// Method sends notification about booking status update to client application	
+		public static void notifyBookingStatusChanged(int bookingId) {
+			Booking booking = VenuesDAO.getBookingById(bookingId);
+			List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
+			
+			if(!regIds.isEmpty()) {
+				Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);
+				String newStatus = "";
+				switch(booking.getStatus()) {
+					case 2: 
+						newStatus = "Approved";
+						break;
+					case 3: 
+						newStatus = "Cancelled";
+						break;
+					case 4: 
+						newStatus = "Rejected";
+						break;
+					case 5: 
+						newStatus = "Closed";
+						break;
+					case 6: 
+						newStatus = "Expired";
+						break;
+				}
+				Message msgBookingCreated = new Message.Builder()
+						.addData("event", "bookingStatusChanged")
+						.addData("bookingId", String.valueOf(booking.getId()))
+						.addData("visitorName", booking.getVisitorName())
+						.addData("visitorPhone", booking.getVisitorPhone())
+						.addData("bookingTime", booking.getBookingTime().toString())
+						.addData("placesAmount", String.valueOf(booking.getPlacesAmount()))
+						.addData("notes", booking.getNotes())
+						.addData("tableNumbers", booking.tableNumbersString())
+						.addData("userId", String.valueOf(booking.getUserId()))
+						.addData("status", newStatus)
+						.build();
+				try {
+					MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);
+					System.out.println(gcmResult.getMulticastId());
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 }

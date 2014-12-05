@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beans.Booking;
+import com.bronimesto.mgr.BookingManager;
 import com.constants.BookingStatus;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
@@ -112,7 +113,12 @@ public class ChangeBookingStatusServlet extends HttpServlet {
  			result.put("status", "failure");
  			result.put("error", "Only venue admin or booking creator are able to change booking status");
  		}
-				
+		
+		// Notify client application that booking status was updated.		
+		if("success".equals(result.get("status").toString())) {
+			BookingManager.notifyBookingStatusChanged(bookingId);
+		}
+		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);			
 		response.getWriter().write(jsonResult);

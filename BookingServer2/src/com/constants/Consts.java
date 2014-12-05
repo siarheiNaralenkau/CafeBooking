@@ -11,6 +11,7 @@ public class Consts {
 	public static final Double DEFAULT_LNG = 31.01457;
 	
 	public static final String ADMIN_APP_KEY = "AIzaSyBQ5MR92uJ1qejeO4zJsRH-bSvIOKH2aq0";
+	public static final String CLIENT_APP_KEY = "AIzaSyBQ5MR92uJ1qejeO4zJsRH-bSvIOKH2aq0";
 	public static final int NUMBER_OF_RETRIES = 3;
 	
 	public static Map<Integer, String> POSITION_NOTES = new HashMap<Integer, String>();
