@@ -8,9 +8,9 @@
 
 4. для админа логин какой нибудь может? счас пароль просто с запросами отправляется.
 Сделать сервлет для проверки пароля админа..(AdminLoginServlet)...
-Input(venueId, password) Response(success/failure)
+Input(venueId, password) Response(success/failure) - Готово
 
-5) Return booking status as string: 
+5) Return booking status as string: - Проверить
 	PENDING
 	APPROVED
 	CANCELLED

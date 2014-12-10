@@ -68,6 +68,8 @@ public class VenuesDAO {
 			+ "b.booking_time, b.places_amount, b.notes, b.booking_created, b.table_no, bs.status FROM bookings b, booking_status bs "
 			+ "where bs.id = b.status AND venue_id = ? ORDER BY b.booking_created desc";
 	
+	private static final String GET_ADMIN_PASSWORD_SQL = "SELECT admin_password FROM venues where id = ?";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -1060,5 +1062,29 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		return result;	
+	}
+	
+	public static Map<String, Object> checkAdminPassword(int venueId, String password) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {	
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_ADMIN_PASSWORD_SQL);
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next() && rs.getString("admin_password").equals(password)) {
+				result.put("status", "success");				
+			} else {
+				result.put("status", "failure");
+				result.put("error", "Incorrect venue id or admin password for venue");
+			}
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
 }
