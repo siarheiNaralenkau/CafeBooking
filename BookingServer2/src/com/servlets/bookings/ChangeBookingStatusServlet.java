@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.beans.Booking;
 import com.bronimesto.mgr.BookingManager;
 import com.constants.BookingStatus;
+import com.constants.Consts;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
@@ -28,11 +29,11 @@ import com.google.gson.Gson;
  * visitor - Name of person who booked table.
  * Requests examples
  *  -- Approve booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=2&adminUser=admin&adminPassword=admin
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=APPROVED&adminUser=admin&adminPassword=admin
  * -- Cancel booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=3&visitorName=Vasia
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=CANCELLED&visitorName=Vasia
  * -- Reject booking --
- * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=3&userId=2
+ * http://localhost:8080/BookingServer2/change_booking_status?bookingId=2&newStatus=REJECTED&userId=2
  */
 
 @WebServlet("/change_booking_status")
@@ -49,8 +50,8 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");		
 		Set<Integer> availableStatuses = new HashSet<Integer>();
-		int bookingId = Integer.valueOf(request.getParameter(BOOKING_ID));
-		int newStatus = Integer.valueOf(request.getParameter(NEW_STATUS));	
+		int bookingId = Integer.valueOf(request.getParameter(BOOKING_ID));		
+		int newStatus = Consts.CODE_BY_STATUS.get(request.getParameter(NEW_STATUS));	
 		Booking booking = VenuesDAO.getBookingById(bookingId);
 		int venueId = booking.getVenueId();
 		int bookingStatus = booking.getStatus();
@@ -116,7 +117,14 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 		
 		// Notify client application that booking status was updated.		
 		if("success".equals(result.get("status").toString())) {
-			BookingManager.notifyBookingStatusChanged(bookingId);
+			result.put("newBookingStatus", Consts.STATUS_BY_CODE.get(newStatus));
+			String receiver = "";
+			if(newStatus == 1 || newStatus == 3) {
+				receiver = "admin";
+			} else {
+				receiver = "client";
+			}
+			BookingManager.notifyBookingStatusChanged(bookingId, receiver);
 		}
 		
 		Gson gson = new Gson();

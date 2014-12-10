@@ -42,7 +42,7 @@ public class CheckBookingStatusServlet extends HttpServlet {
 			VenuesDAO.updateStatus(bookingId, BookingStatus.CANCELLED.getValue());
 			bStatus = BookingStatus.CANCELLED.getValue(); 
 		}
-		responseMap.put("status", bStatus);
+		responseMap.put("status", Consts.STATUS_BY_CODE.get(bStatus));
 		
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(responseMap);			

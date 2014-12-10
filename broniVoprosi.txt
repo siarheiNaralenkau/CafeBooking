@@ -7,3 +7,13 @@
   нужно чето типа setCheckueSumm для ордера, а сервер сам сумму баллов пересчитывает по какимто формулам.
 
 4. для админа логин какой нибудь может? счас пароль просто с запросами отправляется.
+Сделать сервлет для проверки пароля админа..(AdminLoginServlet)...
+Input(venueId, password) Response(success/failure)
+
+5) Return booking status as string: 
+	PENDING
+	APPROVED
+	CANCELLED
+	REJECTED
+	CLOSED
+	EXPIRED

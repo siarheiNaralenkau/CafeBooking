@@ -30,6 +30,7 @@ public class BookingManager {
 					.addData("tableNumbers", booking.tableNumbersString())
 					.addData("userId", String.valueOf(booking.getUserId()))
 					.addData("status", "Pending")
+					.addData("receiver", "admin")
 					.build();
 			try {
 				MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);
@@ -41,7 +42,7 @@ public class BookingManager {
 	}
 	
 	// Method sends notification about booking status update to client application	
-		public static void notifyBookingStatusChanged(int bookingId) {
+		public static void notifyBookingStatusChanged(int bookingId, String receiver) {
 			Booking booking = VenuesDAO.getBookingById(bookingId);
 			List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
 			
@@ -65,6 +66,7 @@ public class BookingManager {
 						newStatus = "Expired";
 						break;
 				}
+				// TODO Add parameter to indicate, for which application the message is sent(admin or client).		
 				Message msgBookingCreated = new Message.Builder()
 						.addData("event", "bookingStatusChanged")
 						.addData("bookingId", String.valueOf(booking.getId()))
@@ -76,6 +78,7 @@ public class BookingManager {
 						.addData("tableNumbers", booking.tableNumbersString())
 						.addData("userId", String.valueOf(booking.getUserId()))
 						.addData("status", newStatus)
+						.addData("receiver", receiver)
 						.build();
 				try {
 					MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);
