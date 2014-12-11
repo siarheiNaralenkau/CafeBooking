@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.constants.Consts;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
@@ -18,7 +17,7 @@ import com.google.gson.Gson;
  * Can be called only by venue's admin user.
  * Example:
  * http://localhost:8080/BookingServer2/get_venue_bookings?venueId=1 - Receive all bookings.
- * http://localhost:8080/BookingServer2/get_venue_bookings?venueId=1&status=2 - Receive only approved bookings.
+ * http://localhost:8080/BookingServer2/get_venue_bookings?venueId=1&status=APPROVED - Receive only approved bookings.
  */
 @WebServlet("/get_venue_bookings")
 public class GetVenueBookingsServlet extends HttpServlet {
@@ -28,9 +27,9 @@ public class GetVenueBookingsServlet extends HttpServlet {
 		response.setContentType("application/json; charset=UTF-8");			
 				
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		int filterStatus = Consts.STATUS_ALL;
+		String filterStatus = "ALL";
 		if(request.getParameterMap().containsKey("status")) {
-			filterStatus = Integer.valueOf(request.getParameter("status"));
+			filterStatus = request.getParameter("status");
 		}
 		Map<String, Object> bookingsForVenue = VenuesDAO.getBookingsForVenue(venueId, filterStatus);
 		

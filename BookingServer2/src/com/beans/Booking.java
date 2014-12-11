@@ -11,7 +11,7 @@ public class Booking {
 	private String visitorPhone;
 	private Timestamp bookingTime;
 	private int placesAmount;
-	private int status;
+	private String status;
 	private String notes;
 	private Timestamp bookingCreated;
 	private List<Integer> tableNumbers;
@@ -67,11 +67,11 @@ public class Booking {
 		this.placesAmount = placesAmount;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -105,7 +105,7 @@ public class Booking {
 
 	public Booking(int id, int venueId, String visitorName,
 			String visitorPhone, Timestamp bookingTime, int placesAmount,
-			int status, String notes, Timestamp bookingCreated) {
+			String status, String notes, Timestamp bookingCreated) {
 		super();
 		this.id = id;
 		this.venueId = venueId;

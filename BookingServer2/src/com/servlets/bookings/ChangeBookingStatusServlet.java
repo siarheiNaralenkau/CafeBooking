@@ -54,15 +54,15 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 		int newStatus = Consts.CODE_BY_STATUS.get(request.getParameter(NEW_STATUS));	
 		Booking booking = VenuesDAO.getBookingById(bookingId);
 		int venueId = booking.getVenueId();
-		int bookingStatus = booking.getStatus();
+		String bookingStatus = booking.getStatus();
 		Map<String, Object> result = new HashMap<String, Object>();
 		
 		// Fill the graph of possible statuses for update		
 		if(request.getParameterMap().containsKey(ADMIN_USER)) {
-			if(bookingStatus == BookingStatus.PENDING.getValue()) {
+			if(bookingStatus.equals("PENDING")) {
 				availableStatuses.add(BookingStatus.APPROVED.getValue());
 				availableStatuses.add(BookingStatus.REJECTED.getValue());
-			} else if(bookingStatus == BookingStatus.APPROVED.getValue()) {
+			} else if(bookingStatus.equals("APPROVED")) {
 				availableStatuses.add(BookingStatus.CLOSED.getValue());
 				availableStatuses.add(BookingStatus.EXPIRED.getValue());
 			}

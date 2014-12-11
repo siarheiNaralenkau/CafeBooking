@@ -47,25 +47,7 @@ public class BookingManager {
 			List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
 			
 			if(!regIds.isEmpty()) {
-				Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);
-				String newStatus = "";
-				switch(booking.getStatus()) {
-					case 2: 
-						newStatus = "Approved";
-						break;
-					case 3: 
-						newStatus = "Cancelled";
-						break;
-					case 4: 
-						newStatus = "Rejected";
-						break;
-					case 5: 
-						newStatus = "Closed";
-						break;
-					case 6: 
-						newStatus = "Expired";
-						break;
-				}
+				Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);				
 				// TODO Add parameter to indicate, for which application the message is sent(admin or client).		
 				Message msgBookingCreated = new Message.Builder()
 						.addData("event", "bookingStatusChanged")
@@ -77,7 +59,7 @@ public class BookingManager {
 						.addData("notes", booking.getNotes())
 						.addData("tableNumbers", booking.tableNumbersString())
 						.addData("userId", String.valueOf(booking.getUserId()))
-						.addData("status", newStatus)
+						.addData("status", booking.getStatus())
 						.addData("receiver", receiver)
 						.build();
 				try {

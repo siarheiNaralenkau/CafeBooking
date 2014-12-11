@@ -27,8 +27,8 @@ public class Consts {
 		STATUS_BY_CODE.put(2, "APPROVED");
 		STATUS_BY_CODE.put(3, "CANCELLED");
 		STATUS_BY_CODE.put(4, "REJECTED");
-		STATUS_BY_CODE.put(3, "CLOSED");
-		STATUS_BY_CODE.put(4, "EXPIRED");
+		STATUS_BY_CODE.put(5, "CLOSED");
+		STATUS_BY_CODE.put(6, "EXPIRED");
 		
 		CODE_BY_STATUS.put("PENDING", 1);
 		CODE_BY_STATUS.put("APPROVED", 2);

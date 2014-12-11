@@ -284,7 +284,7 @@ public class VenuesDAO {
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				booking = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));
 				String sTableNumbers = rs.getString("table_no");				
 				List<Integer> tableNumbers = new ArrayList<Integer>();
 				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
@@ -391,11 +391,11 @@ public class VenuesDAO {
 			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));
 				b.setUserId(rs.getInt("user_id"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
-				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {					
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus().equals("PENDING")) {					
 					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
 				} else {
 					String sTableNumbers = rs.getString("table_no");
@@ -422,7 +422,7 @@ public class VenuesDAO {
 	}
 			
 	
-	public static Map<String, Object> getBookingsForVenue(int venueId, int filterStatus) {
+	public static Map<String, Object> getBookingsForVenue(int venueId, String filterStatus) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -430,8 +430,8 @@ public class VenuesDAO {
 			List<Booking> bookings = new ArrayList<Booking>();
 			con = dataSource.getConnection();
 			String query = GET_BOOKINGS_QUERY;
-			if(filterStatus != Consts.STATUS_ALL) {
-				query += " AND status = " + filterStatus; 
+			if(!filterStatus.equals("ALL")) {
+				query += " AND status = " + Consts.CODE_BY_STATUS.get(filterStatus); 
 			}
 			ps = con.prepareStatement(query);
 			ps.setInt(1, venueId);
@@ -439,7 +439,7 @@ public class VenuesDAO {
 			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));				
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));				
 				String sTableNumbers = rs.getString("table_no");
 				List<Integer> bookedTables = new ArrayList<Integer>();
 				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
@@ -452,11 +452,11 @@ public class VenuesDAO {
 				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
-				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {
-					b.setStatus(BookingStatus.REJECTED.getValue());
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus().equals("PENDING")) {
+					b.setStatus("REJECTED");
 					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
 				}
-				if(b.getStatus() == filterStatus || filterStatus == Consts.STATUS_ALL) {
+				if(b.getStatus().equals(filterStatus) || filterStatus.equals("ALL")) {					
 					bookings.add(b);
 				}
 			}
