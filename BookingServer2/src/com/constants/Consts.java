@@ -11,7 +11,7 @@ public class Consts {
 	public static final Double DEFAULT_LNG = 31.01457;
 
 	public static final String ADMIN_APP_KEY = "AIzaSyCj6I4a8D7grQzJttdmxr_V2uHOfQuj_s4";
-	public static final String CLIENT_APP_KEY = "AIzaSyCj6I4a8D7grQzJttdmxr_V2uHOfQuj_s4";
+	public static final String CLIENT_APP_KEY = "AIzaSyDnFBjNygGQJ45hUl-MPNPrK2-BGu1nWfU";
 	
 	public static final int BONUS_EXCHANGE_SCORE = 10000;
 	

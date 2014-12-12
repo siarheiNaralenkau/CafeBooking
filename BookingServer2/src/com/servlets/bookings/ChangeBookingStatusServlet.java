@@ -117,14 +117,13 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 		
 		// Notify client application that booking status was updated.		
 		if("success".equals(result.get("status").toString())) {
-			result.put("newBookingStatus", Consts.STATUS_BY_CODE.get(newStatus));
-			String receiver = "";
-			if(newStatus == 1 || newStatus == 3) {
-				receiver = "admin";
+			result.put("newBookingStatus", Consts.STATUS_BY_CODE.get(newStatus));			
+			if(newStatus == 1 || newStatus == 3) {				
+				BookingManager.notifyBookingStatusChanged(bookingId, "admin");
 			} else {
-				receiver = "client";
-			}
-			BookingManager.notifyBookingStatusChanged(bookingId, receiver);
+				String clientRegistrationId = booking.getRegId();
+				BookingManager.notifyBookingStatusChanged(bookingId, "client", clientRegistrationId);				
+			}			
 		}
 		
 		Gson gson = new Gson();

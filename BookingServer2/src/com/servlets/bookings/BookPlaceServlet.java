@@ -35,7 +35,8 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
 	private static final String TABLE_NUMBERS = "tableNumbers";	
-	private static final String USER_ID = "userId";		
+	private static final String USER_ID = "userId";	
+	private static final String REG_ID = "regId";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -62,6 +63,7 @@ public class BookPlaceServlet extends HttpServlet {
 			byte places = Byte.valueOf(request.getParameter(PLACES));
 			String notes = "";
 			String tableNumbers = "";
+			String regId = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);				
 			}
@@ -71,7 +73,10 @@ public class BookPlaceServlet extends HttpServlet {
 			if(request.getParameterMap().containsKey(USER_ID)) {
 				userId = Integer.valueOf(request.getParameter(USER_ID));
 			}
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId);
+			if(request.getParameterMap().containsKey(REG_ID)) {
+				regId = request.getParameter(REG_ID);
+			}
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId, regId);
 			result.put("Person name", visitorName);
 			result.put("UserId", userId);
 			

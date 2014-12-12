@@ -18,7 +18,16 @@ public class Booking {
 	private int userId;
 	private int spentMoney;
 	private int visitorSpentMoney;
+	private String regId;
 	
+	public String getRegId() {
+		return regId;
+	}
+
+	public void setRegId(String regId) {
+		this.regId = regId;
+	}
+
 	public int getId() {
 		return id;
 	}

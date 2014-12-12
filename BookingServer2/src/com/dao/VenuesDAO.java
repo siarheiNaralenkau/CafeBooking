@@ -31,8 +31,8 @@ import com.constants.Consts;
 import com.utils.LocationUtil;
 
 public class VenuesDAO {
-	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no, user_id) " +
-			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?, ?)";
+	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no, user_id, reg_id) " +
+			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?, ?, ?)";
 	private static final String VENUES_LIST_SQL = "SELECT * FROM venues";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status) VALUES(?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, new_places, new_time) VALUES(?, ?, ?, ?)";
@@ -179,7 +179,7 @@ public class VenuesDAO {
 		return filter;
 	}		
 	
-	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers, Integer userId) {
+	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers, Integer userId, String regId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		int qResult = 0;
 		Connection con = null;
@@ -204,6 +204,7 @@ public class VenuesDAO {
 				} else {
 					ps.setNull(8, Types.INTEGER);
 				}
+				ps.setString(9, regId);
 				qResult = ps.executeUpdate();
 				if(qResult > 0) {
 					result.put("status", "success");
@@ -294,6 +295,7 @@ public class VenuesDAO {
 				}
 				booking.setTableNumbers(tableNumbers);
 				booking.setUserId(rs.getInt("user_id"));
+				booking.setRegId(rs.getString("reg_id"));
 			}
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
