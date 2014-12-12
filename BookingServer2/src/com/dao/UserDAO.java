@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.beans.User;
+import com.constants.Consts;
 
 public class UserDAO {
 	
@@ -32,7 +32,7 @@ public class UserDAO {
 			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
 	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.visitor_contact_name, b.visitor_contact_phone, "
-			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, b.notes, b.booking_created, "
+			+ "b.spent_money, b.booking_time, b.places_amount, b.status as booking_status, b.notes, b.booking_created, "
 			+ "b.table_no, b.visitor_spent_money from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
 	private static final String GET_BONUS_HISTORY_SQL = "SELECT bh.scores_change, bh.change_time, v.name FROM bonus_history bh, venues v "
@@ -318,7 +318,7 @@ public class UserDAO {
 					bookingData.put("spent_money", rsBookings.getInt("spent_money"));
 					bookingData.put("booking_time", rsBookings.getTimestamp("booking_time"));
 					bookingData.put("places_amount", rsBookings.getInt("places_amount"));
-					bookingData.put("booking_status", rsBookings.getString("booking_status"));
+					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));
 					bookingData.put("notes", rsBookings.getString("notes"));
 					bookingData.put("booking_created", rsBookings.getTimestamp("booking_created"));
 					bookingData.put("table_no", rsBookings.getString("table_no"));

@@ -48,7 +48,6 @@ public class BookingManager {
 			
 			if(!regIds.isEmpty()) {
 				Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);				
-				// TODO Add parameter to indicate, for which application the message is sent(admin or client).		
 				Message msgBookingCreated = new Message.Builder()
 						.addData("event", "bookingStatusChanged")
 						.addData("bookingId", String.valueOf(booking.getId()))

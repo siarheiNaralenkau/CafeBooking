@@ -19,6 +19,7 @@ public class AdminDAO {
 	
 	private static final String ADD_DEVICE_SQL = "INSERT INTO admin_devices(venue_id, registration_id) VALUES(?, ?)";
 	private static final String GET_REG_ID_SQL = "SELECT registration_id FROM admin_devices WHERE venue_id = ?";
+	private static final String CHECK_DEVICE_PRESENSE_SQL = "SELECT * FROM admin_devices WHERE venue_id = ? AND registration_id = ?";
 	
 	static {		
 		try {
@@ -48,13 +49,25 @@ public class AdminDAO {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
-		try {
+		try {			
 			con = dataSource.getConnection();
-			ps = con.prepareStatement(ADD_DEVICE_SQL);
+			
+			ps = con.prepareStatement(CHECK_DEVICE_PRESENSE_SQL);
 			ps.setInt(1, venueId);
 			ps.setString(2, registrationId);
-			ps.executeUpdate();
-			result.put("status", "success");
+			ResultSet rs = ps.executeQuery();
+			if(!rs.next()) {
+				ps.close();
+				ps = con.prepareStatement(ADD_DEVICE_SQL);
+				ps.setInt(1, venueId);
+				ps.setString(2, registrationId);
+				ps.executeUpdate();
+				result.put("status", "success");
+			} else {
+				result.put("status", "failure");
+				result.put("error", "Device with such registration ID already exists in database");
+			}
+			
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());

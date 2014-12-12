@@ -9,7 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.beans.Booking;
+import com.constants.Consts;
 import com.dao.BookingsDAO;
+import com.dao.UserDAO;
+import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
 /**
@@ -33,7 +37,13 @@ public class SetBookingSpendServlet extends HttpServlet {
 		int bookingId = Integer.valueOf(request.getParameter(BOOKING_ID));
 		
 		Map<String, Object> result = BookingsDAO.setBookingSpent(spentMoney, bookingId);
-		
+		if("success".equals(result.get("status"))) {
+			Booking booking = VenuesDAO.getBookingById(bookingId);
+			// Add bonus scores only for registred users.
+			if(booking.getUserId() > 0) {
+				UserDAO.addScores(booking.getUserId(), booking.getVenueId(), spentMoney/Consts.BONUS_EXCHANGE_SCORE);
+			}
+		}			
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);	
 		response.getWriter().write(jsonResult);
