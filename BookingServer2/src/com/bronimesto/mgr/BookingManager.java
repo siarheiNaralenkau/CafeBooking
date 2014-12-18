@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.beans.Booking;
+import com.beans.Venue;
 import com.constants.Consts;
 import com.dao.AdminDAO;
 import com.dao.VenuesDAO;
@@ -17,6 +18,7 @@ public class BookingManager {
 	public static void notifyBookingCreated(int bookingId) {
 		Booking booking = VenuesDAO.getBookingById(bookingId);
 		List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
+		Venue venue = VenuesDAO.getVenueById(booking.getVenueId());
 		
 		if(!regIds.isEmpty()) {
 			Sender notificationSender = new Sender(Consts.ADMIN_APP_KEY);
@@ -32,6 +34,8 @@ public class BookingManager {
 					.addData("userId", String.valueOf(booking.getUserId()))
 					.addData("status", "Pending")
 					.addData("receiver", "admin")
+					.addData("venueId", String.valueOf(booking.getVenueId()))
+					.addData("venueName", venue.getName())
 					.build();
 			try {
 				MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);
@@ -46,6 +50,7 @@ public class BookingManager {
 	public static void notifyBookingStatusChanged(int bookingId, String receiver) {
 		Booking booking = VenuesDAO.getBookingById(bookingId);
 		List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
+		Venue venue = VenuesDAO.getVenueById(booking.getVenueId());
 		
 		if(!regIds.isEmpty()) {
 			Sender notificationSender = new Sender(Consts.ADMIN_APP_KEY);				
@@ -61,6 +66,8 @@ public class BookingManager {
 					.addData("userId", String.valueOf(booking.getUserId()))
 					.addData("status", booking.getStatus())
 					.addData("receiver", receiver)
+					.addData("venueId", String.valueOf(booking.getVenueId()))
+					.addData("venueName", venue.getName())
 					.build();
 			try {
 				MulticastResult gcmResult = notificationSender.send(msgBookingCreated, regIds, Consts.NUMBER_OF_RETRIES);

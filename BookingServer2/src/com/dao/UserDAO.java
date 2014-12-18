@@ -31,7 +31,7 @@ public class UserDAO {
 	private static final String CREATE_REVIEW_SQL = "INSERT INTO reviews(venue_id, user_id, mark_food, mark_service, mark_atmosphere, mark_price_quality, "
 			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
-	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.id as booking_id, b.visitor_contact_name, b.visitor_contact_phone, "
+	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, v.id as venue_id, b.id as booking_id, b.visitor_contact_name, b.visitor_contact_phone, "
 			+ "b.spent_money, b.booking_time, b.places_amount, b.status as booking_status, b.notes, b.booking_created, "
 			+ "b.table_no, b.visitor_spent_money from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
@@ -314,12 +314,18 @@ public class UserDAO {
 					Map<String, Object> bookingData = new HashMap<String, Object>();
 					bookingData.put("bookingId", rsBookings.getInt("booking_id"));
 					bookingData.put("venue_name", rsBookings.getString("venue_name"));
-					bookingData.put("visitor_contact_name", rsBookings.getString("visitor_contact_name"));					
+					bookingData.put("venue_id", rsBookings.getInt("venue_id"));
+					bookingData.put("visitor_contact_name", rsBookings.getString("visitor_contact_name"));
+					int spentMoney = rsBookings.getInt("spent_money");
+					int bonusScores = 0;
+					if(spentMoney > 0) {
+						bonusScores = spentMoney/Consts.BONUS_EXCHANGE_SCORE;
+					}
 					bookingData.put("spent_money", rsBookings.getInt("spent_money"));
+					bookingData.put("bonus_scores", bonusScores);
 					bookingData.put("booking_time", rsBookings.getTimestamp("booking_time"));
 					bookingData.put("places_amount", rsBookings.getInt("places_amount"));
-					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));
-					bookingData.put("notes", rsBookings.getString("notes"));										
+					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));														
 					bookingData.put("visitor_spent_money", rsBookings.getInt("visitor_spent_money"));
 					userBookings.add(bookingData);
 				}

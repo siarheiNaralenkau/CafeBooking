@@ -1,0 +1,3 @@
+https://www.digitalocean.com/community/tutorials/how-to-install-and-setup-postfix-on-ubuntu-14-04
+[4:11:57 PM] Pavel_Kuchin: https://support.google.com/mail/answer/81126?hl=en
+[4:13:38 PM] Pavel_Kuchin: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-dkim-with-postfix-on-debian-wheezy
