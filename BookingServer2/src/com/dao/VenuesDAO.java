@@ -364,7 +364,7 @@ public class VenuesDAO {
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				HistoryEnrty he = new HistoryEnrty(rs.getInt("booking_id"), rs.getInt("new_status"), 
+				HistoryEnrty he = new HistoryEnrty(rs.getInt("booking_id"), Consts.STATUS_BY_CODE.get(rs.getInt("new_status")), 
 						rs.getTimestamp("change_time"), rs.getInt("venue_id"), rs.getInt("places_amount"));
 				bookingHistory.add(he);					
 			}
