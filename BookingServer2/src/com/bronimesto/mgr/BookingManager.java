@@ -80,7 +80,9 @@ public class BookingManager {
 	
 	public static void notifyBookingStatusChanged(int bookingId, String receiver, String regId) {
 		Booking booking = VenuesDAO.getBookingById(bookingId);					
-		Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);				
+		Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);	
+		Venue venue = VenuesDAO.getVenueById(booking.getVenueId());
+		
 		Message msgBookingCreated = new Message.Builder()
 				.addData("event", "bookingStatusChanged")
 				.addData("bookingId", String.valueOf(booking.getId()))
@@ -93,6 +95,8 @@ public class BookingManager {
 				.addData("userId", String.valueOf(booking.getUserId()))
 				.addData("status", booking.getStatus())
 				.addData("receiver", receiver)
+				.addData("venueId", String.valueOf(booking.getVenueId()))
+				.addData("venueName", venue.getName())
 				.build();
 		try {
 			Result gcmResult = notificationSender.send(msgBookingCreated, regId, Consts.NUMBER_OF_RETRIES);
