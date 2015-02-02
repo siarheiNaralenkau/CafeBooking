@@ -293,6 +293,8 @@ public class VenuesDAO {
 				}
 				booking.setTableNumbers(tableNumbers);
 				booking.setUserId(rs.getInt("user_id"));
+				booking.setSpentMoney(rs.getInt("spent_money"));
+				booking.setSpentValid(rs.getBoolean("spent_valid"));
 			}
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
@@ -404,7 +406,8 @@ public class VenuesDAO {
 							bookedTables.add(Integer.valueOf(sNum));
 						}				
 					}
-					b.setTableNumbers(bookedTables);				
+					b.setTableNumbers(bookedTables);	
+					b.setSpentValid(rs.getBoolean("spent_valid"));
 					pendingBookings.add(b);
 				}
 			}
@@ -471,6 +474,7 @@ public class VenuesDAO {
 				b.setUserId(rs.getInt("user_id"));
 				b.setSpentMoney(rs.getInt("spent_money"));
 				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
+				b.setSpentValid(rs.getBoolean("spent_valid"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
 				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {

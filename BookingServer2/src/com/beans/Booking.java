@@ -18,7 +18,16 @@ public class Booking {
 	private int userId;
 	private int spentMoney;
 	private int visitorSpentMoney;
+	private boolean spentValid;
 	
+	public boolean isSpentValid() {
+		return spentValid;
+	}
+
+	public void setSpentValid(boolean spentValid) {
+		this.spentValid = spentValid;
+	}
+
 	public int getId() {
 		return id;
 	}

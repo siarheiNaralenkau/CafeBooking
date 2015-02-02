@@ -34,6 +34,7 @@
 						out.print("<tr data-venueid=" + venue.getId() + " data-category=\"" + category + "\">");
 						out.print("<td>" + venue.getName() + "</td>");
 						out.print("<td><button onClick=\"editVenue(this)\" data-venueid=" + venue.getId() + ">Редактировать</button></td>");
+						out.print("<td><button onClick=\"venueStats(this)\" data-venueid=" + venue.getId() + ">Статистика заказов</button></td>");
 						out.print("</tr>");
 					}
 				}

@@ -11,11 +11,13 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.beans.Booking;
+
 public class BookingsDAO {
 	private static DataSource dataSource;
 	
 	private static final String SET_BOOKING_SPENT_SQL = "UPDATE bookings SET status=6, spent_money = ? WHERE id = ?";
-	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ? WHERE id = ?";
+	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ?, spent_valid = ? WHERE id = ?";
 	
 	static {		
 		try {
@@ -66,11 +68,18 @@ public class BookingsDAO {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
+		boolean spentValid = true;
 		try {
-			con = dataSource.getConnection();
+			con = dataSource.getConnection();			
+			Booking booking = VenuesDAO.getBookingById(bookingId);
+			if(booking.getSpentMoney() != spentMoney) {
+				spentValid = false;
+			}
+			
 			ps = con.prepareStatement(SET_VISITOR_SPENT_SQL);
 			ps.setInt(1, spentMoney);
-			ps.setInt(2, bookingId);
+			ps.setBoolean(2, spentValid);
+			ps.setInt(3, bookingId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		}  catch(SQLException e) {

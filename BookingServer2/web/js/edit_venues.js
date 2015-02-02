@@ -25,7 +25,12 @@ function switchCategory(categoryElem) {
 
 function editVenue(el) {
 	var venueId = $(el).attr("data-venueid");
-	window.location = "edit_venue_open?venueId=" + venueId
+	window.location = "edit_venue_open?venueId=" + venueId;
+};
+
+function venueStats(el) {
+	var venueId = $(el).attr("data-venueid");
+	window.location = "venue_stats?venueId=" + venueId;
 };
 
 function updateCheckBox(el) {

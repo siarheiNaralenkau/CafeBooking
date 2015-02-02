@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 
 /**
  * Servlet implementation class AddUserCheckServlet
- * http://bronimesto.by:8080/BookingServer2/add_user_check?spentMoney=300000
+ * http://bronimesto.by:8080/BookingServer2/add_user_check?spentMoney=300000&bookingId=5
  */
 @WebServlet("/add_user_check")
 public class AddUserCheckServlet extends HttpServlet {
