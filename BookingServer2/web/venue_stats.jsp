@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.beans.VenuePhoto"%>
 <%@page import="com.beans.Venue"%>
 <%@page import="java.util.List"%>
@@ -12,6 +13,23 @@
 	<link rel="stylesheet" type="text/css" href="css/edit_venues.css">
 </head>
 <body>
-	<h3>Статистика заказов по заведению</h3>
+	<% 
+		Venue venue = (Venue)request.getAttribute("venue");
+		Map<String, Object> bookingStats = (Map<String, Object>)request.getAttribute("bookingStats");
+	%>
+	<h4>Статистика заказов по заведению<b>"<%=venue.getName()%>"</b></h4>
+	<ul>
+		<li>Всего бронирований: <%=bookingStats.get("bookingsCreated") %></li>
+		<li>Ожидают утверждения: <%=bookingStats.get("bookingsPending") %></li>
+		<li>Утверждено ресторатором: <%=bookingStats.get("bookingsApproved") %></li>
+		<li>Отменено ресторатором: <%=bookingStats.get("bookingsRejected") %></li>
+		<li>Отменено посетителем: <%=bookingStats.get("bookingsCancelled") %></li>
+		<li>Посетитель не пришел: <%=bookingStats.get("bookingsExpired") %></li>
+		<li>Бронирование и заказ выполнены: <%=bookingStats.get("bookingsCompleted") %></li>
+		<li>---
+		<li>Минимальный чек: <%=bookingStats.get("minCheck") %></li>
+		<li>Максимальный чек: <%=bookingStats.get("maxCheck") %></li>
+		<li>Средний чек: <%=bookingStats.get("avgCheck") %></li>
+	</ul>
 </body>
 </html>

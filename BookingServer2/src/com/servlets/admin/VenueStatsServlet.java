@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.beans.Venue;
 import com.constants.Consts;
+import com.dao.BookingsDAO;
 import com.dao.VenuesDAO;
 
 /**
@@ -33,6 +34,8 @@ public class VenueStatsServlet extends HttpServlet {
 		Map<String, Object> venueBookings = VenuesDAO.getBookingsForVenue(venueId, Consts.STATUS_ALL);
 		request.setAttribute("venue", venue);
 		request.setAttribute("bookings", venueBookings);
+		Map<String, Object> bookingStats = BookingsDAO.getBookingStats(venueId);
+		request.setAttribute("bookingStats", bookingStats);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/venue_stats.jsp");
 		dispatcher.forward(request, response);
 	}	

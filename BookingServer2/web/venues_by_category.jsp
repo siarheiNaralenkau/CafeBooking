@@ -14,33 +14,39 @@
 </head>
 <body>
 	<div id="parent" style="width: 650px">
-		<div id="dCategories" style="float: left; width: 300px; height: 600px;">
-			<ul>
-			<%
-				Map<String, List<Venue>> venues = (Map<String, List<Venue>>)request.getAttribute("venues");
-				Set<String> categories = venues.keySet();
-				for(String category: categories) {
-					out.print("<li><input type=\"checkbox\" checked onclick=\"switchCategory(this)\" value=\"" + category + "\">" + category + "</li>");
-				}
-			%>
-			</ul>
-		</div>
-		<div id="dVenues" style="float: right; height: 600px; overflow-y: auto">
-			<table border="1" id="tVenues">
-			<% 
-				for(String category: categories) {
-					List<Venue> cVenues = venues.get(category);
-					for(Venue venue: cVenues) {
-						out.print("<tr data-venueid=" + venue.getId() + " data-category=\"" + category + "\">");
-						out.print("<td>" + venue.getName() + "</td>");
-						out.print("<td><button onClick=\"editVenue(this)\" data-venueid=" + venue.getId() + ">Редактировать</button></td>");
-						out.print("<td><button onClick=\"venueStats(this)\" data-venueid=" + venue.getId() + ">Статистика заказов</button></td>");
-						out.print("</tr>");
-					}
-				}
-			%>
-			</table>
-		</div>
+		<table><tr>
+			<td>
+				<div id="dCategories" style="float: left; width: 300px; height: 600px;">
+					<ul>
+					<%
+						Map<String, List<Venue>> venues = (Map<String, List<Venue>>)request.getAttribute("venues");
+						Set<String> categories = venues.keySet();
+						for(String category: categories) {
+							out.print("<li><input type=\"checkbox\" checked onclick=\"switchCategory(this)\" value=\"" + category + "\">" + category + "</li>");
+						}
+					%>
+					</ul>
+				</div>
+			</td>
+			<td>
+				<div id="dVenues" style="height: 600px; overflow-y: auto; width: 700px">
+					<table border="1" id="tVenues">
+					<% 
+						for(String category: categories) {
+							List<Venue> cVenues = venues.get(category);
+							for(Venue venue: cVenues) {
+								out.print("<tr data-venueid=" + venue.getId() + " data-category=\"" + category + "\">");
+								out.print("<td>" + venue.getName() + "</td>");
+								out.print("<td><button onClick=\"editVenue(this)\" data-venueid=" + venue.getId() + ">Редактировать</button></td>");
+								out.print("<td><button onClick=\"venueStats(this)\" data-venueid=" + venue.getId() + ">Статистика заказов</button></td>");
+								out.print("</tr>");
+							}
+						}
+					%>
+					</table>
+				</div>
+			</td>
+		</tr></table>
 	</div>
 </body>
 </html>
