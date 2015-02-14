@@ -14,6 +14,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.beans.User;
+import com.constants.Consts;
+
 public class UserDAO {
 	
 	private static DataSource dataSource;
@@ -28,12 +31,14 @@ public class UserDAO {
 	private static final String CREATE_REVIEW_SQL = "INSERT INTO reviews(venue_id, user_id, mark_food, mark_service, mark_atmosphere, mark_price_quality, "
 			+ "comments_good, comments_bad) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
-	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, b.visitor_contact_name, b.visitor_contact_phone, "
-			+ "b.spent_money, b.booking_time, b.places_amount, bs.status as booking_status, b.notes, b.booking_created, "
+	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, v.id as venue_id, b.id as booking_id, b.visitor_contact_name, b.visitor_contact_phone, "
+			+ "b.spent_money, b.booking_time, b.places_amount, b.status as booking_status, b.notes, b.booking_created, "
 			+ "b.table_no, b.visitor_spent_money from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
 	private static final String GET_BONUS_HISTORY_SQL = "SELECT bh.scores_change, bh.change_time, v.name FROM bonus_history bh, venues v "
 			+ "WHERE bh.venue_id = v.id AND bh.user_id = ? ORDER BY bh.change_time DESC";
+	private static final String GET_USER_BY_ID_SQL = "SELECT * FROM users WHERE id = ?";
+	private static final String UPDATE_USER_SQL = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ?, password = ? WHERE id = ?";
 	
 	static {		
 		try {
@@ -238,6 +243,53 @@ public class UserDAO {
 		return result;
 	}
 	
+	public static User getUserById(int userId) {
+		User user = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_USER_BY_ID_SQL);
+			ps.setInt(1, userId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				user = new User(rs.getString("name"), rs.getString("surname"), rs.getString("email"),
+						rs.getString("phone"), rs.getString("password"));
+			}
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return user;
+	}
+	
+	public static Map<String, Object> updateUser(int userId, User user) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(UPDATE_USER_SQL);
+			ps.setString(1, user.getName());
+			ps.setString(2, user.getSurname());
+			ps.setString(3, user.getEmail());
+			ps.setString(4, user.getPhone());
+			ps.setString(5, user.getPassword());
+			ps.setInt(6, userId);
+			ps.executeUpdate();
+			result.put("status", "success");
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
 	public static Map<String, Object> getUserDetails(int userId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
@@ -260,16 +312,20 @@ public class UserDAO {
 				ResultSet rsBookings = ps.executeQuery();
 				while(rsBookings.next()) {
 					Map<String, Object> bookingData = new HashMap<String, Object>();
+					bookingData.put("bookingId", rsBookings.getInt("booking_id"));
 					bookingData.put("venue_name", rsBookings.getString("venue_name"));
+					bookingData.put("venue_id", rsBookings.getInt("venue_id"));
 					bookingData.put("visitor_contact_name", rsBookings.getString("visitor_contact_name"));
-					bookingData.put("visitor_contact_phone", rsBookings.getString("visitor_contact_phone"));
+					int spentMoney = rsBookings.getInt("spent_money");
+					int bonusScores = 0;
+					if(spentMoney > 0) {
+						bonusScores = spentMoney/Consts.BONUS_EXCHANGE_SCORE;
+					}
 					bookingData.put("spent_money", rsBookings.getInt("spent_money"));
+					bookingData.put("bonus_scores", bonusScores);
 					bookingData.put("booking_time", rsBookings.getTimestamp("booking_time"));
 					bookingData.put("places_amount", rsBookings.getInt("places_amount"));
-					bookingData.put("booking_status", rsBookings.getString("booking_status"));
-					bookingData.put("notes", rsBookings.getString("notes"));
-					bookingData.put("booking_created", rsBookings.getTimestamp("booking_created"));
-					bookingData.put("table_no", rsBookings.getString("table_no"));
+					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));														
 					bookingData.put("visitor_spent_money", rsBookings.getInt("visitor_spent_money"));
 					userBookings.add(bookingData);
 				}
@@ -312,6 +368,28 @@ public class UserDAO {
 			closeConnection(con, ps);
 		}
 		return result;
+	}
+	
+	public static void generateAdminPasswords() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			PreparedStatement psVenues = con.prepareStatement("SELECT id FROM venues");
+			ps = con.prepareStatement("UPDATE venues SET admin_password = (SELECT SUBSTRING(MD5(RAND()) FROM 1 FOR 8)) WHERE id = ?");
+			ResultSet rsVenues = psVenues.executeQuery();
+			while(rsVenues.next()) {
+				ps.setInt(1, rsVenues.getInt("id"));
+				ps.executeUpdate();
+			}
+			rsVenues.close();
+			psVenues.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+			closeConnection(con, ps);
+		} finally {
+			closeConnection(con, ps);
+		}		
 	}
 	
 	private static boolean checkUser(Connection con, String email) throws SQLException {

@@ -50,8 +50,13 @@ public class BookingsDAO {
 		try {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(SET_BOOKING_SPENT_SQL);
-			ps.setInt(1, spentMoney);
-			ps.setInt(2, bookingId);
+			if(spentMoney == 0) {
+				ps.setInt(1, 6);
+			} else {
+				ps.setInt(1, 5);
+			}
+			ps.setInt(2, spentMoney);
+			ps.setInt(3, bookingId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		} catch(SQLException e) {

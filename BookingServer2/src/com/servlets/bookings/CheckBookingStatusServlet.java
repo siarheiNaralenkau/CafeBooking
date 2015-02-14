@@ -33,14 +33,14 @@ public class CheckBookingStatusServlet extends HttpServlet {
 		int bookingId = Integer.valueOf(request.getParameter("bookingId"));
 		Booking booking = VenuesDAO.getBookingById(bookingId);		
 		responseMap.put("success", true);			
-		int bStatus = booking.getStatus();			
+		String bStatus = booking.getStatus();			
 		long createdTime = booking.getBookingCreated().getTime();
 		Date now = new Date();
 		long nowTime = now.getTime();
 		// If booking was not approved during 20 minutes since creation - cancel it.			
-		if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && bStatus == BookingStatus.PENDING.getValue()) {
+		if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && bStatus.equals("PENDING")) {
 			VenuesDAO.updateStatus(bookingId, BookingStatus.CANCELLED.getValue());
-			bStatus = BookingStatus.CANCELLED.getValue(); 
+			bStatus = "CANCELLED"; 
 		}
 		responseMap.put("status", bStatus);
 		

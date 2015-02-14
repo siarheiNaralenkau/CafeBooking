@@ -31,8 +31,8 @@ import com.constants.Consts;
 import com.utils.LocationUtil;
 
 public class VenuesDAO {
-	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no, user_id) " +
-			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?, ?)";
+	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no, user_id, reg_id) " +
+			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?, ?, ?)";
 	private static final String VENUES_LIST_SQL = "SELECT * FROM venues";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status) VALUES(?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, new_places, new_time) VALUES(?, ?, ?, ?)";
@@ -45,8 +45,7 @@ public class VenuesDAO {
 	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue();
 	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ?";
 	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
-	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";
-	private static final String DELETE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.DELETED.getValue() + " WHERE booking_id = ?";
+	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";	
 	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";	
 	private static final String ADD_DAY_SCHEDULE_QUERY = "INSERT INTO venue_schedule(venue_id, day, open_time, close_time) VALUES(?, ?, ?, ?)";
 	private static final String UPDATE_DAY_SCHEDULE_QUERY = "UPDATE venue_schedule set open_time = ?, close_time = ? WHERE day = ? AND venue_id = ?";
@@ -68,6 +67,8 @@ public class VenuesDAO {
 	private static final String VENUE_BOOKINGS_SQL = "SELECT b.id, b.user_id, b.visitor_contact_name, b.visitor_contact_phone, b.spent_money, "
 			+ "b.booking_time, b.places_amount, b.notes, b.booking_created, b.table_no, bs.status FROM bookings b, booking_status bs "
 			+ "where bs.id = b.status AND venue_id = ? ORDER BY b.booking_created desc";
+	
+	private static final String GET_ADMIN_PASSWORD_SQL = "SELECT admin_password FROM venues where id = ?";
 	
 	private static DataSource dataSource;
 	
@@ -178,7 +179,7 @@ public class VenuesDAO {
 		return filter;
 	}		
 	
-	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers, Integer userId) {
+	public static Map<String, Object> bookPlaces(int venue_id, String visitorName, String visitorPhone, Date bookingTime, byte places, String notes, String tableNumbers, Integer userId, String regId) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		int qResult = 0;
 		Connection con = null;
@@ -203,6 +204,7 @@ public class VenuesDAO {
 				} else {
 					ps.setNull(8, Types.INTEGER);
 				}
+				ps.setString(9, regId);
 				qResult = ps.executeUpdate();
 				if(qResult > 0) {
 					result.put("status", "success");
@@ -283,7 +285,7 @@ public class VenuesDAO {
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				booking = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));
 				String sTableNumbers = rs.getString("table_no");				
 				List<Integer> tableNumbers = new ArrayList<Integer>();
 				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
@@ -293,8 +295,11 @@ public class VenuesDAO {
 				}
 				booking.setTableNumbers(tableNumbers);
 				booking.setUserId(rs.getInt("user_id"));
+
 				booking.setSpentMoney(rs.getInt("spent_money"));
 				booking.setSpentValid(rs.getBoolean("spent_valid"));
+
+				booking.setRegId(rs.getString("reg_id"));
 			}
 		} catch(SQLException e) {
 			System.out.println(e.getMessage());
@@ -363,7 +368,7 @@ public class VenuesDAO {
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
-				HistoryEnrty he = new HistoryEnrty(rs.getInt("booking_id"), rs.getInt("new_status"), 
+				HistoryEnrty he = new HistoryEnrty(rs.getInt("booking_id"), Consts.STATUS_BY_CODE.get(rs.getInt("new_status")), 
 						rs.getTimestamp("change_time"), rs.getInt("venue_id"), rs.getInt("places_amount"));
 				bookingHistory.add(he);					
 			}
@@ -392,11 +397,11 @@ public class VenuesDAO {
 			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));
 				b.setUserId(rs.getInt("user_id"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
-				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {					
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus().equals("PENDING")) {					
 					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
 				} else {
 					String sTableNumbers = rs.getString("table_no");
@@ -422,31 +427,9 @@ public class VenuesDAO {
 		}
 		return result;
 	}
+			
 	
-	public static Map<String, Object> deleteBooking(int bookingId) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		Connection con = null;
-		PreparedStatement ps = null;
-		try {					
-			con = dataSource.getConnection();
-			ps = con.prepareStatement(DELETE_BOOKING_QUERY);
-			ps.setInt(1, bookingId);
-			ps.executeUpdate();
-			result.put("status", "success");
-			result.put("bookingId", bookingId);
-			result.put("newBookingStatus", BookingStatus.DELETED.getValue());			
-		} catch(SQLException e) {
-			System.out.println("Error: " + e.getMessage());
-			result.put("status", "failure");
-			result.put("error", e.getMessage());
-		} finally {
-			closeConnection(con, ps);
-		}
-		
-		return result;
-	}	
-	
-	public static Map<String, Object> getBookingsForVenue(int venueId, int filterStatus) {
+	public static Map<String, Object> getBookingsForVenue(int venueId, String filterStatus) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -454,8 +437,8 @@ public class VenuesDAO {
 			List<Booking> bookings = new ArrayList<Booking>();
 			con = dataSource.getConnection();
 			String query = GET_BOOKINGS_QUERY;
-			if(filterStatus != Consts.STATUS_ALL) {
-				query += " AND status = " + filterStatus; 
+			if(!filterStatus.equals("ALL")) {
+				query += " AND status = " + Consts.CODE_BY_STATUS.get(filterStatus); 
 			}
 			ps = con.prepareStatement(query);
 			ps.setInt(1, venueId);
@@ -463,7 +446,7 @@ public class VenuesDAO {
 			long nowTime = new Date().getTime();
 			while(rs.next()) {
 				Booking b = new Booking(rs.getInt("id"), rs.getInt("venue_id"), rs.getString("visitor_contact_name"), rs.getString("visitor_contact_phone"),
-						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), rs.getInt("status"), rs.getString("notes"), rs.getTimestamp("booking_created"));				
+						rs.getTimestamp("booking_time"), rs.getInt("places_amount"), Consts.STATUS_BY_CODE.get(rs.getInt("status")), rs.getString("notes"), rs.getTimestamp("booking_created"));				
 				String sTableNumbers = rs.getString("table_no");
 				List<Integer> bookedTables = new ArrayList<Integer>();
 				if(sTableNumbers != null && !sTableNumbers.isEmpty()) {
@@ -477,11 +460,11 @@ public class VenuesDAO {
 				b.setSpentValid(rs.getBoolean("spent_valid"));
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
-				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus() == BookingStatus.PENDING.getValue()) {
-					b.setStatus(BookingStatus.REJECTED.getValue());
+				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus().equals("PENDING")) {
+					b.setStatus("REJECTED");
 					updateStatus(b.getId(), BookingStatus.REJECTED.getValue());
 				}
-				if(b.getStatus() == filterStatus || filterStatus == Consts.STATUS_ALL) {
+				if(b.getStatus().equals(filterStatus) || filterStatus.equals("ALL")) {					
 					bookings.add(b);
 				}
 			}
@@ -1087,5 +1070,29 @@ public class VenuesDAO {
 			closeConnection(con, ps);
 		}
 		return result;	
+	}
+	
+	public static Map<String, Object> checkAdminPassword(int venueId, String password) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {	
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_ADMIN_PASSWORD_SQL);
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next() && rs.getString("admin_password").equals(password)) {
+				result.put("status", "success");				
+			} else {
+				result.put("status", "failure");
+				result.put("error", "Incorrect venue id or admin password for venue");
+			}
+		} catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
 }

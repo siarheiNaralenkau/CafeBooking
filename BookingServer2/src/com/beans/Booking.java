@@ -11,13 +11,14 @@ public class Booking {
 	private String visitorPhone;
 	private Timestamp bookingTime;
 	private int placesAmount;
-	private int status;
+	private String status;
 	private String notes;
 	private Timestamp bookingCreated;
 	private List<Integer> tableNumbers;
 	private int userId;
 	private int spentMoney;
 	private int visitorSpentMoney;
+
 	private boolean spentValid;
 	
 	public boolean isSpentValid() {
@@ -26,6 +27,16 @@ public class Booking {
 
 	public void setSpentValid(boolean spentValid) {
 		this.spentValid = spentValid;
+	}
+		
+	private String regId;
+	
+	public String getRegId() {
+		return regId;
+	}
+
+	public void setRegId(String regId) {
+		this.regId = regId;
 	}
 
 	public int getId() {
@@ -76,11 +87,11 @@ public class Booking {
 		this.placesAmount = placesAmount;
 	}
 
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -114,7 +125,7 @@ public class Booking {
 
 	public Booking(int id, int venueId, String visitorName,
 			String visitorPhone, Timestamp bookingTime, int placesAmount,
-			int status, String notes, Timestamp bookingCreated) {
+			String status, String notes, Timestamp bookingCreated) {
 		super();
 		this.id = id;
 		this.venueId = venueId;
@@ -151,4 +162,14 @@ public class Booking {
 		this.visitorSpentMoney = visitorSpentMoney;
 	}
 
+	public String tableNumbersString() {
+		StringBuilder result = new StringBuilder();
+		for(int i = 0; i < tableNumbers.size(); i++) {
+			result.append(tableNumbers.get(i));
+			if(i < tableNumbers.size() - 1) {
+				result.append(",");
+			}
+		}
+		return result.toString();
+	}
 }

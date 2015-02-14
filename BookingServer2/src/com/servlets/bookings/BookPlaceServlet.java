@@ -5,10 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bronimesto.mgr.BookingManager;
 import com.dao.VenuesDAO;
 import com.google.gson.Gson;
 
@@ -24,6 +21,7 @@ import com.google.gson.Gson;
  * Requires POST request.
  * Example:
  * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3
+ * http://localhost:8080/BookingServer2/book_place?venueId=1&userId=2&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3
  */
 
 @WebServlet("/book_place")
@@ -37,7 +35,8 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String NOTES = "notes";
 	private static final String BOOKING_TIME = "bookingTime";
 	private static final String TABLE_NUMBERS = "tableNumbers";	
-	private static final String USER_ID = "userId";
+	private static final String USER_ID = "userId";	
+	private static final String REG_ID = "regId";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -64,6 +63,7 @@ public class BookPlaceServlet extends HttpServlet {
 			byte places = Byte.valueOf(request.getParameter(PLACES));
 			String notes = "";
 			String tableNumbers = "";
+			String regId = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);				
 			}
@@ -73,8 +73,16 @@ public class BookPlaceServlet extends HttpServlet {
 			if(request.getParameterMap().containsKey(USER_ID)) {
 				userId = Integer.valueOf(request.getParameter(USER_ID));
 			}
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId);
+			if(request.getParameterMap().containsKey(REG_ID)) {
+				regId = request.getParameter(REG_ID);
+			}
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId, regId);
 			result.put("Person name", visitorName);
+			result.put("UserId", userId);
+			
+			// Send push notification to device for venue
+			BookingManager.notifyBookingCreated(Integer.valueOf(result.get("bookingId").toString()));
+			
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	
 			response.getWriter().write(jsonResult);
