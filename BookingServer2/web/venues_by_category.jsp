@@ -11,8 +11,11 @@
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="js/edit_venues.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/edit_venues.css">
+	
+	
 </head>
 <body>
+
 	<div id="parent" style="width: 650px">
 		<table><tr>
 			<td>

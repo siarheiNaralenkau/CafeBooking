@@ -1,6 +1,8 @@
 package com.servlets.admin;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -14,6 +16,7 @@ import com.beans.Venue;
 import com.constants.Consts;
 import com.dao.BookingsDAO;
 import com.dao.VenuesDAO;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class VenueStatsServlet
@@ -29,15 +32,23 @@ public class VenueStatsServlet extends HttpServlet {
     }
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("application/json; charset=UTF-8");
 		int venueId = Integer.valueOf(request.getParameter(VENUE_ID));
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		Venue venue = VenuesDAO.getVenueForEdit(venueId);
+		Map<String, Object> result = new HashMap<String, Object>();
 		Map<String, Object> venueBookings = VenuesDAO.getBookingsForVenue(venueId, Consts.STATUS_ALL);
-		request.setAttribute("venue", venue);
-		request.setAttribute("bookings", venueBookings);
+		result.put("venue", venue);
+		result.put("bookings", venueBookings);
 		Map<String, Object> bookingStats = BookingsDAO.getBookingStats(venueId);
-		request.setAttribute("bookingStats", bookingStats);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/venue_stats.jsp");
-		dispatcher.forward(request, response);
+		result.put("bookingStats", bookingStats);
+		List<Map<String, Object>> bookingsRegistred = BookingsDAO.getBookingsForRegistredUsers(venueId, startDate, endDate);
+		result.put("bookingsRegistred", bookingsRegistred);
+		
+		Gson gson = new Gson();
+		String jsonResult = gson.toJson(result);		
+		response.getWriter().write(jsonResult);
 	}	
 
 }

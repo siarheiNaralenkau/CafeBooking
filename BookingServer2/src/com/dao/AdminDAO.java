@@ -19,7 +19,16 @@ public class AdminDAO {
 	
 	private static final String ADD_DEVICE_SQL = "INSERT INTO admin_devices(venue_id, registration_id) VALUES(?, ?)";
 	private static final String GET_REG_ID_SQL = "SELECT registration_id FROM admin_devices WHERE venue_id = ?";
-	private static final String CHECK_DEVICE_PRESENSE_SQL = "SELECT * FROM admin_devices WHERE venue_id = ? AND registration_id = ?";
+	private static final String CHECK_DEVICE_PRESENSE_SQL = "SELECT * FROM admin_devices WHERE venue_id = ? AND registration_id = ?";	
+	
+	private static final String BOOKING_STATS_SQL = "SELECT v.id, v.name," 
+			+ " (select count(*) from bookings where venue_id = v.id and status=5 and booking_time BETWEEN ? and ?) as successfull_bookings,"
+			+ " (select count(*) from bookings where venue_id = v.id and status=6 and booking_time BETWEEN ? and ?) as expired_bookings,"
+			+ " (select sum(spent_money) from bookings where venue_id = v.id and booking_time BETWEEN ? and ?) as check_sum"
+			+ " FROM venues v";
+	
+	private static final String BOOKING_STATS_UNREG_SQL = "SELECT visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
+			+ " where venue_id = ? and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
 	static {		
 		try {
@@ -89,6 +98,73 @@ public class AdminDAO {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				result.add(rs.getString("registration_id"));
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static List<Map<String, Object>> getBookingStatisctics(String startDate, String endDate) {
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(BOOKING_STATS_SQL);
+			ps.setString(1, startDate);
+			ps.setString(2, endDate);
+			ps.setString(3, startDate);
+			ps.setString(4, endDate);
+			ps.setString(5, startDate);
+			ps.setString(6, endDate);
+			ResultSet rs = ps.executeQuery();			
+			while(rs.next()) {
+				int successVisits = rs.getInt("successfull_bookings");
+				int expiredVisits = rs.getInt("expired_bookings");
+				double percentUnvisited = 0;
+				if(expiredVisits != 0) {
+					percentUnvisited = ((double)expiredVisits / (double)(successVisits + expiredVisits) ) * 100;
+				}
+				int checkSum = rs.getInt("check_sum");
+				int venueDebt = checkSum * 5 / 100;
+				Map<String, Object> venueStats = new HashMap<String, Object>();
+				venueStats.put("id", rs.getInt("id"));
+				venueStats.put("name", rs.getString("name"));				
+				venueStats.put("successVisits", successVisits);
+				venueStats.put("percentUnvisited", String.format("%.2f", percentUnvisited) + "%");
+				venueStats.put("checkSum", checkSum);
+				venueStats.put("venueDebt", venueDebt);
+				result.add(venueStats);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static List<Map<String, Object>> getBookingsForUnregUsers(int venueId, String startDate, String endDate) {
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(BOOKING_STATS_UNREG_SQL);
+			ps.setInt(1, venueId);
+			ps.setString(2, startDate);
+			ps.setString(3, endDate);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {				
+				Map<String, Object> userData = new HashMap<String, Object>();
+				userData.put("name", rs.getString("visitor_contact_name"));
+				userData.put("phone", rs.getString("visitor_contact_phone"));
+				userData.put("bookingsCount", rs.getInt("bookings_count"));
+				userData.put("spentMoney", rs.getInt("money_spent"));
+				result.add(userData);
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();

@@ -28,10 +28,15 @@ public class BookingsDAO {
 	private static final String GET_BOOKINS_COUNT = "SELECT count(*) as amount FROM bookings where venue_id = ?";
 	private static final String GET_PENDING_BOOKINGS_COUNT = "SELECT count(*) as pending_amount FROM bookings where venue_id = ? and status = 1";
 	
-	private static final String BOOKINGS_FOR_UNREGISTRED_USER = "select visitor_contact_name, count(*) as visits, sum(spent_money) as spent_sum from bookings "
-			+ "where venue_id = ? and visitor_contact_name is not null and user_id is null group by visitor_contact_name";
-	private static final String BOOKINGS_FOR_REGISTRED_USER = "select b.user_id, u.name, count(*) as visits, sum(b.spent_money) as spent_sum from bookings b, users u "
-			+ "where b.user_id = u.id and b.venue_id = ? and b.user_id is not null group by b.user_id";
+	private static final String BOOKINGS_REGISTRED = "Select count(*) as bookings_count, b.user_id, u.name, u.surname, u.email, u.phone, u.bonus_scores" 
+			+ " from bookings b, users u where b.venue_id = ? and b.user_id = u.id and b.booking_time > ? and b.booking_time < ?"
+			+ " group by b.user_id";
+	private static final String SPENT_MONEY_SQL = "SELECT sum(spent_money) as spent from bookings where user_id = ? and"
+			+ " (spent_valid=1 OR spent_valid is null) and venue_id=? and booking_time > ? and booking_time < ?";
+	private static final String CLAIMS_ALL_SQL = "SELECT count(*) as claims_all from bookings where user_id = ? and spent_valid is not null and venue_id=?"
+			+ " and booking_time > ? and booking_time < ?";
+	private static final String CLAIMS_ACTIVE_SQL = "SELECT count(*) as claims_active from bookings where user_id = ? and spent_valid = 0 and venue_id=?"
+			+ " and booking_time > ? and booking_time < ?";
 	
 	static {		
 		try {
@@ -57,59 +62,138 @@ public class BookingsDAO {
 		}			
 	}
 	
-	private static void getBookingsForUnregistredUsers(int venueId, Map<String, Object> result) {
+	private static int getSpentMoney(int venueId, String dateFrom, String dateTo, int userId) {
 		Connection con = null;
 		PreparedStatement ps = null;
+		int result = 0;
 		try {
 			con = dataSource.getConnection();
-			ps = con.prepareStatement(BOOKINGS_FOR_UNREGISTRED_USER);
-			ps.setInt(1, venueId);
+			ps = con.prepareStatement(SPENT_MONEY_SQL);
+			ps.setInt(1, userId);
+			ps.setInt(2, venueId);
+			ps.setString(3, dateFrom);
+			ps.setString(4, dateTo);
 			ResultSet rs = ps.executeQuery();
-			List<Map<String, Object>> bookings = new ArrayList<Map<String,Object>>();
-			while(rs.next()) {
-				Map<String, Object> userInfo = new HashMap<String, Object>();
-				userInfo.put("userName", rs.getString("visitor_contact_name"));
-				userInfo.put("visits", rs.getInt("visits"));
-				userInfo.put("spent_sum", rs.getInt("spent_sum"));
-				bookings.add(userInfo);
+			if(rs.next()) {
+				result = rs.getInt("spent");
 			}
-			result.put("bookingsByUnregUsers", bookings);
 			rs.close();
 		} catch(SQLException e) {
-			result.put("status", "failure");
-			result.put("error", e.getMessage());
 			e.printStackTrace();
 		} finally {
 			closeConnection(con, ps);
 		}
+		return result;
 	}
 	
-	private static void getBookingsForRegistredUsers(int venueId, Map<String, Object> result) {
+	private static int getClaimsAll(int venueId, String dateFrom, String dateTo, int userId) {
 		Connection con = null;
 		PreparedStatement ps = null;
+		int result = 0;
 		try {
 			con = dataSource.getConnection();
-			ps = con.prepareStatement(BOOKINGS_FOR_REGISTRED_USER);
-			ps.setInt(1, venueId);
+			ps = con.prepareStatement(CLAIMS_ALL_SQL);
+			ps.setInt(1, userId);
+			ps.setInt(2, venueId);
+			ps.setString(3, dateFrom);
+			ps.setString(4, dateTo);
 			ResultSet rs = ps.executeQuery();
-			List<Map<String, Object>> bookings = new ArrayList<Map<String,Object>>();
-			while(rs.next()) {
-				Map<String, Object> userInfo = new HashMap<String, Object>();
-				userInfo.put("userId", rs.getInt("user_id"));
-				userInfo.put("userName", rs.getString("name"));
-				userInfo.put("visits", rs.getInt("visits"));
-				userInfo.put("spent_sum", rs.getInt("spent_sum"));
-				bookings.add(userInfo);
+			if(rs.next()) {
+				result = rs.getInt("claims_all");
 			}
-			result.put("bookingsByRegUsers", bookings);
 			rs.close();
 		} catch(SQLException e) {
-			result.put("status", "failure");
-			result.put("error", e.getMessage());
 			e.printStackTrace();
 		} finally {
 			closeConnection(con, ps);
 		}
+		return result;
+	}
+	
+	private static int getClaimsActive(int venueId, String dateFrom, String dateTo, int userId) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		int result = 0;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(CLAIMS_ACTIVE_SQL);
+			ps.setInt(1, userId);
+			ps.setInt(2, venueId);
+			ps.setString(3, dateFrom);
+			ps.setString(4, dateTo);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt("claims_active");
+			}
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+//	private static void getBookingsForUnregistredUsers(int venueId, Map<String, Object> result) {
+//		Connection con = null;
+//		PreparedStatement ps = null;
+//		try {
+//			con = dataSource.getConnection();
+//			ps = con.prepareStatement(BOOKINGS_FOR_UNREGISTRED_USER);
+//			ps.setInt(1, venueId);
+//			ResultSet rs = ps.executeQuery();
+//			List<Map<String, Object>> bookings = new ArrayList<Map<String,Object>>();
+//			while(rs.next()) {
+//				Map<String, Object> userInfo = new HashMap<String, Object>();
+//				userInfo.put("userName", rs.getString("visitor_contact_name"));
+//				userInfo.put("visits", rs.getInt("visits"));
+//				userInfo.put("spent_sum", rs.getInt("spent_sum"));
+//				bookings.add(userInfo);
+//			}
+//			result.put("bookingsByUnregUsers", bookings);
+//			rs.close();
+//		} catch(SQLException e) {
+//			result.put("status", "failure");
+//			result.put("error", e.getMessage());
+//			e.printStackTrace();
+//		} finally {
+//			closeConnection(con, ps);
+//		}
+//	}
+	
+	public static List<Map<String, Object>> getBookingsForRegistredUsers(int venueId, String startDate, String endDate) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(BOOKINGS_REGISTRED);
+			ps.setInt(1, venueId);
+			ps.setString(2, startDate);
+			ps.setString(3, endDate);
+			ResultSet rs = ps.executeQuery();			
+			while(rs.next()) {
+				Map<String, Object> userInfo = new HashMap<String, Object>();
+				int userId = rs.getInt("user_id");
+				userInfo.put("id", userId);
+				userInfo.put("name", rs.getString("name"));
+				userInfo.put("surname", rs.getString("surname"));
+				userInfo.put("phone", rs.getString("phone"));
+				userInfo.put("email", rs.getString("email"));
+				userInfo.put("bookingsCount", rs.getInt("bookings_count"));
+				userInfo.put("bonusScores", rs.getInt("bonus_scores"));
+				userInfo.put("spentMoney", getSpentMoney(venueId, startDate, endDate, userId));
+				userInfo.put("claimsAll", getClaimsAll(venueId, startDate, endDate, userId));
+				userInfo.put("claimsActive", getClaimsActive(venueId, startDate, endDate, userId));
+				result.add(userInfo);
+			}			
+			rs.close();
+		} catch(SQLException e) {			
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
 	
 	public static Map<String, Object> setBookingSpent(int spentMoney, int bookingId) {
@@ -233,7 +317,12 @@ public class BookingsDAO {
 			result.put("bookingsRejected", rejected);
 			result.put("bookingsCancelled", cancelled);
 			result.put("bookingsExpired", expired);
-			result.put("bookingsCompleted", completed);			
+			result.put("bookingsCompleted", completed);
+			double percentUnvisited = 0;
+			if(expired != 0 && approved != 0) {
+				percentUnvisited = ((double)expired / (double)approved) * 100;
+			}
+			result.put("percentUnvisited", String.format("%.2f", percentUnvisited) + "%");
 			
 			rs.close();
 			ps.close();
@@ -248,10 +337,7 @@ public class BookingsDAO {
 			int avgSpent = rs.getInt("avg_spent");
 			result.put("minCheck", minSpent);
 			result.put("maxCheck", maxSpent);
-			result.put("avgCheck", avgSpent);
-			
-			getBookingsForRegistredUsers(venueId, result);
-			getBookingsForUnregistredUsers(venueId, result);
+			result.put("avgCheck", avgSpent);						
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
@@ -261,4 +347,5 @@ public class BookingsDAO {
 		}
 		return result;
 	}
+		
 }
