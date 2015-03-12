@@ -14,6 +14,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.constants.Consts;
+
 public class AdminDAO {
 	private static DataSource dataSource;
 	
@@ -29,6 +31,9 @@ public class AdminDAO {
 	
 	private static final String BOOKING_STATS_UNREG_SQL = "SELECT visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
 			+ " where venue_id = ? and booking_time > ? and booking_time < ? group by visitor_contact_name";	
+	
+	private static final String BOOKINGS_FOR_USER_SQL = "select DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
+			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ?";	
 	
 	static {		
 		try {
@@ -166,6 +171,39 @@ public class AdminDAO {
 				userData.put("spentMoney", rs.getInt("money_spent"));
 				result.add(userData);
 			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static List<Map<String, Object>> getBookingsForUser(int venueId, int userId, String startDate, String endDate) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(BOOKINGS_FOR_USER_SQL);
+			ps.setInt(1, venueId);
+			ps.setInt(2, userId);
+			ps.setString(3, startDate);
+			ps.setString(4, endDate);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Map<String, Object> bookingData = new HashMap<String, Object>();
+				bookingData.put("date", rs.getString("booking_date"));
+				bookingData.put("time", rs.getString("booking_time"));
+				int spentMoney = rs.getInt("spent_money");
+				int bonusScores = spentMoney/Consts.BONUS_EXCHANGE_SCORE;
+				bookingData.put("venue_sum", spentMoney);
+				bookingData.put("user_sum", rs.getInt("visitor_spent_money"));
+				bookingData.put("bonus_scores", bonusScores);
+				bookingData.put("notes", rs.getString("notes"));
+				result.add(bookingData);
+			}
+			rs.close();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {

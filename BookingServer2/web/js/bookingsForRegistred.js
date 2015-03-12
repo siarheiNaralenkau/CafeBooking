@@ -99,7 +99,7 @@ function fetchRegistredData(bookingsData) {
 };
 
 function moreInfoFormatter(cellValue, options, rowObject) {        		
-	return "<a href='./VenueStatsForUser?" + cellValue + "'>Подробнее</a>";                
+	return "<a href='./user_bookings.jsp?userId=" + cellValue + "&venueId=" + $("#venueId").text() + "'>Подробнее</a>"; ;                
 };
 
 function formatCaptionRegistred() {
