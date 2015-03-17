@@ -4,14 +4,7 @@
 	<%@page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Venues List</title>
-	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-	<script type="text/ecmascript" src="js/jquery.jqGrid.min.js"></script>	
-	<script type="text/ecmascript" src="js/grid.locale-en.js"></script>		
-	
-	<!-- A link to a jQuery UI ThemeRoller theme, more than 22 built-in and many more custom -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/jquery-ui.min.css" />
-    <!-- The link to the CSS that the grid needs -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
+	<jsp:include page="jq-grid.jsp"></jsp:include>
 </head>
 <body>
 	<table id="jqGrid"></table>
@@ -109,7 +102,7 @@
         	};
         	
         	function formatCaption() {
-        		return "<label for='dateFrom'>С</label><input type='date' id='dateFrom'/><label for='dateTo'>По</label><input type='date' id='dateTo'/>";
+        		return "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
         	};
         	
         	function dateFilterChanged() {        		

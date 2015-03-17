@@ -3,6 +3,11 @@ $(document).ready(function () {
 	$("#bookingsGrid").jqGrid({
         colModel: [
             {
+            	label: 'Booking ID',
+            	name: 'bookingId',
+            	hidden: true
+            },
+            {
 				label: 'Дата',
                 name: 'date',
                 width: 100                        
@@ -20,7 +25,8 @@ $(document).ready(function () {
             {
             	label: 'Сумма пользователя',
             	name: 'user_sum',
-            	width: 150
+            	width: 150,
+            	formatter: userSumFormatter
             },
             {
             	label: 'Начислено баллов',
@@ -62,7 +68,8 @@ $(document).ready(function () {
 			success: function(result) {	        			
     			for(var i = 0; i < result.length; i++) {
     				var bookingItem = result[i];
-                    gridArrayData.push({                                
+                    gridArrayData.push({   
+                    	bookingId: bookingItem.id,
                     	date: bookingItem.date,
                     	time: bookingItem.time,
                     	venue_sum: bookingItem.venue_sum,
@@ -84,11 +91,43 @@ $(document).ready(function () {
     	return "<a href='./venue_stats_jq.jsp?venueId=" + cellValue + "'>Подробнее</a>";                
 	};
 	
+	function userSumFormatter(cellValue, options, rowObject) {
+		var resultFormat = "";
+		if(cellValue == 0 || rowObject.venue_sum == rowObject.user_sum) {
+			resultFormat = cellValue;
+		} else {
+			var clickAgree = ' onClick="resolveSumConflict(' + rowObject.bookingId + ", \'agree\', " + options.rowId + ", " + options.pos + ", " + rowObject.user_sum + ')"';
+			var clickDisagree = ' onClick="resolveSumConflict(' + rowObject.bookingId + ", \'disagree\', " + options.rowId + ", " + options.pos + ", " + rowObject.user_sum + ')"';
+			resultFormat = "<div><div>" + cellValue + "</div><div><a class='agreeBtn' href='#'" + clickAgree + ">Agree</a>" + 
+				"<a class='disagreeBtn' href='#' style='margin-left: 10px'" + clickDisagree + ">Disagree</a></div></div>";
+		}
+		return resultFormat;
+	}
+	
 	function formatCaption() {
-		return "<label for='dateFrom'>С</label><input type='date' id='dateFrom'/><label for='dateTo'>По</label><input type='date' id='dateTo'/>";
+		return "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
 	};
 	
 	function dateFilterChanged() {        		
 		fetchGridData();
 	};
+		
 });
+
+function resolveSumConflict(bookingId, resolution, rowPos, cellPos, userValue) {
+	var rows = $(".jqgrow");
+	var rowToChange = rows.get(rowPos-1);
+	var bookingCells = $(rowToChange).children();
+	var cellUserSum = $(bookingCells).get(cellPos);
+	$(cellUserSum).html(userValue);
+	if(resolution == 'agree') {		
+		var cellVenueSum = $(bookingCells).get(cellPos-1);
+		$(cellVenueSum).html(userValue);
+		var cellBonus = $(bookingCells).get(cellPos+1);
+		$(cellBonus).html(userValue/10000);				
+	}
+	$.post(
+			'./ResolveSumConflictServlet',
+			{resolution: resolution, bookingId: bookingId, newSum: userValue}
+	);
+}

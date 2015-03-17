@@ -30,7 +30,7 @@ function createUnregistredGrid() {
 	    ],
 	
 	    viewrecords: true, // show the current page, data rang and total records on the toolbar
-	    width: 700,
+	    width: 850,
 	    height: 300,
 	    rowNum: 30,
 		datatype: 'local',
@@ -59,12 +59,13 @@ function fetchUnregistredData() {
 			console.log(result);
 			for(var i = 0; i < result.length; i++) {
 				var userItem = result[i];
+				var userNameEncoded = encodeURIComponent(userItem.name);
 		        gridArrayData.push({          	
 		            name: userItem.name,            
 		            phone: userItem.phone,            
 		            bookingsCount: userItem.bookingsCount,
 		            spentMoney: userItem.spentMoney,
-		            moreInfo: "userName=" + userItem.name + "&venueId=" + $("#venueId").text()            
+		            moreInfo: "userName=" + userNameEncoded + "&venueId=" + $("#venueId").text()            
 		        });     
 			}
 			$("#jqGridUnregistred").jqGrid('setGridParam', { data: gridArrayData});
@@ -75,11 +76,11 @@ function fetchUnregistredData() {
 };
 
 function moreInfoUnregFormatter(cellValue, options, rowObject) {        		
-	return "<a href='./VenueStatsForUser?" + cellValue + "'>Подробнее</a>";                
+	return "<a href='./UserBookingsUnregServlet?" + cellValue + "'>Подробнее</a>";                
 };
 
 function formatCaptionUnregistred() {
-	return "<label for='dateFromUnreg'>С</label><input type='date' id='dateFromUnreg'/><label for='dateToUnreg'>По</label><input type='date' id='dateToUnreg'/>";
+	return "<label for='dateFromUnreg'>С</label><input type='date' id='dateFromUnreg' style='margin-left: 10px'/><label for='dateToUnreg' style='margin-left: 10px'>По</label><input type='date' id='dateToUnreg' style='margin-left: 10px'/>";
 };
 
 function dateFilterUnregChanged() {        		

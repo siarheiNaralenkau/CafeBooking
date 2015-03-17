@@ -103,7 +103,7 @@ function moreInfoFormatter(cellValue, options, rowObject) {
 };
 
 function formatCaptionRegistred() {
-	return "<label for='dateFromReg'>С</label><input type='date' id='dateFromReg'/><label for='dateToReg'>По</label><input type='date' id='dateToReg'/>";
+	return "<label for='dateFromReg'>С</label><input type='date' id='dateFromReg' style='margin-left: 10px'/><label for='dateToReg' style='margin-left: 10px'>По</label><input type='date' id='dateToReg' style='margin-left: 10px'/>";
 };
 
 function dateFilterChanged() {        		

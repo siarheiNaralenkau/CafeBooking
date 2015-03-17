@@ -14,6 +14,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.beans.Booking;
 import com.constants.Consts;
 
 public class AdminDAO {
@@ -29,11 +30,18 @@ public class AdminDAO {
 			+ " (select sum(spent_money) from bookings where venue_id = v.id and booking_time BETWEEN ? and ?) as check_sum"
 			+ " FROM venues v";
 	
-	private static final String BOOKING_STATS_UNREG_SQL = "SELECT visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
+	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
 			+ " where venue_id = ? and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
-	private static final String BOOKINGS_FOR_USER_SQL = "select DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
+	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
 			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ?";	
+	
+	private static final String BOOKINGS_FOR_UNREG_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
+			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ?";
+	
+	private static final String RESOLVE_BOOKING_AGREE_SQL = "UPDATE bookings SET spent_money = ?, spent_valid = 1 WHERE id = ?";
+	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 1 WHERE id = ?";
+	private static final String UPDATE_USER_BONUS = "UPDATE users SET bonus_scores = bonus_scores + ? WHERE id = ?";
 	
 	static {		
 		try {
@@ -165,6 +173,7 @@ public class AdminDAO {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {				
 				Map<String, Object> userData = new HashMap<String, Object>();
+				userData.put("id", rs.getInt("id"));
 				userData.put("name", rs.getString("visitor_contact_name"));
 				userData.put("phone", rs.getString("visitor_contact_phone"));
 				userData.put("bookingsCount", rs.getInt("bookings_count"));
@@ -193,6 +202,7 @@ public class AdminDAO {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				Map<String, Object> bookingData = new HashMap<String, Object>();
+				bookingData.put("id", rs.getInt("id"));
 				bookingData.put("date", rs.getString("booking_date"));
 				bookingData.put("time", rs.getString("booking_time"));
 				int spentMoney = rs.getInt("spent_money");
@@ -210,5 +220,66 @@ public class AdminDAO {
 			closeConnection(con, ps);
 		}
 		return result;
+	}
+	
+	public static List<Map<String, Object>> getBookingsUnregUser(int venueId, String userName, String startDate, String endDate) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(BOOKINGS_FOR_UNREG_USER_SQL);
+			ps.setInt(1, venueId);
+			ps.setString(2, userName);
+			ps.setString(3, startDate);
+			ps.setString(4, endDate);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Map<String, Object> bookingData = new HashMap<String, Object>();
+				bookingData.put("id", rs.getInt("id"));
+				bookingData.put("date", rs.getString("booking_date"));
+				bookingData.put("time", rs.getString("booking_time"));
+				int spentMoney = rs.getInt("spent_money");				
+				bookingData.put("venue_sum", spentMoney);
+				bookingData.put("user_sum", rs.getInt("visitor_spent_money"));				
+				bookingData.put("notes", rs.getString("notes"));
+				result.add(bookingData);
+			}
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static void resolveSumConflict(int bookingId, int newCheckSum, String resolution) {
+		Booking booking = VenuesDAO.getBookingById(bookingId);
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			if(resolution.equals("agree")) {
+				// Update booking venue sum and bonus scores here, set spent_valid to true.
+				int oldCheckSum = booking.getSpentMoney();
+				int userId = booking.getUserId();
+				int bonusScoreChange = (newCheckSum - oldCheckSum)/Consts.BONUS_EXCHANGE_SCORE;
+				ps = con.prepareStatement(RESOLVE_BOOKING_AGREE_SQL);
+				ps.setInt(1, newCheckSum);
+				ps.setInt(2, bookingId);
+				ps.executeUpdate();
+				UserDAO.addScores(userId, booking.getVenueId(), bonusScoreChange);
+			} else {
+				// Only set spent_valid to true(resolve conflict).
+				ps = con.prepareStatement(RESOLVE_BOOKING_DISAGREE_SQL);
+				ps.setInt(1, bookingId);
+				ps.executeUpdate();
+			} 
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
 	}
 }

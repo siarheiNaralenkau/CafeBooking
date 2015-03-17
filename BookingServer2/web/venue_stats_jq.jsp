@@ -3,60 +3,15 @@
 <head>
 	<%@page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8"%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title>Статистика заказов по заведению</title>
-	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="js/edit_venues.js"></script>
-	<script type="text/ecmascript" src="js/jquery.jqGrid.min.js"></script>	
-	<script type="text/ecmascript" src="js/grid.locale-en.js"></script>
+	<title>Статистика заказов по заведению</title>		
+		
+	<jsp:include page="jq-grid.jsp"></jsp:include>
+	
+	<script type="text/javascript" src="js/venue_stats_jq.js"></script>
 	<script type="text/javascript" src="js/bookingsForRegistred.js"></script>
-	<script type="text/javascript" src="js/bookingsForUnregistred.js"></script>
-	<link rel="stylesheet" type="text/css" href="css/edit_venues.css">
-	<!-- A link to a jQuery UI ThemeRoller theme, more than 22 built-in and many more custom -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/jquery-ui.min.css" />
-    <!-- The link to the CSS that the grid needs -->
-    <link rel="stylesheet" type="text/css" media="screen" href="css/ui.jqgrid.css" />
-    
-    <script type="text/javascript">
-    	$(document).ready(function() {
-    		// Set default start and end dates.
-        	var endDate = new Date();
-        	var startDate = new Date();
-        	startDate.setMonth(startDate.getMonth()-1);
-        	document.getElementById('dateFrom').valueAsDate = startDate;
-        	document.getElementById('dateTo').valueAsDate = endDate;        	        	
-    		
-    		var startDate = $("#dateFrom").val();
-    		var endDate = $("#dateTo").val();
-    		var venueId = $("#venueId").text()
-    		
-    		var url = "./venue_stats?startDate=" + startDate + "&endDate=" + endDate + "&venueId=" + venueId;
-    		$.ajax({
-    			url: url,
-    			success: function(result) {
-    				console.log(result);    				
-    				$("#bookingsApproved").text(result.bookingStats.bookingsApproved);
-    				$("#bookingsCompleted").text(result.bookingStats.bookingsCompleted);
-    				$("#bookingsRejected").text(result.bookingStats.bookingsRejected);
-    				$("#bookingsCancelled").text(result.bookingStats.bookingsCancelled);
-    				$("#bookingsPending").text(result.bookingStats.bookingsPending);
-    				$("#bookingsExpired").text(result.bookingStats.bookingsExpired);
-    				$("#bookingsAll").text(result.bookingStats.bookingsCreated);
-    				$("#percentUnvisited").text(result.bookingStats.percentUnvisited)
-    				$("#maxCheck").text(result.bookingStats.maxCheck);
-    				$("#minCheck").text(result.bookingStats.minCheck);
-    				$("#avgCheck").text(result.bookingStats.avgCheck);
-    				$("#venueName").text(result.venue.name); 
-    				
-    				createRegistredGrid();
-    				fetchRegistredData(result.bookingsRegistred);
-    				
-    				// Get data for unregistred users.
-    	    		createUnregistredGrid();
-    			}
-    		});    		    		
-    	});
-    </script>
+	<script type="text/javascript" src="js/bookingsForUnregistred.js"></script>	   
 </head>
+
 <body>
 	<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
 	<h4>Статистика заказов по заведению <b id="venueName"></b> за период:</h4>
@@ -112,10 +67,13 @@
 		</li>		
 	</ul>
 	
-	<table id="jqGridRegistred"></table>
-    <div id="jqGridRegistredPager"></div>
-    
-    <table id="jqGridUnregistred"></table>
-    <div id="jqGridUnregistredPager"></div>
+	<div style="margin-top: 10px">
+		<table id="jqGridRegistred"></table>
+	    <div id="jqGridRegistredPager"></div>
+    </div>
+    <div style="margin-top: 20px">
+	    <table id="jqGridUnregistred"></table>
+	    <div id="jqGridUnregistredPager"></div>
+    </div>
 </body>
 </html>

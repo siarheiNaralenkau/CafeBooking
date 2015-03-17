@@ -1,6 +1,3 @@
-/**
- * 
- */
 function switchCategory(categoryElem) {
 	var checked = categoryElem.checked;
 	var categoryName = categoryElem.value;
