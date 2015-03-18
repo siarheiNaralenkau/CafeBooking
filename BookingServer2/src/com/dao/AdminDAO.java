@@ -31,7 +31,7 @@ public class AdminDAO {
 			+ " FROM venues v";
 	
 	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
-			+ " where venue_id = ? and booking_time > ? and booking_time < ? group by visitor_contact_name";	
+			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
 	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
 			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ?";	
@@ -193,6 +193,11 @@ public class AdminDAO {
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
+			String userName = UserDAO.getUserById(userId).getName();
+			Map<String, Object> uName = new HashMap<String, Object>();
+			uName.put("userName", userName);
+			result.add(uName);
+			
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(BOOKINGS_FOR_USER_SQL);
 			ps.setInt(1, venueId);
@@ -222,11 +227,16 @@ public class AdminDAO {
 		return result;
 	}
 	
-	public static List<Map<String, Object>> getBookingsUnregUser(int venueId, String userName, String startDate, String endDate) {
+	public static List<Map<String, Object>> getBookingsUnregUser(int venueId, int bookingId, String startDate, String endDate) {
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
 		Connection con = null;
-		PreparedStatement ps = null;
+		PreparedStatement ps = null;				
 		try {
+			Booking booking = VenuesDAO.getBookingById(bookingId);
+			String userName = booking.getVisitorName();
+			Map<String, Object> uName = new HashMap<String, Object>();
+			uName.put("userName", userName);
+			result.add(uName);
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(BOOKINGS_FOR_UNREG_USER_SQL);
 			ps.setInt(1, venueId);
@@ -243,6 +253,7 @@ public class AdminDAO {
 				bookingData.put("venue_sum", spentMoney);
 				bookingData.put("user_sum", rs.getInt("visitor_spent_money"));				
 				bookingData.put("notes", rs.getString("notes"));
+				bookingData.put("userName", userName);
 				result.add(bookingData);
 			}
 			rs.close();

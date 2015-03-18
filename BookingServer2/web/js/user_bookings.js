@@ -46,7 +46,7 @@ $(document).ready(function () {
         rowNum: 30,
 		datatype: 'local',
         pager: "#bookingsGridPager",
-		caption: "Бронирования пользователя за период: " + formatCaption()
+		caption: formatCaption()
     });
 	
 	// Set default start and end dates.
@@ -65,8 +65,9 @@ $(document).ready(function () {
 		var gridArrayData = [];
 		$.ajax({
 			url: url,
-			success: function(result) {	        			
-    			for(var i = 0; i < result.length; i++) {
+			success: function(result) {
+				$("#userName").text(result[0].userName)
+    			for(var i = 1; i < result.length; i++) {
     				var bookingItem = result[i];
                     gridArrayData.push({   
                     	bookingId: bookingItem.id,
@@ -105,7 +106,9 @@ $(document).ready(function () {
 	}
 	
 	function formatCaption() {
-		return "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
+		var caption = "Бронирования пользователя \"" + "<span id='userName'></span>" + "\" за период: ";
+		caption += "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
+		return caption;		
 	};
 	
 	function dateFilterChanged() {        		

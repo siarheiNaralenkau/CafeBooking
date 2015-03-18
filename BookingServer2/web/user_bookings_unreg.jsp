@@ -17,8 +17,10 @@
 </head>
 <body>
 	<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
-	<span id="userName"><%=request.getParameter("userName") %></span>
-	<table id="bookingsGrid"></table>
-    <div id="bookingsGridPager"></div>
+	<span id="bookingId" style="display: none"><%=request.getParameter("bookingId") %></span>
+	<div style='margin-left: auto; margin-right: auto; width: 880px'>
+		<table id="bookingsGrid"></table>
+    	<div id="bookingsGridPager"></div>
+    </div>
 </body>
 </html>   

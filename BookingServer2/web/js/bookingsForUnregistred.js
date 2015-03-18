@@ -44,8 +44,11 @@ function createUnregistredGrid() {
 	document.getElementById('dateFromUnreg').valueAsDate = startDate;
 	document.getElementById('dateToUnreg').valueAsDate = endDate;
 	
-	fetchUnregistredData()
-}
+	fetchUnregistredData();
+	
+	$("#dateFromUnreg").change(dateFilterUnregChanged);
+	$("#dateToUnreg").change(dateFilterUnregChanged);
+};
     		
 function fetchUnregistredData() {
 	var startDate = $("#dateFromUnreg").val();
@@ -59,13 +62,12 @@ function fetchUnregistredData() {
 			console.log(result);
 			for(var i = 0; i < result.length; i++) {
 				var userItem = result[i];
-				var userNameEncoded = encodeURIComponent(userItem.name);
-		        gridArrayData.push({          	
+				gridArrayData.push({          	
 		            name: userItem.name,            
 		            phone: userItem.phone,            
 		            bookingsCount: userItem.bookingsCount,
 		            spentMoney: userItem.spentMoney,
-		            moreInfo: "userName=" + userNameEncoded + "&venueId=" + $("#venueId").text()            
+		            moreInfo: "bookingId=" + userItem.id + "&venueId=" + $("#venueId").text()            
 		        });     
 			}
 			$("#jqGridUnregistred").jqGrid('setGridParam', { data: gridArrayData});
@@ -76,7 +78,7 @@ function fetchUnregistredData() {
 };
 
 function moreInfoUnregFormatter(cellValue, options, rowObject) {        		
-	return "<a href='./UserBookingsUnregServlet?" + cellValue + "'>Подробнее</a>";                
+	return "<a href='./user_bookings_unreg.jsp?" + cellValue + "'>Подробнее</a>";                
 };
 
 function formatCaptionUnregistred() {

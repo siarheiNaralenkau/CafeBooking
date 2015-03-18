@@ -27,9 +27,9 @@ public class VenueStatsForUnregUserServlet extends HttpServlet {
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		int venueId = Integer.valueOf(request.getParameter("venueId"));
-		String userName = request.getParameter("userName");
+		int bookingId = Integer.valueOf(request.getParameter("bookingId"));
 		
-		List<Map<String, Object>> userBookings = AdminDAO.getBookingsUnregUser(venueId, userName, startDate, endDate);
+		List<Map<String, Object>> userBookings = AdminDAO.getBookingsUnregUser(venueId, bookingId, startDate, endDate);
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(userBookings);		
 		response.getWriter().write(jsonResult);

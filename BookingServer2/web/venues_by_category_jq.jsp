@@ -7,8 +7,10 @@
 	<jsp:include page="jq-grid.jsp"></jsp:include>
 </head>
 <body>
-	<table id="jqGrid"></table>
-    <div id="jqGridPager"></div>    
+	<div style='margin-left: auto; margin-right: auto; width: 920px'>
+		<table id="jqGrid"></table>
+    	<div id="jqGridPager"></div>    
+    </div>
     
     <script type="text/javascript">                 
         $(document).ready(function () {        	
@@ -23,13 +25,13 @@
                     {
 						label: 'Успешных посещений',
                         name: 'successVisits',
-                        width: 150, 
+                        width: 170, 
                         formatter: 'number'
                     },
                     {
 						label: 'Процент непришедших',
                         name: 'percentUnvisited',
-                        width: 150
+                        width: 170
                     },
                     {
                     	label: 'Сумма по чекам',
@@ -52,7 +54,7 @@
                 ],
 
                 viewrecords: true, // show the current page, data rang and total records on the toolbar
-                width: 880,
+                width: 920,
                 height: 500,
                 rowNum: 30,
 				datatype: 'local',
