@@ -83,7 +83,7 @@ $(document).ready(function () {
 	
 	function formatCaption() {
 		var caption = "Бронирования пользователя \"" + "<span id='userName'></span>" + "\" за период: ";
-		caption += "<label for='dateFrom'>С</label><input type='date' id='dateFrom'/><label for='dateTo'>По</label><input type='date' id='dateTo'/>";
+		caption += "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
 		return caption;
 	};
 	
