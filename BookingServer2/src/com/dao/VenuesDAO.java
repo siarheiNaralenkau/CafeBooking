@@ -70,6 +70,8 @@ public class VenuesDAO {
 	
 	private static final String GET_ADMIN_PASSWORD_SQL = "SELECT admin_password FROM venues where id = ?";
 	
+	private static final String GET_REVIEWS_SQL = "SELECT mark_food, mark_service, mark_atmosphere, mark_price_quality, comments_good, comments_bad FROM reviews WHERE venue_id = ?";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -297,7 +299,17 @@ public class VenuesDAO {
 				booking.setUserId(rs.getInt("user_id"));
 
 				booking.setSpentMoney(rs.getInt("spent_money"));
-				booking.setSpentValid(rs.getBoolean("spent_valid"));
+				
+				boolean spentValid = rs.getBoolean("spent_valid");
+				if(rs.wasNull()) {
+					booking.setSpentValid("No visitor check");
+				} else {
+					if(spentValid == true) {
+						booking.setSpentValid("Yes");
+					} else {
+						booking.setSpentValid("No");
+					}
+				}				
 
 				booking.setRegId(rs.getString("reg_id"));
 			}
@@ -357,14 +369,22 @@ public class VenuesDAO {
 		return result;
 	}
 	
-	public static Map<String, Object> getBookingHistory(int venueId) {
+	public static Map<String, Object> getBookingHistory(int venueId, int page) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<HistoryEnrty> bookingHistory = new ArrayList<HistoryEnrty>();
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			con = dataSource.getConnection();				
-			ps = con.prepareStatement(GET_HISTORY_QUERY);
+			con = dataSource.getConnection();	
+			String query = GET_HISTORY_QUERY;
+			// Limit the amount of returned records.			
+			if(page > 0) {
+				int offset = Consts.RECORDS_BY_PAGE * (page - 1);
+				String limit = " LIMIT " + offset + "," + Consts.RECORDS_BY_PAGE;
+				System.out.println(limit);
+				query += limit;
+			}
+			ps = con.prepareStatement(query);
 			ps.setInt(1, venueId);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
@@ -412,7 +432,18 @@ public class VenuesDAO {
 						}				
 					}
 					b.setTableNumbers(bookedTables);	
-					b.setSpentValid(rs.getBoolean("spent_valid"));
+					
+					boolean spentValid = rs.getBoolean("spent_valid");
+					if(rs.wasNull()) {
+						b.setSpentValid("No visitor check");
+					} else {
+						if(spentValid == true) {
+							b.setSpentValid("Yes");
+						} else {
+							b.setSpentValid("No");
+						}
+					}
+										
 					pendingBookings.add(b);
 				}
 			}
@@ -429,7 +460,7 @@ public class VenuesDAO {
 	}
 			
 	
-	public static Map<String, Object> getBookingsForVenue(int venueId, String filterStatus) {
+	public static Map<String, Object> getBookingsForVenue(int venueId, String filterStatus, int page) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -439,6 +470,13 @@ public class VenuesDAO {
 			String query = GET_BOOKINGS_QUERY;
 			if(!filterStatus.equals("ALL")) {
 				query += " AND status = " + Consts.CODE_BY_STATUS.get(filterStatus); 
+			}
+			// Limit the amount of returned records.			
+			if(page > 0) {
+				int offset = Consts.RECORDS_BY_PAGE * (page - 1);
+				String limit = " LIMIT " + offset + "," + Consts.RECORDS_BY_PAGE;
+				System.out.println(limit);
+				query += limit;
 			}
 			ps = con.prepareStatement(query);
 			ps.setInt(1, venueId);
@@ -457,7 +495,18 @@ public class VenuesDAO {
 				b.setUserId(rs.getInt("user_id"));
 				b.setSpentMoney(rs.getInt("spent_money"));
 				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
-				b.setSpentValid(rs.getBoolean("spent_valid"));
+				
+				boolean spentValid = rs.getBoolean("spent_valid");
+				if(rs.wasNull()) {
+					b.setSpentValid("No visitor check");
+				} else {
+					if(spentValid == true) {
+						b.setSpentValid("Yes");
+					} else {
+						b.setSpentValid("No");
+					}
+				}
+				
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
 				if(Math.abs(nowTime-createdTime) >= Consts.TWENTY_MINUTES_MS && b.getStatus().equals("PENDING")) {
@@ -1090,6 +1139,37 @@ public class VenuesDAO {
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static List<Map<String, Object>> getReviews(int venueId) {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_REVIEWS_SQL);
+			ps.setInt(1, venueId);
+			ResultSet rs = ps.executeQuery();			
+			while(rs.next()) {
+				Map<String, Object> review = new HashMap<String, Object>();
+				review.put("mark_food", rs.getFloat("mark_food"));
+				review.put("mark_service", rs.getFloat("mark_service"));
+				review.put("mark_atmosphere", rs.getFloat("mark_atmosphere"));
+				review.put("mark_price_quality", rs.getFloat("mark_price_quality"));
+				review.put("comments_good", rs.getString("comments_good"));
+				review.put("comments_bad", rs.getString("comments_bad"));
+				result.add(review);
+			}
+			rs.close();
+		}  catch(SQLException e) {
+			Map<String, Object> errorResult = new HashMap<String, Object>();
+			errorResult.put("status", "failure");
+			errorResult.put("error", e.getMessage());
+			e.printStackTrace();			
 		} finally {
 			closeConnection(con, ps);
 		}

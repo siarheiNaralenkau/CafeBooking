@@ -19,13 +19,13 @@ public class Booking {
 	private int spentMoney;
 	private int visitorSpentMoney;
 
-	private boolean spentValid;
+	private String spentValid;
 	
-	public boolean isSpentValid() {
+	public String isSpentValid() {
 		return spentValid;
 	}
 
-	public void setSpentValid(boolean spentValid) {
+	public void setSpentValid(String spentValid) {
 		this.spentValid = spentValid;
 	}
 		

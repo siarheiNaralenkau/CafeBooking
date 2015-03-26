@@ -80,7 +80,7 @@ public class BookingManager {
 	
 	public static void notifyBookingStatusChanged(int bookingId, String receiver, String regId) {
 		Booking booking = VenuesDAO.getBookingById(bookingId);					
-		Sender notificationSender = new Sender(Consts.CLIENT_APP_KEY);	
+		Sender notificationSender = new Sender(Consts.ADMIN_APP_KEY);	
 		Venue venue = VenuesDAO.getVenueById(booking.getVenueId());
 		
 		Message msgBookingCreated = new Message.Builder()
@@ -104,5 +104,39 @@ public class BookingManager {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	public static void notifyBookingSpentDefinedAdmin(int bookingId) {
+		Booking booking = VenuesDAO.getBookingById(bookingId);
+		Sender notificationSender = new Sender(Consts.ADMIN_APP_KEY);
+		Message msgSpentDefined = new Message.Builder()
+			.addData("event", "bookingSpentDefined")
+			.addData("bookingId", String.valueOf(booking.getId()))
+			.addData("venueId", String.valueOf(booking.getVenueId()))
+			.addData("checkSum", String.valueOf(booking.getSpentMoney()))
+			.build();
+		try {
+			Result gcmResult = notificationSender.send(msgSpentDefined, booking.getRegId(), Consts.NUMBER_OF_RETRIES);
+			System.out.println(gcmResult.getMessageId());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void notifyBookingSpentDefinedVisitor(int bookingId) {
+		Booking booking = VenuesDAO.getBookingById(bookingId);
+		List<String> regIds = AdminDAO.getRegIdsForVenue(booking.getVenueId());
+		Sender notificationSender = new Sender(Consts.ADMIN_APP_KEY);
+		Message msgVisitorSpentDefined = new Message.Builder()
+			.addData("event", "visitorSpentDefined")
+			.addData("bookingId", String.valueOf(booking.getId()))
+			.addData("visitorCheckSum", String.valueOf(booking.getVisitorSpentMoney()))
+			.build();
+		try {
+			MulticastResult gcmResult = notificationSender.send(msgVisitorSpentDefined, regIds, Consts.NUMBER_OF_RETRIES);
+			System.out.println(gcmResult.getMulticastId());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

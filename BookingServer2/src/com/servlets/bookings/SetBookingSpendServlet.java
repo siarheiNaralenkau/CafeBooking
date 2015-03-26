@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beans.Booking;
+import com.bronimesto.mgr.BookingManager;
 import com.constants.Consts;
 import com.dao.BookingsDAO;
 import com.dao.UserDAO;
@@ -43,6 +44,9 @@ public class SetBookingSpendServlet extends HttpServlet {
 			if(booking.getUserId() > 0) {
 				UserDAO.addScores(booking.getUserId(), booking.getVenueId(), spentMoney/Consts.BONUS_EXCHANGE_SCORE);
 			}
+			
+			// Send push notification to client.
+			BookingManager.notifyBookingSpentDefinedAdmin(bookingId);
 		}			
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);	

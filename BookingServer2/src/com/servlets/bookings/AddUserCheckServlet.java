@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bronimesto.mgr.BookingManager;
 import com.dao.BookingsDAO;
 import com.google.gson.Gson;
 
@@ -32,7 +33,7 @@ public class AddUserCheckServlet extends HttpServlet {
 		int spentMoney = Integer.valueOf(request.getParameter(SPENT_MONEY));
 		int bookingId = Integer.valueOf(request.getParameter(BOOKING_ID));
 		Map<String, Object> result = BookingsDAO.setVisitorSpent(spentMoney, bookingId);
-		
+		BookingManager.notifyBookingSpentDefinedVisitor(bookingId);
 		Gson gson = new Gson();
 		String jsonResult = gson.toJson(result);	
 		response.getWriter().write(jsonResult);					

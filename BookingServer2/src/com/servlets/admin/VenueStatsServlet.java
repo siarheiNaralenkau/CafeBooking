@@ -34,11 +34,12 @@ public class VenueStatsServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=UTF-8");
 		int venueId = Integer.valueOf(request.getParameter(VENUE_ID));
+		int page = 0;
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		Venue venue = VenuesDAO.getVenueForEdit(venueId);
 		Map<String, Object> result = new HashMap<String, Object>();
-		Map<String, Object> venueBookings = VenuesDAO.getBookingsForVenue(venueId, Consts.STATUS_ALL);
+		Map<String, Object> venueBookings = VenuesDAO.getBookingsForVenue(venueId, Consts.STATUS_ALL, page);
 		result.put("venue", venue);
 		result.put("bookings", venueBookings);
 		Map<String, Object> bookingStats = BookingsDAO.getBookingStats(venueId);

@@ -15,6 +15,8 @@ public class Consts {
 	
 	public static final int BONUS_EXCHANGE_SCORE = 10000;
 	
+	public static final int RECORDS_BY_PAGE = 50;
+	
 //	public static final String ADMIN_APP_KEY = "AIzaSyBQ5MR92uJ1qejeO4zJsRH-bSvIOKH2aq0";
 //	public static final String CLIENT_APP_KEY = "AIzaSyBQ5MR92uJ1qejeO4zJsRH-bSvIOKH2aq0";
 	
