@@ -151,11 +151,23 @@ public class BookingManager {
 	}
 	
 	public static void sendBookingStatusChangeEmail(String email, String venueName, String bookingTime, String newStatus) {
+		String mailSubject = "Изменение статуса вашей брони";
+		String mailText = String.format("Статус вашей брони в %s на время %s изменен на %s.", venueName, bookingTime, newStatus);
+		sendMail(mailSubject, mailText, email);
+	}
+	
+	public static void sendPasswordEmail(String email, String password) {		
+		String mailSubject = "Восстановление пароля для bronimesto,by";
+		String mailText = "Ваш пароль: " + password;
+		sendMail(mailSubject, mailText, email);						 
+	}
+	
+	public static void sendMail(String subject, String text, String addressList) {
 		String hostName = "smtp.gmail.com";		
-		String username = "naralenkov2010";
+		String username = "bronimestoby";
 		String mailServerPassword = "qwerty12Q";								
 				
-		String from = "naralenkov2010@gmail.com";
+		String from = "bronimestoby@gmail.com";
 		
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
 		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
@@ -176,10 +188,9 @@ public class BookingManager {
         
         try {
 			msg.setFrom(new InternetAddress(from));
-			msg.setRecipients(javax.mail.Message.RecipientType.TO, InternetAddress.parse(email, false));
-			msg.setSubject("Изменение статуса вашей брони", "utf-8");			
-			String mailText = String.format("Статус вашей брони в %s на время %s изменен на %s.", venueName, bookingTime, newStatus);
-			msg.setText(mailText, "utf-8");
+			msg.setRecipients(javax.mail.Message.RecipientType.TO, InternetAddress.parse(addressList, false));
+			msg.setSubject(subject, "utf-8");			
+			msg.setText(text, "utf-8");
 			msg.setSentDate(new Date());
 			SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
 			t.connect(hostName, username, mailServerPassword);
