@@ -28,7 +28,7 @@ public class AdminDAO {
 			+ " (select count(*) from bookings where venue_id = v.id and status=5 and booking_time BETWEEN ? and ?) as successfull_bookings,"
 			+ " (select count(*) from bookings where venue_id = v.id and status=6 and booking_time BETWEEN ? and ?) as expired_bookings,"
 			+ " (select sum(spent_money) from bookings where venue_id = v.id and booking_time BETWEEN ? and ?) as check_sum"
-			+ " FROM venues v";
+			+ " FROM venues v order by successfull_bookings desc";
 	
 	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
 			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
