@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.beans.Booking;
+import com.beans.Venue;
 import com.bronimesto.mgr.BookingManager;
 import com.constants.BookingStatus;
 import com.constants.Consts;
@@ -116,7 +117,7 @@ public class ChangeBookingStatusServlet extends HttpServlet {
  		}
 		
 		// Notify client application that booking status was updated.		
-		if("success".equals(result.get("status").toString())) {
+		if("success".equals(result.get("status").toString())) {			
 			result.put("newBookingStatus", Consts.STATUS_BY_CODE.get(newStatus));			
 			if(newStatus == 1 || newStatus == 3) {				
 				BookingManager.notifyBookingStatusChanged(bookingId, "admin");
@@ -124,6 +125,15 @@ public class ChangeBookingStatusServlet extends HttpServlet {
 				String clientRegistrationId = booking.getRegId();
 				BookingManager.notifyBookingStatusChanged(bookingId, "client", clientRegistrationId);				
 			}			
+			
+			Venue venue = VenuesDAO.getVenueById(venueId);
+			String venueName = venue.getName();
+			String bookingTime = booking.getBookingTime().toLocaleString();
+			String newStatusString = Consts.STATUS_BY_CODE.get(newStatus);
+			String email = booking.getEmail();
+			if(!email.isEmpty()) {
+				BookingManager.sendBookingStatusChangeEmail(email, venueName, bookingTime, newStatusString);
+			}
 		}
 		
 		Gson gson = new Gson();

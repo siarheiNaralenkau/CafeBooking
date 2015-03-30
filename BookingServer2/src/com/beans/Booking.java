@@ -17,9 +17,11 @@ public class Booking {
 	private List<Integer> tableNumbers;
 	private int userId;
 	private int spentMoney;
-	private int visitorSpentMoney;
+	private int visitorSpentMoney;	
 
 	private String spentValid;
+	
+	private String email;
 	
 	public String isSpentValid() {
 		return spentValid;
@@ -171,5 +173,13 @@ public class Booking {
 			}
 		}
 		return result.toString();
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

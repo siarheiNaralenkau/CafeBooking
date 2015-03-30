@@ -37,6 +37,7 @@ public class BookPlaceServlet extends HttpServlet {
 	private static final String TABLE_NUMBERS = "tableNumbers";	
 	private static final String USER_ID = "userId";	
 	private static final String REG_ID = "regId";
+	private static final String EMAIL = "email";
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
@@ -64,6 +65,7 @@ public class BookPlaceServlet extends HttpServlet {
 			String notes = "";
 			String tableNumbers = "";
 			String regId = "";
+			String email = "";
 			if(request.getParameterMap().containsKey(NOTES)) {
 				notes = request.getParameter(NOTES);				
 			}
@@ -76,12 +78,18 @@ public class BookPlaceServlet extends HttpServlet {
 			if(request.getParameterMap().containsKey(REG_ID)) {
 				regId = request.getParameter(REG_ID);
 			}
-			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId, regId);
+			if(request.getParameterMap().containsKey(EMAIL)) {
+				email = request.getParameter(EMAIL);
+			}
+			Map<String, Object> result = VenuesDAO.bookPlaces(venueId, visitorName, visitorPhone, bookingDate, places, notes, tableNumbers, userId, regId, email);
+				
 			result.put("Person name", visitorName);
 			result.put("UserId", userId);
 			
 			// Send push notification to device for venue
-			BookingManager.notifyBookingCreated(Integer.valueOf(result.get("bookingId").toString()));
+			if(result.get("status").equals("success")) {
+				BookingManager.notifyBookingCreated(Integer.valueOf(result.get("bookingId").toString()));
+			}
 			
 			Gson gson = new Gson();
 			String jsonResult = gson.toJson(result);	

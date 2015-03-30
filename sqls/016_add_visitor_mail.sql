@@ -1,0 +1,1 @@
+ALTER TABLE bookings ADD COLUMN email VARCHAR(60) NULL default NULL;

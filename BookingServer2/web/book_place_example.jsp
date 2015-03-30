@@ -39,6 +39,10 @@
 			<input type="text" id="tableNumbers" name="tableNumbers"/>
 		</div>
 		<div>
+			<label for="email">Email: </label>
+			<input type="text" id="email" name="email"/>
+		</div>
+		<div>
 			<input type="submit" value="Забронировать"/> 
 		</div>
 	</form>

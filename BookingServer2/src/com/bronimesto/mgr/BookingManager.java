@@ -1,7 +1,16 @@
 package com.bronimesto.mgr;
 
 import java.io.IOException;
+import java.security.Security;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import com.beans.Booking;
 import com.beans.Venue;
@@ -12,6 +21,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.MulticastResult;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
+import com.sun.mail.smtp.SMTPTransport;
 
 public class BookingManager {
 	// Method sends notification about newly created booking to android admin application.	
@@ -136,6 +146,48 @@ public class BookingManager {
 			MulticastResult gcmResult = notificationSender.send(msgVisitorSpentDefined, regIds, Consts.NUMBER_OF_RETRIES);
 			System.out.println(gcmResult.getMulticastId());
 		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void sendBookingStatusChangeEmail(String email, String venueName, String bookingTime, String newStatus) {
+		String hostName = "smtp.gmail.com";		
+		String username = "naralenkov2010";
+		String mailServerPassword = "qwerty12Q";								
+				
+		String from = "naralenkov2010@gmail.com";
+		
+		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+		final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
+		
+		Properties props = System.getProperties();
+        props.setProperty("mail.smtps.host", "smtp.gmail.com");
+        props.setProperty("mail.smtp.socketFactory.class", SSL_FACTORY);
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.socketFactory.port", "465");
+        props.setProperty("mail.smtps.auth", "true");
+        
+        props.put("mail.smtps.quitwait", "false");
+        
+        Session session = Session.getInstance(props, null);
+        
+        final MimeMessage msg = new MimeMessage(session);
+        
+        try {
+			msg.setFrom(new InternetAddress(from));
+			msg.setRecipients(javax.mail.Message.RecipientType.TO, InternetAddress.parse(email, false));
+			msg.setSubject("Изменение статуса вашей брони", "utf-8");			
+			String mailText = String.format("Статус вашей брони в %s на время %s изменен на %s.", venueName, bookingTime, newStatus);
+			msg.setText(mailText, "utf-8");
+			msg.setSentDate(new Date());
+			SMTPTransport t = (SMTPTransport)session.getTransport("smtps");
+			t.connect(hostName, username, mailServerPassword);
+			t.sendMessage(msg, msg.getAllRecipients());
+			t.close();
+		} catch (AddressException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
 	}

@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/com/bronimesto/mgr/BookingManager.java=UTF-8
 encoding//src/com/dao/UserDAO.java=UTF-8
 encoding//src/com/servlets/users/CreateUserServlet.java=UTF-8
 encoding//src/com/servlets/users/RestorePasswordServlet.java=UTF-8
