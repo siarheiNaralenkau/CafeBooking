@@ -41,13 +41,17 @@ function createUnregistredGrid() {
 	var endDate = new Date();
 	var startDate = new Date();
 	startDate.setMonth(startDate.getMonth()-1);
-	document.getElementById('dateFromUnreg').valueAsDate = startDate;
-	document.getElementById('dateToUnreg').valueAsDate = endDate;
 	
-	fetchUnregistredData();
+	$("#dateFromUnreg").datepicker({dateFormat: "yy-mm-dd"});
+	$("#dateToUnreg").datepicker({dateFormat: "yy-mm-dd"});
+	
+	$("#dateFromUnreg").datepicker("setDate", startDate);
+	$("#dateToUnreg").datepicker("setDate", endDate);
 	
 	$("#dateFromUnreg").change(dateFilterUnregChanged);
 	$("#dateToUnreg").change(dateFilterUnregChanged);
+	
+	fetchUnregistredData();	
 };
     		
 function fetchUnregistredData() {
@@ -82,7 +86,7 @@ function moreInfoUnregFormatter(cellValue, options, rowObject) {
 };
 
 function formatCaptionUnregistred() {
-	return "<label for='dateFromUnreg'>С</label><input type='date' id='dateFromUnreg' style='margin-left: 10px'/><label for='dateToUnreg' style='margin-left: 10px'>По</label><input type='date' id='dateToUnreg' style='margin-left: 10px'/>";
+	return "<label for='dateFromUnreg'>С</label><input type='text' id='dateFromUnreg' style='margin-left: 10px'/><label for='dateToUnreg' style='margin-left: 10px'>По</label><input type='text' id='dateToUnreg' style='margin-left: 10px'/>";
 };
 
 function dateFilterUnregChanged() {        		

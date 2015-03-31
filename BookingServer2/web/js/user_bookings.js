@@ -53,8 +53,15 @@ $(document).ready(function () {
 	var endDate = new Date();
 	var startDate = new Date();
 	startDate.setMonth(startDate.getMonth()-1);
-	document.getElementById('dateFrom').valueAsDate = startDate;
-	document.getElementById('dateTo').valueAsDate = endDate;
+	
+	$("#dateFrom").datepicker({dateFormat: "yy-mm-dd"});
+	$("#dateTo").datepicker({dateFormat: "yy-mm-dd"});
+	
+	$("#dateFrom").datepicker("setDate", startDate);
+	$("#dateTo").datepicker("setDate", endDate);
+	
+	$("#dateFrom").change(dateFilterChanged);
+	$("#dateTo").change(dateFilterChanged);	
 	
 	fetchGridData();
 	
@@ -83,10 +90,7 @@ $(document).ready(function () {
     			$("#bookingsGrid").trigger('reloadGrid');
 			}
 		});
-	};
-	
-	$("#dateFrom").change(dateFilterChanged);
-	$("#dateTo").change(dateFilterChanged);
+	};	
 	
 	function moreInfoFormatter(cellValue, options, rowObject) {        		
     	return "<a href='./venue_stats_jq.jsp?venueId=" + cellValue + "'>Подробнее</a>";                
@@ -107,7 +111,7 @@ $(document).ready(function () {
 	
 	function formatCaption() {
 		var caption = "Бронирования пользователя \"" + "<span id='userName'></span>" + "\" за период: ";
-		caption += "<label for='dateFrom'>С</label><input type='date' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='date' id='dateTo' style='margin-left: 10px'/>";
+		caption += "<label for='dateFrom'>С</label><input type='text' id='dateFrom' style='margin-left: 10px'/><label for='dateTo' style='margin-left: 10px'>По</label><input type='text' id='dateTo' style='margin-left: 10px'/>";
 		return caption;		
 	};
 	

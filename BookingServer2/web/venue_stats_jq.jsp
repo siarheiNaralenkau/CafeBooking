@@ -16,9 +16,9 @@
 	<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
 	<h4>Статистика заказов по заведению <b id="venueName"></b> за период:</h4>
 	<label for='dateFrom'>С</label>
-	<input type='date' id='dateFrom'/>
+	<input type='text' id='dateFrom'/>
 	<label for='dateTo'>По</label>
-	<input type='date' id='dateTo'/>
+	<input type='text' id='dateTo'/>
 	<ul>
 		<li>
 			<span>Подтверждено ресторатором:</span>

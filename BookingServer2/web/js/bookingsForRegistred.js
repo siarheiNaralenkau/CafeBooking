@@ -70,32 +70,46 @@ function createRegistredGrid() {
 	var endDate = new Date();
 	var startDate = new Date();
 	startDate.setMonth(startDate.getMonth()-1);
-	document.getElementById('dateFromReg').valueAsDate = startDate;
-	document.getElementById('dateToReg').valueAsDate = endDate;
+	
+	$("#dateFromReg").datepicker({dateFormat: "yy-mm-dd"});
+	$("#dateToReg").datepicker({dateFormat: "yy-mm-dd"});
+	
+	$("#dateFromReg").datepicker("setDate", startDate);
+	$("#dateToReg").datepicker("setDate", endDate);
+	
+	$("#dateFromReg").change(dateFilterChanged);
+	$("#dateToReg").change(dateFilterChanged);
 }
     		
-function fetchRegistredData(bookingsData) {
-	var gridArrayData = [];    		    		
+function fetchRegistredData() {	
+	var startDate = $("#dateFromReg").val();
+	var endDate = $("#dateToReg").val();
+	var url = "./VenueStatsRegJSON?startDate=" + startDate + "&endDate=" + endDate + "&venueId=" + $("#venueId").text();        				
+	var gridArrayData = [];    
 	
-	for(var i = 0; i < bookingsData.length; i++) {
-		var userItem = bookingsData[i];
-        gridArrayData.push({  
-        	id: userItem.id,
-            name: userItem.name,
-            surname: userItem.surname,
-            phone: userItem.phone,
-            email: userItem.email,
-            bookingsCount: userItem.bookingsCount,
-            spentMoney: userItem.spentMoney,
-            bonusScores: userItem.bonusScores,
-            claimsAll: userItem.claimsAll,
-            claimsActive: userItem.claimsActive,
-            moreInfo: userItem.id
-        });     
-	}
-	
-	$("#jqGridRegistred").jqGrid('setGridParam', { data: gridArrayData});
-	$("#jqGridRegistred").trigger('reloadGrid');
+	$.ajax({
+		url: url,
+		success: function(result) {			
+			for(var i = 0; i < result.length; i++) {
+				var userItem = result[i];
+				gridArrayData.push({          	
+					id: userItem.id,
+		            name: userItem.name,
+		            surname: userItem.surname,
+		            phone: userItem.phone,
+		            email: userItem.email,
+		            bookingsCount: userItem.bookingsCount,
+		            spentMoney: userItem.spentMoney,
+		            bonusScores: userItem.bonusScores,
+		            claimsAll: userItem.claimsAll,
+		            claimsActive: userItem.claimsActive,
+		            moreInfo: userItem.id            
+		        });     
+			}
+			$("#jqGridRegistred").jqGrid('setGridParam', { data: gridArrayData});
+			$("#jqGridRegistred").trigger('reloadGrid');
+		}
+	});				
 };
 
 function moreInfoFormatter(cellValue, options, rowObject) {        		
@@ -103,7 +117,7 @@ function moreInfoFormatter(cellValue, options, rowObject) {
 };
 
 function formatCaptionRegistred() {
-	return "<label for='dateFromReg'>С</label><input type='date' id='dateFromReg' style='margin-left: 10px'/><label for='dateToReg' style='margin-left: 10px'>По</label><input type='date' id='dateToReg' style='margin-left: 10px'/>";
+	return "<label for='dateFromReg'>С</label><input type='text' id='dateFromReg' style='margin-left: 10px'/><label for='dateToReg' style='margin-left: 10px'>По</label><input type='text' id='dateToReg' style='margin-left: 10px'/>";
 };
 
 function dateFilterChanged() {        		
