@@ -10,6 +10,88 @@
 	<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 	<script type="text/javascript" src="js/edit_venues.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/edit_venues.css">
+	
+	<style type="text/css">
+		.fileform {
+			background-color: #FFFFFF;
+			border: 1px solid #CCCCCC;
+			border-radius: 2px;
+			cursor: pointer;
+			height: 26px;
+			overflow: hidden;
+			padding: 2px;
+			position: relative;
+			text-align: left;
+			vertical-align: middle;
+			width: 230px;
+		}
+
+		.fileform .selectbutton { 
+		    background-color: #A2A3A3;
+		    border: 1px solid #939494;
+		    border-radius: 2px;
+		    color: #FFFFFF;
+		    float: right;
+		    font-size: 16px;
+		    height: 20px;
+		    line-height: 20px;
+		    overflow: hidden;
+		    padding: 2px 6px;
+		    text-align: center;
+		    vertical-align: middle;
+		    width: 50px;
+		}
+
+		.fileform #upload{
+		    position:absolute; 
+		    top:0; 
+		    left:0; 
+		    width:100%; 
+		    -moz-opacity: 0; 
+		    filter: alpha(opacity=0); 
+		    opacity: 0; 
+		    font-size: 150px; 
+		    height: 30px; 
+		    z-index:20;
+		}
+
+		.thumb {
+			height: 100px;
+			width: 100px;
+			border: 1px solid #000;
+			margin: 10px 5px 0 0;
+		}
+
+		.previewDiv {
+			margin-top: 10px;
+			margin-bottom: 10px;				
+			display: inline-block;							
+		}
+	</style>
+	
+	<script type="text/javascript">
+		function handleFileSelect(evt) {
+			var files = evt.target.files;
+			var output = [];
+			document.getElementById("previewDiv").innerHTML = '';
+			for(var i = 0, f; f = files[i]; i++) {
+				if(!f.type.match('image.*')) {
+					continue;
+				}
+
+				var reader = new FileReader();
+
+				reader.onload = (function(theFile) {
+					return function(e) {							
+						var imgPreview = ['<img class="thumb" src="', e.target.result, '" title="', theFile.name, '"/>'].join('');
+						document.getElementById("previewDiv").innerHTML = document.getElementById("previewDiv").innerHTML + imgPreview;
+					}
+				})(f);
+
+				reader.readAsDataURL(f);
+			}
+		};				
+	</script>
 </head>
 <body>
 	<%
@@ -186,6 +268,18 @@
 			</tr>
 			</tbody>
 		</table>
+	</div>
+	<div id="addPhotosDiv">
+		<form action="./upload_venue_photos" name="uploadForm" enctype="multipart/form-data" method="post">			
+			<div class="fileform">				
+				<div class="selectbutton">Обзор</div>
+				<input id="upload" type="file" name="upload[]" multiple onchange="handleFileSelect(event);"/>				
+			</div>
+			<div id="previewDiv" class="previewDiv"></div>
+			<div>
+				<input type="submit" value="Сохранить">
+			</div>
+		</form>		
 	</div>
 </body>
 </html>

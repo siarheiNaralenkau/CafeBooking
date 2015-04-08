@@ -21,6 +21,12 @@ public class Consts {
 //	public static final String CLIENT_APP_KEY = "AIzaSyBQ5MR92uJ1qejeO4zJsRH-bSvIOKH2aq0";
 	
 	public static final int NUMBER_OF_RETRIES = 3;
+	
+//	public static final String IMGUR_CLIENT_ID = "7948d2fcbd9c53d";
+//	public static final String IMGUR_CLIENT_SECRET = "eba05888cfeaa88436725532387a418be0f709f7";
+	
+	public static final String IMGUR_CLIENT_ID = "ed21cf32c4c0840";
+	public static final String IMGUR_CLIENT_SECRET = "cff8f1ba7e58df2800784b05d0c94d9c48c6fd3e";
 
 	public static Map<Integer, String> POSITION_NOTES = new HashMap<Integer, String>();
 	public static Map<Integer, String> STATUS_BY_CODE = new HashMap<Integer, String>();
