@@ -72,6 +72,8 @@ public class VenuesDAO {
 	
 	private static final String GET_REVIEWS_SQL = "SELECT mark_food, mark_service, mark_atmosphere, mark_price_quality, comments_good, comments_bad FROM reviews WHERE venue_id = ?";
 	
+	private static final String UPLOAD_VENUE_PHOTO_SQL = "INSERT INTO venue_photos(venue_id, url, delete_hash) VALUES(?, ?, ?)";
+	
 	private static DataSource dataSource;
 	
 	static {		
@@ -1176,6 +1178,35 @@ public class VenuesDAO {
 			Map<String, Object> errorResult = new HashMap<String, Object>();
 			errorResult.put("status", "failure");
 			errorResult.put("error", e.getMessage());
+			e.printStackTrace();			
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
+	 
+	public static Map<String, Object> uploadVenuePhotos(int venueId, List<Map<String, String>> photos) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		int photosUploaded = 0;
+		try {
+			Venue venue = getVenueById(venueId);
+			String uniqueId = venue.getUniqueId();
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(UPLOAD_VENUE_PHOTO_SQL);
+			for(Map<String, String> photo: photos) {
+				ps.setString(1, uniqueId);
+				ps.setString(2, photo.get("imageUrl"));
+				ps.setString(3, photo.get("deleteHash"));
+				ps.executeUpdate();
+				++photosUploaded;
+			}
+			result.put("status", "success");
+			result.put("photosUploaded", photosUploaded);
+		} catch(SQLException e) {			
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
 			e.printStackTrace();			
 		} finally {
 			closeConnection(con, ps);

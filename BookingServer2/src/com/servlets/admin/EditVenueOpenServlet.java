@@ -21,16 +21,11 @@ public class EditVenueOpenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	private static final String VENUE_ID = "venueId";
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EditVenueOpenServlet() {
+
+	public EditVenueOpenServlet() {
         super();        
     }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int venueId = Integer.valueOf(request.getParameter(VENUE_ID));
 		Venue venue = VenuesDAO.getVenueForEdit(venueId);

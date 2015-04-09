@@ -9,8 +9,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +27,9 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 
+import com.beans.Venue;
 import com.constants.Consts;
+import com.dao.VenuesDAO;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
@@ -39,8 +45,15 @@ public class ImageUploadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 	        List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+	        List<Map<String, String>> uploadedPhotos = new ArrayList<Map<String, String>>();
+	        int venueId = 0;
 	        for (FileItem item : items) {
-	            if (item.isFormField()) {	                
+	            if (item.isFormField()) {	
+	            	String fieldName = item.getFieldName();
+	            	String fieldValue = item.getString();
+	            	if(fieldName.equals("venueId")) {
+	            		venueId = Integer.valueOf(fieldValue);
+	            	}
 	            } else {
 	                // Process form file field (input type="file").	                               
 	                long fileSize = item.getSize();	                
@@ -50,16 +63,28 @@ public class ImageUploadServlet extends HttpServlet {
 	                byte[] fileData = new byte[(int)fileSize];
 	                fileContent.read(fileData);
 	                System.out.println("File data array size: " + String.valueOf(fileData.length));
-	                uploadToImgur(fileData);
+	                uploadedPhotos.add(uploadToImgur(fileData));
 	            }
 	        }
+	        if(venueId != 0) {
+	        	VenuesDAO.uploadVenuePhotos(venueId, uploadedPhotos);
+	        }
+	        returnToEdit(venueId, request, response);
 	    } catch (FileUploadException e) {
 	        throw new ServletException("Cannot parse multipart request.", e);
 	    }
-	}	
+	}
 	
-	private static void uploadToImgur(byte[] fileData) {		
+	private static void returnToEdit(int venueId, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Venue venue = VenuesDAO.getVenueForEdit(venueId);
+		request.setAttribute("venue", venue);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/edit_venue.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	private static Map<String, String> uploadToImgur(byte[] fileData) {		
 		URL url;
+		Map<String, String> newImage = new HashMap<String, String>();
 		try {
 			url = new URL("https://api.imgur.com/3/image");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -95,12 +120,14 @@ public class ImageUploadServlet extends HttpServlet {
 		    String deleteHash = root.getAsJsonObject().get("data").getAsJsonObject().get("deletehash").getAsString();
 		    System.out.println("Image link: " + link);
 		    System.out.println("Delete hash: " + deleteHash);
+		    newImage.put("imageUrl", link);
+		    newImage.put("deleteHash", deleteHash);
 		} catch (MalformedURLException e) { 
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		return newImage;
 	}
 			
 

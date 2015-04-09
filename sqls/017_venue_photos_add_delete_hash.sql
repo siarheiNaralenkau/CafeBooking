@@ -1,0 +1,4 @@
+ALTER TABLE `venue_photos`
+	ADD COLUMN `delete_hash` VARCHAR(40) NULL DEFAULT NULL;
+ALTER TABLE `venue_photos`
+	CHANGE COLUMN `uid` `uid` VARCHAR(35) NULL DEFAULT NULL AFTER `id`;

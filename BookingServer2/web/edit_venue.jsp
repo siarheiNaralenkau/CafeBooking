@@ -270,8 +270,9 @@
 		</table>
 	</div>
 	<div id="addPhotosDiv">
-		<form action="./upload_venue_photos" name="uploadForm" enctype="multipart/form-data" method="post">			
-			<div class="fileform">				
+		<form action="./upload_venue_photos" name="uploadForm" enctype="multipart/form-data" method="post">
+			<input type="hidden" name="venueId" value="<%=venue.getId()%>"/>			
+			<div class="fileform">			
 				<div class="selectbutton">Обзор</div>
 				<input id="upload" type="file" name="upload[]" multiple onchange="handleFileSelect(event);"/>				
 			</div>
