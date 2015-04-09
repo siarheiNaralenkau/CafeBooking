@@ -24,7 +24,8 @@ public class BookingsDAO {
 	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ?, spent_valid = ? WHERE id = ?";
 	
 	private static final String GET_BOOKINGS_BY_STATUS_SQL = "select id, booking_id, new_status from booking_history where booking_id in (SELECT id from bookings WHERE venue_id = ?)";
-	private static final String GET_SPENT_STATS_SQL = "select MIN(spent_money) as min_spent, MAX(spent_money) as max_spent, AVG(spent_money) as avg_spent FROM bookings WHERE venue_id=?";
+	private static final String GET_SPENT_STATS_SQL = "select MIN(spent_money) as min_spent, MAX(spent_money) as max_spent, AVG(spent_money) as avg_spent FROM bookings WHERE venue_id=? "
+			+ "and spent_money is not NULL and spent_money != 0";
 	private static final String GET_BOOKINS_COUNT = "SELECT count(*) as amount FROM bookings where venue_id = ?";
 	private static final String GET_PENDING_BOOKINGS_COUNT = "SELECT count(*) as pending_amount FROM bookings where venue_id = ? and status = 1";
 	
@@ -335,9 +336,9 @@ public class BookingsDAO {
 			int minSpent = rs.getInt("min_spent");
 			int maxSpent = rs.getInt("max_spent");
 			int avgSpent = rs.getInt("avg_spent");
-			result.put("minCheck", minSpent);
-			result.put("maxCheck", maxSpent);
-			result.put("avgCheck", avgSpent);						
+			result.put("minCheck", minSpent > 0 ? minSpent : "");
+			result.put("maxCheck", maxSpent > 0 ? maxSpent : "");
+			result.put("avgCheck", avgSpent > 0 ? avgSpent : "");						
 		} catch(SQLException e) {
 			result.put("status", "failure");
 			result.put("error", e.getMessage());

@@ -35,28 +35,15 @@ function createUnregistredGrid() {
 	    rowNum: 30,
 		datatype: 'local',
 	    pager: "#jqGridUnregistredPager",
-		caption: "Статистика по незарегистрированным пользователям за период: " + formatCaptionUnregistred()
-	});
-	
-	var endDate = new Date();
-	var startDate = new Date();
-	startDate.setMonth(startDate.getMonth()-1);
-	
-	$("#dateFromUnreg").datepicker({dateFormat: "yy-mm-dd"});
-	$("#dateToUnreg").datepicker({dateFormat: "yy-mm-dd"});
-	
-	$("#dateFromUnreg").datepicker("setDate", startDate);
-	$("#dateToUnreg").datepicker("setDate", endDate);
-	
-	$("#dateFromUnreg").change(dateFilterUnregChanged);
-	$("#dateToUnreg").change(dateFilterUnregChanged);
+		caption: "Статистика по незарегистрированным пользователям"
+	});		
 	
 	fetchUnregistredData();	
 };
     		
 function fetchUnregistredData() {
-	var startDate = $("#dateFromUnreg").val();
-	var endDate = $("#dateToUnreg").val();
+	var startDate = $("#dateFrom").val();
+	var endDate = $("#dateTo").val();
 	var url = "./VenuesStatsUnregJSON?startDate=" + startDate + "&endDate=" + endDate + "&venueId=" + $("#venueId").text();        		
 	var gridArrayData = [];	 
 	
@@ -81,14 +68,8 @@ function fetchUnregistredData() {
 		
 };
 
-function moreInfoUnregFormatter(cellValue, options, rowObject) {        		
-	return "<a href='./user_bookings_unreg.jsp?" + cellValue + "'>Подробнее</a>";                
-};
-
-function formatCaptionUnregistred() {
-	return "<label for='dateFromUnreg'>С</label><input type='text' id='dateFromUnreg' style='margin-left: 10px'/><label for='dateToUnreg' style='margin-left: 10px'>По</label><input type='text' id='dateToUnreg' style='margin-left: 10px'/>";
-};
-
-function dateFilterUnregChanged() {        		
-	fetchUnregistredData();
+function moreInfoUnregFormatter(cellValue, options, rowObject) {
+	var dateFrom = $("#dateFrom").val();
+	var dateTo = $("#dateTo").val();
+	return "<a href='./user_bookings_unreg.jsp?" + cellValue + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "'>Подробнее</a>";                
 };

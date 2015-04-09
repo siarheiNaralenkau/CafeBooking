@@ -1,11 +1,9 @@
-$(document).ready(function() {
-	// Set default start and end dates.
-	var endDate = new Date();
-	var startDate = new Date();
-	startDate.setMonth(startDate.getMonth()-1);
-	
+$(document).ready(function() {	
 	$("#dateFrom").datepicker({dateFormat: "yy-mm-dd"});
 	$("#dateTo").datepicker({dateFormat: "yy-mm-dd"});
+	
+	var startDate = $("#initialDateFrom").text();
+	var endDate = $("#initialDateTo").text();	
 	
 	$("#dateFrom").datepicker("setDate", startDate);
 	$("#dateTo").datepicker("setDate", endDate);
@@ -48,5 +46,7 @@ $(document).ready(function() {
 	
 	function dateFilterChanged() {
 		fetchVenueData();
+		fetchRegistredData();
+		fetchUnregistredData();
 	};
 });

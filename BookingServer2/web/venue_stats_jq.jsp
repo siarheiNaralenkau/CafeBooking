@@ -13,7 +13,12 @@
 </head>
 
 <body>
-	<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
+	<div>
+		<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
+		<span id="initialDateFrom" style="display: none"><%=request.getParameter("dateFrom") %></span>
+		<span id="initialDateTo" style="display: none"><%=request.getParameter("dateTo") %></span>
+	</div>
+	
 	<h4>Статистика заказов по заведению <b id="venueName"></b> за период:</h4>
 	<label for='dateFrom'>С</label>
 	<input type='text' id='dateFrom'/>
@@ -62,7 +67,7 @@
 			<span id="maxCheck"></span>
 		</li>
 		<li>
-			<span>Максимальный чек:</span>
+			<span>Средний чек:</span>
 			<span id="avgCheck"></span>
 		</li>		
 	</ul>

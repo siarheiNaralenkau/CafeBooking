@@ -41,7 +41,7 @@
         viewrecords: true, // show the current page, data rang and total records on the toolbar
         width: 920,
         height: 500,
-        rowNum: 30,
+        rowNum: 200,
 		datatype: 'local',
         pager: "#jqGridPager",
 		caption: "Статистика по заведениям за период: " + formatCaption()
@@ -88,8 +88,10 @@
 		});
 	};        	        	
 	
-	function moreInfoFormatter(cellValue, options, rowObject) {        		
-    	return "<a href='./venue_stats_jq.jsp?venueId=" + cellValue + "'>Подробнее</a>";                
+	function moreInfoFormatter(cellValue, options, rowObject) {
+		var dateFrom = $("#dateFrom").val();
+		var dateTo = $("#dateTo").val();
+    	return "<a href='./venue_stats_jq.jsp?venueId=" + cellValue + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "'>Подробнее</a>";              
 	};
 	
 	function formatCaption() {

@@ -64,26 +64,13 @@ function createRegistredGrid() {
 	    rowNum: 30,
 		datatype: 'local',
 	    pager: "#jqGridRegistredPager",
-		caption: "Статистика по зарегистрированным пользователям за период: " + formatCaptionRegistred()
-	});
-	
-	var endDate = new Date();
-	var startDate = new Date();
-	startDate.setMonth(startDate.getMonth()-1);
-	
-	$("#dateFromReg").datepicker({dateFormat: "yy-mm-dd"});
-	$("#dateToReg").datepicker({dateFormat: "yy-mm-dd"});
-	
-	$("#dateFromReg").datepicker("setDate", startDate);
-	$("#dateToReg").datepicker("setDate", endDate);
-	
-	$("#dateFromReg").change(dateFilterChanged);
-	$("#dateToReg").change(dateFilterChanged);
+		caption: "Статистика по зарегистрированным пользователям"
+	});		
 }
     		
 function fetchRegistredData() {	
-	var startDate = $("#dateFromReg").val();
-	var endDate = $("#dateToReg").val();
+	var startDate = $("#dateFrom").val();
+	var endDate = $("#dateTo").val();
 	var url = "./VenueStatsRegJSON?startDate=" + startDate + "&endDate=" + endDate + "&venueId=" + $("#venueId").text();        				
 	var gridArrayData = [];    
 	
@@ -112,14 +99,8 @@ function fetchRegistredData() {
 	});				
 };
 
-function moreInfoFormatter(cellValue, options, rowObject) {        		
-	return "<a href='./user_bookings.jsp?userId=" + cellValue + "&venueId=" + $("#venueId").text() + "'>Подробнее</a>"; ;                
-};
-
-function formatCaptionRegistred() {
-	return "<label for='dateFromReg'>С</label><input type='text' id='dateFromReg' style='margin-left: 10px'/><label for='dateToReg' style='margin-left: 10px'>По</label><input type='text' id='dateToReg' style='margin-left: 10px'/>";
-};
-
-function dateFilterChanged() {        		
-	fetchRegistredData();
+function moreInfoFormatter(cellValue, options, rowObject) {      
+	var dateFrom = $("#dateFrom").val();
+	var dateTo = $("#dateTo").val();
+	return "<a href='./user_bookings.jsp?userId=" + cellValue + "&venueId=" + $("#venueId").text() + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "'>Подробнее</a>";                
 };
