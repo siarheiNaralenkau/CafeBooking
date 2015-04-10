@@ -18,6 +18,7 @@ $(document).ready(function() {
 	
 	// Get data for unregistred users.
 	createUnregistredGrid();
+	fetchUnregistredData();
 	
 	function fetchVenueData() {
 		var startDate = $("#dateFrom").val();

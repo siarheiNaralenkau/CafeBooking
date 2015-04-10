@@ -78,6 +78,7 @@ $(document).ready(function () {
                     	notes: bookingItem.notes                   
                     });     
     			}
+    			$("#bookingsGrid").jqGrid('clearGridData');
     			$("#bookingsGrid").jqGrid('setGridParam', { data: gridArrayData});
     			$("#bookingsGrid").trigger('reloadGrid');
 			}

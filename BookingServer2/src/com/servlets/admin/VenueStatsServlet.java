@@ -41,7 +41,7 @@ public class VenueStatsServlet extends HttpServlet {
 		Map<String, Object> venueBookings = VenuesDAO.getBookingsForVenue(venueId, Consts.STATUS_ALL, page);
 		result.put("venue", venue);
 		result.put("bookings", venueBookings);
-		Map<String, Object> bookingStats = BookingsDAO.getBookingStats(venueId);
+		Map<String, Object> bookingStats = BookingsDAO.getBookingStats(venueId, startDate, endDate);
 		result.put("bookingStats", bookingStats);
 		List<Map<String, Object>> bookingsRegistred = BookingsDAO.getBookingsForRegistredUsers(venueId, startDate, endDate);
 		result.put("bookingsRegistred", bookingsRegistred);

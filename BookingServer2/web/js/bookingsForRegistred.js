@@ -66,7 +66,7 @@ function createRegistredGrid() {
 	    pager: "#jqGridRegistredPager",
 		caption: "Статистика по зарегистрированным пользователям"
 	});		
-}
+};
     		
 function fetchRegistredData() {	
 	var startDate = $("#dateFrom").val();
@@ -93,6 +93,7 @@ function fetchRegistredData() {
 		            moreInfo: userItem.id            
 		        });     
 			}
+			$("#jqGridRegistred").jqGrid('clearGridData');
 			$("#jqGridRegistred").jqGrid('setGridParam', { data: gridArrayData});
 			$("#jqGridRegistred").trigger('reloadGrid');
 		}

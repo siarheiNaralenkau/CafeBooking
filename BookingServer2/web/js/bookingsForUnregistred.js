@@ -36,9 +36,7 @@ function createUnregistredGrid() {
 		datatype: 'local',
 	    pager: "#jqGridUnregistredPager",
 		caption: "Статистика по незарегистрированным пользователям"
-	});		
-	
-	fetchUnregistredData();	
+	});				
 };
     		
 function fetchUnregistredData() {
@@ -61,11 +59,11 @@ function fetchUnregistredData() {
 		            moreInfo: "bookingId=" + userItem.id + "&venueId=" + $("#venueId").text()            
 		        });     
 			}
+			$("#jqGridUnregistred").jqGrid('clearGridData');
 			$("#jqGridUnregistred").jqGrid('setGridParam', { data: gridArrayData});
 			$("#jqGridUnregistred").trigger('reloadGrid');
 		}
-	});		
-		
+	});			
 };
 
 function moreInfoUnregFormatter(cellValue, options, rowObject) {
