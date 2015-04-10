@@ -33,17 +33,17 @@ import com.utils.LocationUtil;
 public class VenuesDAO {
 	private static final String BOOK_QUERY = "INSERT INTO bookings(venue_id, visitor_contact_name, visitor_contact_phone, booking_time, places_amount, status, notes, table_no, user_id, reg_id, email) " +
 			"VALUES(?, ?, ?, ?, ?, " + BookingStatus.PENDING.getValue() + ", ?, ?, ?, ?, ?)";
-	private static final String VENUES_LIST_SQL = "SELECT * FROM venues";
+	private static final String VENUES_LIST_SQL = "SELECT * FROM venues order by name asc";
 	private static final String UPDATE_HISTORY_QUERY = "INSERT INTO booking_history(booking_id, new_status) VALUES(?, ?)";
 	private static final String UPDATE_HISTORY_EXT_QUERY = "INSERT INTO booking_history(booking_id, new_status, new_places, new_time) VALUES(?, ?, ?, ?)";
 	private static final String GET_LAST_AUTOINCREMENT = "SELECT LAST_INSERT_ID() AS NEW_ID";
 	private static final String GET_HISTORY_QUERY = "SELECT h.booking_id, h.new_status, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE h.booking_id = b.id AND b.venue_id = ?";
 	private static final String UPDATE_STATUS_QUERY = "UPDATE bookings SET status = ? WHERE id = ?"; 
-	private static final String GET_BOOKING_QUERY = "SELECT * FROM bookings WHERE id = ?";
+	private static final String GET_BOOKING_QUERY = "SELECT * FROM bookings WHERE id = ? order by booking_time desc";
 	private static final String GET_VENUE_QUERY = "SELECT * FROM venues WHERE id = ?";
 	private static final String BLOCK_BOOKING_QUERY = "UPDATE venues SET has_free_seats = ? WHERE id = ?";
-	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue();
-	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ?";
+	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue() + " order by booking_time desc";
+	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? order by booking_time desc";
 	private static final String SET_ADMIN_QUERY = "UPDATE venues set admin_user = ? WHERE id = ?";
 	private static final String DELETE_BOOKINGS_QUERY = "DELETE FROM bookings WHERE booking_time < NOW() - INTERVAL 1 DAY AND venue_id = ?";	
 	private static final String UPDATE_BOOKING_QUERY = "UPDATE bookings SET status = " + BookingStatus.PENDING.getValue() + ", places_amount = ?, booking_time = ? WHERE id = ?";	
@@ -54,7 +54,7 @@ public class VenuesDAO {
 	private static final String ADD_TABLE_QUERY = "INSERT INTO tables(venue_id, x_pos, y_pos, places, number, position_notes, photo_url) "
 			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";		
 	private static final String SET_VENUE_PLAN_QUERY = "UPDATE venues set plan = ? WHERE id = ?";	
-	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category";
+	private static final String VENUES_BY_CATEGORY_SQL = "SELECT id, name, category FROM venues ORDER BY category, name";
 	private static final String UPDATE_VENUE_SQL = "UPDATE venues SET name = ?, phone = ?, address = ?, admin_user = ?, "
 			+ "tables_amount = ?, icon_url = ?, open_time = ?, close_time = ?, cuisine = ?, has_wifi = ?, take_credit_cards = ?, "
 			+ "has_outdoors_seats = ?, category = ?, admin_password = ?, avg_check = ? WHERE id = ?";

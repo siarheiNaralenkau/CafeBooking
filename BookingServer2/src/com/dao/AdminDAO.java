@@ -34,10 +34,10 @@ public class AdminDAO {
 			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
 	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
-			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ?";	
+			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ? order by booking_time desc";	
 	
 	private static final String BOOKINGS_FOR_UNREG_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
-			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ?";
+			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ? order by booking_time desc";
 	
 	private static final String RESOLVE_BOOKING_AGREE_SQL = "UPDATE bookings SET spent_money = ?, spent_valid = 1 WHERE id = ?";
 	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 1 WHERE id = ?";
