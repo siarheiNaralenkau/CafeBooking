@@ -40,7 +40,7 @@ public class VenuesDAO {
 	private static final String GET_HISTORY_QUERY = "SELECT h.booking_id, h.new_status, h.change_time, b.venue_id, b.places_amount FROM booking_history h, bookings b WHERE h.booking_id = b.id AND b.venue_id = ?";
 	private static final String UPDATE_STATUS_QUERY = "UPDATE bookings SET status = ? WHERE id = ?"; 
 	private static final String GET_BOOKING_QUERY = "SELECT * FROM bookings WHERE id = ? order by booking_time desc";
-	private static final String GET_VENUE_QUERY = "SELECT * FROM venues WHERE id = ?";
+	private static final String GET_VENUE_QUERY = "SELECT venues.*, (SELECT COUNT(*) FROM reviews WHERE venue_id = ?) as reviews_amount FROM venues WHERE id = ?";
 	private static final String BLOCK_BOOKING_QUERY = "UPDATE venues SET has_free_seats = ? WHERE id = ?";
 	private static final String PENDING_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? and status = " + BookingStatus.PENDING.getValue() + " order by booking_time desc";
 	private static final String GET_BOOKINGS_QUERY = "SELECT * from bookings WHERE venue_id = ? order by booking_time desc";
@@ -70,7 +70,7 @@ public class VenuesDAO {
 	
 	private static final String GET_ADMIN_PASSWORD_SQL = "SELECT admin_password FROM venues where id = ?";
 	
-	private static final String GET_REVIEWS_SQL = "SELECT mark_food, mark_service, mark_atmosphere, mark_price_quality, comments_good, comments_bad FROM reviews WHERE venue_id = ?";
+	private static final String GET_REVIEWS_SQL = "SELECT r.mark_food, r.mark_service, r.mark_atmosphere, r.mark_price_quality, r.comments_good, r.comments_bad, r.created, u.name FROM reviews r, users u WHERE venue_id = ? and r.user_id = u.id";
 	
 	private static final String UPLOAD_VENUE_PHOTO_SQL = "INSERT INTO venue_photos(venue_id, url, delete_hash) VALUES(?, ?, ?)";
 	
@@ -338,6 +338,7 @@ public class VenuesDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
+			ps.setInt(2, venueId);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				venue = new Venue(rs.getInt("id"), rs.getString("unique_id"), rs.getString("name"),
@@ -815,6 +816,7 @@ public class VenuesDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
+			ps.setInt(2, venueId);
 			ResultSet rs = ps.executeQuery();			
 			if(rs.next()) {
 				Venue venue = new Venue();
@@ -845,6 +847,7 @@ public class VenuesDAO {
 				venue.setPhotos(photos);
 				venue.setRating(getVenueRating(con, venueId));
 				venue.setAvgPayment(rs.getString("avg_check"));
+				venue.setReviewsAmount(rs.getInt("reviews_amount"));
 				result.put("status", "success");
 				result.put("venue", venue);
 			}			
@@ -1171,6 +1174,8 @@ public class VenuesDAO {
 				review.put("mark_price_quality", rs.getFloat("mark_price_quality"));
 				review.put("comments_good", rs.getString("comments_good"));
 				review.put("comments_bad", rs.getString("comments_bad"));
+				review.put("create_date", rs.getString("created"));
+				review.put("username", rs.getString("name"));
 				result.add(review);
 			}
 			rs.close();

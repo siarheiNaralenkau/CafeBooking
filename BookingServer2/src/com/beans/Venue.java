@@ -225,6 +225,14 @@ public class Venue {
 		this.avgPayment = avgPayment;
 	}
 
+	public int getReviewsAmount() {
+		return reviewsAmount;
+	}
+
+	public void setReviewsAmount(int reviewsAmount) {
+		this.reviewsAmount = reviewsAmount;
+	}
+
 	private int id;
 	private Float rating;
 	private int freeTablesAmount;	
@@ -254,4 +262,6 @@ public class Venue {
 	private String avgPayment;		
 	
 	private double distance;
+	
+	private int reviewsAmount;
 }
