@@ -6,7 +6,9 @@
 <script type="text/ecmascript" src="js/jqGrid/js/i18n/grid.locale-ru.js"></script>
 <!-- jQuery UI Library for custom UI components -->
 <script type="text/javascript" src="js/jquery-ui/jquery-ui.js"></script>
-	
+<!-- Russian localization for jQuery date-picker -->
+<script type="text/javascript" src="js/jquery-ui/datepicker-ru.js"></script>
+
 <!-- A link to a jQuery UI ThemeRoller theme, more than 22 built-in and many more custom -->
 <link rel="stylesheet" type="text/css" media="screen" href="js/jquery-ui-themes/themes/smoothness/jquery-ui.css" />
 <!-- The link to the CSS that the grid needs -->

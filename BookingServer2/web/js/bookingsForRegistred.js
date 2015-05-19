@@ -1,11 +1,6 @@
 function createRegistredGrid() {
 	$("#jqGridRegistred").jqGrid({
-	    colModel: [
-	        {
-				label: 'ID пользователя',
-	            name: 'id',
-	            width: 80                        
-	        },
+	    colModel: [	        
 	        {
 				label: 'Имя',
 	            name: 'name',
@@ -35,23 +30,14 @@ function createRegistredGrid() {
 	        	label: 'Потрачено денег',
 	        	name: 'spentMoney',
 	        	width: 150
-	        },
+	        },	   
 	        {
-	        	label: 'Начислено баллов',
-	        	name: 'bonusScores',
+	        	label: 'Долг (5%)',
+	        	name: 'dept5',
 	        	width: 150
 	        },
-	        {
-	        	label: 'Претензий всего',
-	        	name: 'claimsAll',
-	        	width: 150
-	        },
-	        {
-	        	label: 'Претензий активных',
-	        	name: 'claimsActive',
-	        	width: 150
-	        },                    
-	        {                    	
+	        { 
+	        	label: 'Подробнее',
 	        	name: 'moreInfo',
 	        	width: 100,
 	        	formatter: moreInfoFormatter
@@ -87,6 +73,7 @@ function fetchRegistredData() {
 		            email: userItem.email,
 		            bookingsCount: userItem.bookingsCount,
 		            spentMoney: userItem.spentMoney,
+		            dept5: userItem.spentMoney/20,
 		            bonusScores: userItem.bonusScores,
 		            claimsAll: userItem.claimsAll,
 		            claimsActive: userItem.claimsActive,

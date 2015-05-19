@@ -1,4 +1,12 @@
 $(document).ready(function() {	
+	
+	$.datepicker.setDefaults(
+	  $.extend(	    
+	    $.datepicker.regional['ru'],
+	    {'dateFormat':'dd-mm-yy'}
+	  )
+	);
+	
 	$("#dateFrom").datepicker({dateFormat: "yy-mm-dd"});
 	$("#dateTo").datepicker({dateFormat: "yy-mm-dd"});
 	
@@ -40,6 +48,8 @@ $(document).ready(function() {
 				$("#maxCheck").text(result.bookingStats.maxCheck);
 				$("#minCheck").text(result.bookingStats.minCheck);
 				$("#avgCheck").text(result.bookingStats.avgCheck);
+				$("#sumSpent").text(result.bookingStats.sumSpent);
+				$("#dept5").text(result.bookingStats.dept5);
 				$("#venueName").text(result.venue.name); 								
 			}
 		});

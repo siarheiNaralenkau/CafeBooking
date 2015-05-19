@@ -898,6 +898,7 @@ public class VenuesDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(GET_VENUE_QUERY);
 			ps.setInt(1, venueId);
+			ps.setInt(2, venueId);
 			ResultSet rs = ps.executeQuery();					
 			if(rs.next()) {
 				String venueUid = rs.getString("unique_id");

@@ -9,7 +9,7 @@
 	
 	<script type="text/javascript" src="js/venue_stats_jq.js"></script>
 	<script type="text/javascript" src="js/bookingsForRegistred.js"></script>
-	<script type="text/javascript" src="js/bookingsForUnregistred.js"></script>	   
+	<script type="text/javascript" src="js/bookingsForUnregistred.js"></script>	
 </head>
 
 <body>
@@ -59,16 +59,31 @@
 		-------------------------
 		</li>
 		<li>
+			<span>Сумма по чекам:</span>
+			<span id="sumSpent"></span>
+			<span>&nbsp;бел. руб.</span>
+		</li>
+		<li>
+			<span>Долг за период:</span>
+			<span id="dept5"></span>
+			<span>&nbsp;бел. руб.</span>
+		<li>
+		-------------------------
+		</li>
+		<li>
 			<span>Минимальный чек:</span>
 			<span id="minCheck"></span>
+			<span>&nbsp;бел. руб.</span>
 		</li>
 		<li>
 			<span>Максимальный чек:</span>
 			<span id="maxCheck"></span>
+			<span>&nbsp;бел. руб.</span>
 		</li>
 		<li>
 			<span>Средний чек:</span>
 			<span id="avgCheck"></span>
+			<span>&nbsp;бел. руб.</span>
 		</li>		
 	</ul>
 	

@@ -10,7 +10,12 @@ function createUnregistredGrid() {
 	        	label: 'Телефон',
 	        	name: 'phone',
 	        	width: 120                    	
-	        },	        
+	        },
+	        {
+	        	label: 'E-Mail',
+	        	name: 'email',
+	        	width: 150
+	        },
 	        {
 	        	label: 'Количество броней',
 	        	name: 'bookingsCount',
@@ -51,9 +56,11 @@ function fetchUnregistredData() {
 			console.log(result);
 			for(var i = 0; i < result.length; i++) {
 				var userItem = result[i];
+				console.log(userItem);
 				gridArrayData.push({          	
 		            name: userItem.name,            
-		            phone: userItem.phone,            
+		            phone: userItem.phone,
+		            email: userItem.email,
 		            bookingsCount: userItem.bookingsCount,
 		            spentMoney: userItem.spentMoney,
 		            moreInfo: "bookingId=" + userItem.id + "&venueId=" + $("#venueId").text()            

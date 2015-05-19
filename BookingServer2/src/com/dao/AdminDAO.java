@@ -30,7 +30,7 @@ public class AdminDAO {
 			+ " (select sum(spent_money) from bookings where venue_id = v.id and booking_time BETWEEN ? and ?) as check_sum"
 			+ " FROM venues v order by successfull_bookings desc, v.name asc";
 	
-	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
+	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, email, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
 			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
 	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
@@ -178,6 +178,7 @@ public class AdminDAO {
 				userData.put("phone", rs.getString("visitor_contact_phone"));
 				userData.put("bookingsCount", rs.getInt("bookings_count"));
 				userData.put("spentMoney", rs.getInt("money_spent"));
+				userData.put("email", rs.getString("email"));
 				result.add(userData);
 			}
 		} catch(SQLException e) {
