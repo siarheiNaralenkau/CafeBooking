@@ -33,10 +33,12 @@ public class AdminDAO {
 	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, email, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
 			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
 	
-	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
+	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, DATE(booking_created) as created_date,"
+			+ " TIME(booking_created) as created_time, spent_money, visitor_spent_money, notes" 
 			+ " from bookings where venue_id = ? and user_id = ? and booking_time > ? and booking_time < ? order by booking_time desc";	
 	
-	private static final String BOOKINGS_FOR_UNREG_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, spent_money, visitor_spent_money, notes" 
+	private static final String BOOKINGS_FOR_UNREG_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time,"
+			+ " DATE(booking_created) as created_date, TIME(booking_created) as created_time, spent_money, visitor_spent_money, notes" 
 			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ? order by booking_time desc";
 	
 	private static final String RESOLVE_BOOKING_AGREE_SQL = "UPDATE bookings SET spent_money = ?, spent_valid = 1 WHERE id = ?";
@@ -209,12 +211,13 @@ public class AdminDAO {
 			while(rs.next()) {
 				Map<String, Object> bookingData = new HashMap<String, Object>();
 				bookingData.put("id", rs.getInt("id"));
-				bookingData.put("date", rs.getString("booking_date"));
-				bookingData.put("time", rs.getString("booking_time"));
+				bookingData.put("date_booking", rs.getString("booking_date") + " " + rs.getString("booking_time"));
+				bookingData.put("date_created", rs.getString("created_date") + " " + rs.getString("created_time"));
 				int spentMoney = rs.getInt("spent_money");
 				int bonusScores = spentMoney/Consts.BONUS_EXCHANGE_SCORE;
 				bookingData.put("venue_sum", spentMoney);
 				bookingData.put("user_sum", rs.getInt("visitor_spent_money"));
+				bookingData.put("dept", rs.getInt("visitor_spent_money")/20);
 				bookingData.put("bonus_scores", bonusScores);
 				bookingData.put("notes", rs.getString("notes"));
 				result.add(bookingData);
@@ -248,8 +251,8 @@ public class AdminDAO {
 			while(rs.next()) {
 				Map<String, Object> bookingData = new HashMap<String, Object>();
 				bookingData.put("id", rs.getInt("id"));
-				bookingData.put("date", rs.getString("booking_date"));
-				bookingData.put("time", rs.getString("booking_time"));
+				bookingData.put("date_booking", rs.getString("booking_date") + " " + rs.getString("booking_time"));
+				bookingData.put("date_created", rs.getString("created_date") + " " + rs.getString("created_time"));
 				int spentMoney = rs.getInt("spent_money");				
 				bookingData.put("venue_sum", spentMoney);
 				bookingData.put("user_sum", rs.getInt("visitor_spent_money"));				

@@ -8,14 +8,14 @@ $(document).ready(function () {
             	hidden: true
             },
             {
-				label: 'Дата',
-                name: 'date',
-                width: 100                        
+				label: 'Дата создания',
+                name: 'date_created',
+                width: 200                        
             },
             {
-				label: 'Время',
-                name: 'time',
-                width: 100                
+				label: 'Дата бронирования',
+                name: 'date_booking',
+                width: 200                
             },
             {
 				label: 'Сумма ресторана',
@@ -35,7 +35,7 @@ $(document).ready(function () {
         ],
 
         viewrecords: true,
-        width: 880,
+        width: 1000,
         height: 500,
         rowNum: 30,
 		datatype: 'local',
@@ -71,8 +71,8 @@ $(document).ready(function () {
     				var bookingItem = result[i];
                     gridArrayData.push({   
                     	bookingId: bookingItem.id,
-                    	date: bookingItem.date,
-                    	time: bookingItem.time,
+                    	date_created: bookingItem.date_created,
+                    	date_booking: bookingItem.date_booking,
                     	venue_sum: bookingItem.venue_sum,
                     	user_sum: bookingItem.user_sum,
                     	notes: bookingItem.notes                   

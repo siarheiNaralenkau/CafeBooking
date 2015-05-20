@@ -11,6 +11,7 @@
 	<a href="./venues_list?lat=52.405348&lng=30.920542&responseType=jsp">Get Venues JSP</a>
 	<a href="book_place_example.jsp">Book venue</a>
 	<a href="./admin_servlet?mode=editVenues">Редактировать заведения</a>
+	<a hred="./venue_admin">Администрирование заведения</a>
 	<a href="./venues_by_category_jq.jsp">Статистика заказов</a>
 </body>
 </html>
