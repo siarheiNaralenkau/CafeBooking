@@ -45,6 +45,8 @@ public class AdminDAO {
 	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 1 WHERE id = ?";
 	private static final String UPDATE_USER_BONUS = "UPDATE users SET bonus_scores = bonus_scores + ? WHERE id = ?";
 	
+	private static final String VENUES_SHORT_SQL = "SELECT id, name FROM venues ORDER BY name";
+	
 	static {		
 		try {
 			Context initContext = new InitialContext();
@@ -296,5 +298,27 @@ public class AdminDAO {
 		} finally {
 			closeConnection(con, ps);
 		}
+	}
+	
+	public static List<Map<String, Object>> getVenuesShort() {
+		Connection con = null;
+		PreparedStatement ps = null;
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(VENUES_SHORT_SQL);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Map<String, Object> venueShort = new HashMap<String, Object>();
+				venueShort.put("id", rs.getInt("id"));
+				venueShort.put("name", rs.getString("name"));
+				result.add(venueShort);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
 	}
 }

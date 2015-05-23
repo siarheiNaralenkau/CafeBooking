@@ -1,6 +1,8 @@
 package com.servlets.admin.venue;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.beans.Venue;
+import com.dao.AdminDAO;
 import com.dao.VenuesDAO;
 
 /**
@@ -35,26 +39,10 @@ public class VenueAdminServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(true);
-		String vAdminLogin = (String)session.getAttribute(VENUE_ADMIN_LOGIN);
-		String vAdminPassword = (String)session.getAttribute(VENUE_ADMIN_PASSWORD);
-		int venueId = (Integer)session.getAttribute(VENUE_ID);
-		if(vAdminLogin == null || vAdminLogin == null || venueId == 0) {
-			vAdminLogin = request.getParameter(VENUE_ADMIN_LOGIN);
-			vAdminPassword = request.getParameter(VENUE_ADMIN_PASSWORD);
-			venueId = Integer.valueOf(request.getParameter(VENUE_ID));		
-			
-			Map<String, Object> checkAdmin = VenuesDAO.checkAdmin(vAdminLogin, vAdminPassword, venueId);
-			if(checkAdmin.get("status").equals("success")) {
-				// TODO - receive - id-name list of venues(Order by name).
-	//			VenuesDAO.getVenuesShort();
-			} else {
-				// TODO - Process login error.
-			}				
-		} else {
-			// TODO - Verify stored credentials for venue and redirect to venue admin page or error page.			
-		}
-	}	
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	List<Map<String, Object>> venuesShort = AdminDAO.getVenuesShort();
+    	request.setAttribute("venuesList", venuesShort);
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("/venue_login.jsp");
+		dispatcher.forward(request, response);
+    }
 }

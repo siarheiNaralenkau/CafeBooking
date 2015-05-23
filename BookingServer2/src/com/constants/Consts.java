@@ -28,6 +28,9 @@ public class Consts {
 	public static final String IMGUR_CLIENT_ID = "ed21cf32c4c0840";
 	public static final String IMGUR_CLIENT_SECRET = "cff8f1ba7e58df2800784b05d0c94d9c48c6fd3e";
 
+	public static final String STATUS_SUCCESS = "success";
+	public static final String STATUS_FAILURE = "failure";
+	
 	public static Map<Integer, String> POSITION_NOTES = new HashMap<Integer, String>();
 	public static Map<Integer, String> STATUS_BY_CODE = new HashMap<Integer, String>();
 	public static Map<String, Integer> CODE_BY_STATUS = new HashMap<String, Integer>();
