@@ -1,6 +1,10 @@
 package com.servlets.admin.venue;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
@@ -40,7 +44,13 @@ public class VenueAdminLoginServlet extends HttpServlet {
 		if(checkStatus.equals(Consts.STATUS_SUCCESS)) {
 			Venue venue = VenuesDAO.getVenueById(venueId);
 			request.setAttribute("venue", venue);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/venue_admin_data.jsp");
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Calendar calendar = Calendar.getInstance();
+			String endDate = dateFormat.format(calendar.getTime());
+			calendar.add(Calendar.DATE, -30);
+			String startDate = dateFormat.format(calendar.getTime());
+			String redirectURL = String.format("/venue_stats_jq.jsp?venueId=%s&dateFrom=%s&dateTo=%s", venueId, startDate, endDate);
+			RequestDispatcher dispatcher = request.getRequestDispatcher(redirectURL);
 			dispatcher.forward(request, response);
 		}		
 	}
