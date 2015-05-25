@@ -1,7 +1,6 @@
 package com.filters;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,18 +15,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.constants.Consts;
-import com.dao.VenuesDAO;
-
-@WebFilter("/venue_admin_filter")
-public class VenueAdminFilter implements Filter {
+/**
+ * Servlet Filter implementation class ApplicationAdminFilter
+ */
+@WebFilter("/app_admin_filter")
+public class ApplicationAdminFilter implements Filter {
 	
 	private FilterConfig config;
 	
-    public VenueAdminFilter() {
-
+	private static final String ADMIN_LOGIN = "adminLogin";
+	private static final String ADMIN_PASSWORD = "adminPassword";
+	
+	private static final String LOGIN = "venueAdmin";
+	private static final String PASSWORD = "canEditVenues";
+	
+    public ApplicationAdminFilter() {    
     }
-
+	
 	public void destroy() {
 
 	}
@@ -35,11 +39,11 @@ public class VenueAdminFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest hRequest = (HttpServletRequest)request;
 		HttpServletResponse hResponse = (HttpServletResponse)response;
-		if(isLoggedIn(hRequest.getSession())) {
+		if(isLoggedAsAdmin(hRequest.getSession())) {
 			chain.doFilter(request, response);
 		} else {			
 			ServletContext context = config.getServletContext();
-			RequestDispatcher rd = context.getRequestDispatcher("/venue_admin");
+			RequestDispatcher rd = context.getRequestDispatcher("/admin_servlet");
 			rd.forward(hRequest, hResponse);
 		}
 	}
@@ -48,24 +52,18 @@ public class VenueAdminFilter implements Filter {
 		this.config = fConfig;
 	}
 	
-	protected boolean isLoggedIn(HttpSession session) {
+	public boolean isLoggedAsAdmin(HttpSession session) {
 		boolean result;
-		Object oLogin = session.getAttribute("login");
-		Object oPassword = session.getAttribute("password");
-		Object oVenueId = session.getAttribute("venueId");
-		if(oLogin == null || oPassword == null || oVenueId == null) {
+		
+		String adminLogin = (String)session.getAttribute(ADMIN_LOGIN);
+		String adminPassword = (String)session.getAttribute(ADMIN_PASSWORD);
+		
+		if(!LOGIN.equals(adminLogin) || !PASSWORD.equals(adminPassword)) {
 			result = false;
 		} else {
-			int venueId = (Integer)oVenueId;
-			String login = oLogin.toString();
-			String password = oPassword.toString();
-			Map<String, Object> credentialCheck = VenuesDAO.checkAdmin(login, password, venueId);
-			if(credentialCheck.get("status").toString().equals(Consts.STATUS_SUCCESS)) {
-				result = true;
-			} else {
-				result = false;
-			}
-		}
+			result = true;
+		} 
+		
 		return result;
 	}
 

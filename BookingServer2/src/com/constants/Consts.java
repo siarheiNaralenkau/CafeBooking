@@ -31,6 +31,10 @@ public class Consts {
 	public static final String STATUS_SUCCESS = "success";
 	public static final String STATUS_FAILURE = "failure";
 	
+	public static final String LOGGED_SUPERADMIN = "superadmin";
+	public static final String LOGGED_VENUE_ADMIN = "venueadmin";
+	public static final String LOGGED_AS = "logged_as";
+	
 	public static Map<Integer, String> POSITION_NOTES = new HashMap<Integer, String>();
 	public static Map<Integer, String> STATUS_BY_CODE = new HashMap<Integer, String>();
 	public static Map<String, Integer> CODE_BY_STATUS = new HashMap<String, Integer>();

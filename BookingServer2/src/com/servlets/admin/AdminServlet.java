@@ -49,6 +49,7 @@ public class AdminServlet extends HttpServlet {
 			} else {
 				session.setAttribute(ADMIN_LOGIN, adminLogin);
 				session.setAttribute(adminPassword, ADMIN_PASSWORD);
+				session.setMaxInactiveInterval(3600);
 				ServletContext servletContext = getServletContext();
 				RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/get_grouped_venues");
 				dispatcher.forward(request, response);
