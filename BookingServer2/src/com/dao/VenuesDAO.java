@@ -285,6 +285,7 @@ public class VenuesDAO {
 	}
 	
 	public static Booking getBookingById(int bookingId) {
+		// TODO - Verify spend valid logic		
 		Connection con = null;
 		PreparedStatement ps = null;
 		Booking booking = null;
@@ -471,6 +472,7 @@ public class VenuesDAO {
 			
 	
 	public static Map<String, Object> getBookingsForVenue(int venueId, String filterStatus, int page) {
+		// TODO - Verify spend valid logic		
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;

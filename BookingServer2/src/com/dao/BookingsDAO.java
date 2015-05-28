@@ -230,6 +230,7 @@ public class BookingsDAO {
 	}
 	
 	public static Map<String, Object> setVisitorSpent(int spentMoney, int bookingId) {
+		// TODO Verify work logic		
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
 		PreparedStatement ps = null;

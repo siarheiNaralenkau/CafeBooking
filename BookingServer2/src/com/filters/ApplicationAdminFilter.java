@@ -20,30 +20,32 @@ import javax.servlet.http.HttpSession;
  */
 @WebFilter("/app_admin_filter")
 public class ApplicationAdminFilter implements Filter {
-	
+
 	private FilterConfig config;
-	
+
 	private static final String ADMIN_LOGIN = "adminLogin";
 	private static final String ADMIN_PASSWORD = "adminPassword";
-	
+
 	private static final String LOGIN = "venueAdmin";
 	private static final String PASSWORD = "canEditVenues";
-	
-    public ApplicationAdminFilter() {    
-    }
-	
+
+	public ApplicationAdminFilter() {
+	}
+
 	public void destroy() {
 
 	}
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest hRequest = (HttpServletRequest)request;
-		HttpServletResponse hResponse = (HttpServletResponse)response;
-		if(isLoggedAsAdmin(hRequest.getSession())) {
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
+		HttpServletRequest hRequest = (HttpServletRequest) request;
+		HttpServletResponse hResponse = (HttpServletResponse) response;
+		if (isLoggedAsAdmin(hRequest.getSession())) {
 			chain.doFilter(request, response);
-		} else {			
+		} else {
 			ServletContext context = config.getServletContext();
-			RequestDispatcher rd = context.getRequestDispatcher("/admin_servlet");
+			RequestDispatcher rd = context
+					.getRequestDispatcher("/admin_servlet");
 			rd.forward(hRequest, hResponse);
 		}
 	}
@@ -51,19 +53,19 @@ public class ApplicationAdminFilter implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {
 		this.config = fConfig;
 	}
-	
+
 	public boolean isLoggedAsAdmin(HttpSession session) {
 		boolean result;
-		
-		String adminLogin = (String)session.getAttribute(ADMIN_LOGIN);
-		String adminPassword = (String)session.getAttribute(ADMIN_PASSWORD);
-		
-		if(!LOGIN.equals(adminLogin) || !PASSWORD.equals(adminPassword)) {
+
+		String adminLogin = (String) session.getAttribute(ADMIN_LOGIN);
+		String adminPassword = (String) session.getAttribute(ADMIN_PASSWORD);
+
+		if (!LOGIN.equals(adminLogin) || !PASSWORD.equals(adminPassword)) {
 			result = false;
 		} else {
 			result = true;
-		} 
-		
+		}
+
 		return result;
 	}
 
