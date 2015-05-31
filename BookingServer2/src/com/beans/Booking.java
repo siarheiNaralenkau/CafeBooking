@@ -19,15 +19,15 @@ public class Booking {
 	private int spentMoney;
 	private int visitorSpentMoney;	
 
-	private String spentValid;
+	private int spentValid;
 	
 	private String email;
 	
-	public String isSpentValid() {
+	public int isSpentValid() {
 		return spentValid;
 	}
 
-	public void setSpentValid(String spentValid) {
+	public void setSpentValid(int spentValid) {
 		this.spentValid = spentValid;
 	}
 		

@@ -21,7 +21,7 @@ public class BookingsDAO {
 	private static DataSource dataSource;
 	
 	private static final String SET_BOOKING_SPENT_SQL = "UPDATE bookings SET status=?, spent_money = ? WHERE id = ?";
-	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ?, spent_valid = ? WHERE id = ?";
+	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ? WHERE id = ?";
 	
 	private static final String GET_BOOKINGS_BY_STATUS_SQL = "select id, booking_id, new_status from booking_history where booking_id in (SELECT id from bookings WHERE venue_id = ? and booking_time >= ? and booking_time <= ?)";
 	private static final String GET_SPENT_STATS_SQL = "select MIN(spent_money) as min_spent, MAX(spent_money) as max_spent, AVG(spent_money) as avg_spent, SUM(spent_money) as sum_spent FROM bookings WHERE venue_id=? "
@@ -229,23 +229,15 @@ public class BookingsDAO {
 		return result;
 	}
 	
-	public static Map<String, Object> setVisitorSpent(int spentMoney, int bookingId) {
-		// TODO Verify work logic		
+	public static Map<String, Object> setVisitorSpent(int spentMoney, int bookingId) {	
 		Map<String, Object> result = new HashMap<String, Object>();
 		Connection con = null;
-		PreparedStatement ps = null;
-		boolean spentValid = true;
+		PreparedStatement ps = null;		
 		try {
-			con = dataSource.getConnection();			
-			Booking booking = VenuesDAO.getBookingById(bookingId);
-			if(booking.getSpentMoney() != spentMoney) {
-				spentValid = false;
-			}
-			
+			con = dataSource.getConnection();												
 			ps = con.prepareStatement(SET_VISITOR_SPENT_SQL);
-			ps.setInt(1, spentMoney);
-			ps.setBoolean(2, spentValid);
-			ps.setInt(3, bookingId);
+			ps.setInt(1, spentMoney);			
+			ps.setInt(2, bookingId);
 			ps.executeUpdate();
 			result.put("status", "success");
 		}  catch(SQLException e) {

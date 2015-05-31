@@ -284,8 +284,7 @@ public class VenuesDAO {
 		return result;
 	}
 	
-	public static Booking getBookingById(int bookingId) {
-		// TODO - Verify spend valid logic		
+	public static Booking getBookingById(int bookingId) {	
 		Connection con = null;
 		PreparedStatement ps = null;
 		Booking booking = null;
@@ -309,16 +308,10 @@ public class VenuesDAO {
 
 				booking.setSpentMoney(rs.getInt("spent_money"));
 				
-				boolean spentValid = rs.getBoolean("spent_valid");
-				if(rs.wasNull()) {
-					booking.setSpentValid("No visitor check");
-				} else {
-					if(spentValid == true) {
-						booking.setSpentValid("Yes");
-					} else {
-						booking.setSpentValid("No");
-					}
-				}				
+				int spentValid = rs.getInt("spent_valid");
+				int venueSpent = rs.getInt("spent_money");
+				int visitorSpent = rs.getInt("visitor_spent_money");
+				booking.setSpentValid(getSpentValid(venueSpent, visitorSpent, spentValid));		
 
 				booking.setRegId(rs.getString("reg_id"));
 				booking.setEmail(rs.getString("email"));
@@ -442,19 +435,7 @@ public class VenuesDAO {
 							bookedTables.add(Integer.valueOf(sNum));
 						}				
 					}
-					b.setTableNumbers(bookedTables);	
-					
-					boolean spentValid = rs.getBoolean("spent_valid");
-					if(rs.wasNull()) {
-						b.setSpentValid("No visitor check");
-					} else {
-						if(spentValid == true) {
-							b.setSpentValid("Yes");
-						} else {
-							b.setSpentValid("No");
-						}
-					}
-										
+					b.setTableNumbers(bookedTables);																					
 					pendingBookings.add(b);
 				}
 			}
@@ -508,16 +489,10 @@ public class VenuesDAO {
 				b.setSpentMoney(rs.getInt("spent_money"));
 				b.setVisitorSpentMoney(rs.getInt("visitor_spent_money"));
 				
-				boolean spentValid = rs.getBoolean("spent_valid");
-				if(rs.wasNull()) {
-					b.setSpentValid("No visitor check");
-				} else {
-					if(spentValid == true) {
-						b.setSpentValid("Yes");
-					} else {
-						b.setSpentValid("No");
-					}
-				}
+				int spentValid = rs.getInt("spent_valid");
+				int spentMoney = rs.getInt("spent_money");
+				int visitorSpentMoney = rs.getInt("visitor_spent_money");
+				b.setSpentValid(getSpentValid(spentMoney, visitorSpentMoney, spentValid));							
 				
 				// Check if booking status is pending, and booking was created more then 20 minutes ago. If true - Disable booking.
 				long createdTime = b.getBookingCreated().getTime();
@@ -1218,6 +1193,30 @@ public class VenuesDAO {
 			e.printStackTrace();			
 		} finally {
 			closeConnection(con, ps);
+		}
+		return result;
+	}
+	
+	public static int getSpentValid(int venueSpent, int visitorSpent, int spentValid) {
+		/**
+		 * Spent valid statuses:
+		 * 0 - No Venue sum, no visitor sum
+		 * 1 - No visitor sum
+		 * 2 - Visitor sum is checking
+		 * 3 - Visitor sum is correct
+		 * 4 - Visitor sum is incorrect		
+		 */
+		int result = 0;
+		if(venueSpent == 0 && visitorSpent == 0) {
+			result = 0;
+		} else if(venueSpent > 0 && visitorSpent == 0) {
+			result = 1;
+		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 0) {
+			result = 2;
+		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 1) {
+			result = 3;
+		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 2) {
+			result = 4;
 		}
 		return result;
 	}

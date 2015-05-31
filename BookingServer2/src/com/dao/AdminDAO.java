@@ -42,7 +42,7 @@ public class AdminDAO {
 			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ? order by booking_time desc";
 	
 	private static final String RESOLVE_BOOKING_AGREE_SQL = "UPDATE bookings SET spent_money = ?, spent_valid = 1 WHERE id = ?";
-	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 1 WHERE id = ?";
+	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 2 WHERE id = ?";
 	private static final String UPDATE_USER_BONUS = "UPDATE users SET bonus_scores = bonus_scores + ? WHERE id = ?";
 	
 	private static final String VENUES_SHORT_SQL = "SELECT id, name FROM venues ORDER BY name";
