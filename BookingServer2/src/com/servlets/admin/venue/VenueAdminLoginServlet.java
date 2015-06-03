@@ -90,7 +90,7 @@ public class VenueAdminLoginServlet extends HttpServlet {
 			String login = oLogin.toString();
 			String password = oPassword.toString();
 			Map<String, Object> credentialCheck = VenuesDAO.checkAdmin(login, password, venueId);
-			if(credentialCheck.get("starus").toString().equals(Consts.STATUS_SUCCESS)) {
+			if(credentialCheck.get("status").toString().equals(Consts.STATUS_SUCCESS)) {
 				result = true;
 			} else {
 				result = false;
