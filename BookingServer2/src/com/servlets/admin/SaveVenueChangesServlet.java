@@ -62,9 +62,9 @@ public class SaveVenueChangesServlet extends HttpServlet {
 				adminUser, tablesAmount, iconURL, openTime, closeTime, cuisine, hasWiFi, takeCreditCards, 
 				hasOutdoorsSeats, category, adminPassword, avgPayment);
 		if(updateResult.get("status").equals("success")) {
-			// Redirect to venuesList.
-			ServletContext servletContext = getServletContext();
-			RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/get_grouped_venues");
+			// Redirect to editting venue page.
+			ServletContext servletContext = getServletContext();			
+			RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/edit_venue_open?venueId=" + venueId);
 			dispatcher.forward(request, response);
 		} else {
 			System.out.println(updateResult.get("error"));

@@ -247,29 +247,31 @@
 				</tr>
 			</tbody>
 		</table>
-		<input type="submit" value="Сохранить">
+		<div id="venuePhotos">
+			<h3>Фотографии заведения</h3>
+			<table>
+				<tbody>
+				<tr>
+					<%
+						List<VenuePhoto> photos = venue.getPhotos();
+						if(photos != null && photos.size() > 0) {
+						for(VenuePhoto photo: photos) {					
+					%>
+					<td width="100px" height="100px">
+						<img width="100px" height="100px" src="<%=photo.getUrl()%>" data-id="<%=photo.getId()%>">
+						<a href="#" onclick="setVenueIcon(this)">Установить как эмблему</a>
+						<a href="./delete_venue_photo?photoId=<%=photo.getId()%>&venueId=<%=venue.getId()%>">Удалить</a>
+					</td>
+					<% } } %>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+		<input type="submit" value="Сохранить изменения">
 	</form>
-	</div>
-	<div id="venuePhotos">
-		<table>
-			<tbody>
-			<tr>
-				<%
-					List<VenuePhoto> photos = venue.getPhotos();
-					if(photos != null && photos.size() > 0) {
-					for(VenuePhoto photo: photos) {					
-				%>
-				<td width="100px" height="100px">
-					<img width="100px" height="100px" src="<%=photo.getUrl()%>" data-id="<%=photo.getId()%>">
-					<a href="#" onclick="setVenueIcon(this)">Установить как эмблему</a>
-					<a href="./delete_venue_photo?photoId=<%=photo.getId()%>&venueId=<%=venue.getId()%>">Удалить</a>
-				</td>
-				<% } } %>
-			</tr>
-			</tbody>
-		</table>
-	</div>
+	</div>	
 	<div id="addPhotosDiv">
+		<h3>Добавить фотографии</h3>
 		<form action="./upload_venue_photos" name="uploadForm" enctype="multipart/form-data" method="post">
 			<input type="hidden" name="venueId" value="<%=venue.getId()%>"/>			
 			<div class="fileform">			
@@ -278,7 +280,7 @@
 			</div>
 			<div id="previewDiv" class="previewDiv"></div>
 			<div>
-				<input type="submit" value="Сохранить">
+				<input type="submit" value="Сохранить фотографии">
 			</div>
 		</form>		
 	</div>

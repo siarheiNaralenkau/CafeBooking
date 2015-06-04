@@ -63,7 +63,9 @@ public class ImageUploadServlet extends HttpServlet {
 	                byte[] fileData = new byte[(int)fileSize];
 	                fileContent.read(fileData);
 	                System.out.println("File data array size: " + String.valueOf(fileData.length));
-	                uploadedPhotos.add(uploadToImgur(fileData));
+	                if(!fileName.isEmpty()) {
+	                	uploadedPhotos.add(uploadToImgur(fileData));
+	                }
 	            }
 	        }
 	        if(venueId != 0) {
