@@ -22,6 +22,12 @@ import com.dao.VenuesDAO;
 @WebFilter("/venue_admin_filter")
 public class VenueAdminFilter implements Filter {
 	
+	private static final String ADMIN_LOGIN = "adminLogin";
+	private static final String ADMIN_PASSWORD = "adminPassword";
+	
+	private static final String LOGIN = "venueAdmin";
+	private static final String PASSWORD = "canEditVenues";
+	
 	private FilterConfig config;
 	
     public VenueAdminFilter() {
@@ -54,7 +60,11 @@ public class VenueAdminFilter implements Filter {
 		Object oPassword = session.getAttribute("password");
 		Object oVenueId = session.getAttribute("venueId");
 		if(oLogin == null || oPassword == null || oVenueId == null) {
-			result = false;
+			if(session.getAttribute(ADMIN_LOGIN) != null && session.getAttribute(ADMIN_PASSWORD) != null) {
+				result = true;
+			} else {
+				result = false;
+			}
 		} else {
 			int venueId = (Integer)oVenueId;
 			String login = oLogin.toString();

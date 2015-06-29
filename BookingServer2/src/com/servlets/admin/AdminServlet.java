@@ -25,8 +25,7 @@ public class AdminServlet extends HttpServlet {
 	private static final String PASSWORD = "canEditVenues";
 	
     public AdminServlet() {
-        super();
-       
+        super();       
     }
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -44,14 +43,18 @@ public class AdminServlet extends HttpServlet {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin_login.jsp");
 				dispatcher.forward(request, response);
 			} else {
-				session.setAttribute(ADMIN_LOGIN, adminLogin);
-				session.setAttribute(adminPassword, ADMIN_PASSWORD);
-				session.setMaxInactiveInterval(3600);
+				saveCredentialsInSession(session, adminLogin, adminPassword);
 				ServletContext servletContext = getServletContext();
 				RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/get_grouped_venues");
 				dispatcher.forward(request, response);
 			}
 		} 
+	}
+	
+	protected void saveCredentialsInSession(HttpSession session, String login, String password) {
+		session.setMaxInactiveInterval(3600);
+		session.setAttribute("adminLogin", login);
+		session.setAttribute("adminPassword", password);		
 	}
 
 }
