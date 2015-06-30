@@ -33,7 +33,7 @@ public class UserDAO {
 	private static final String GET_USER_DETAILS_SQL = "SELECT name, surname, email, phone, bonus_scores FROM users WHERE id = ?";
 	private static final String GET_USER_BOOKINGS_SQL = "SELECT v.name as venue_name, v.id as venue_id, b.id as booking_id, b.visitor_contact_name, b.visitor_contact_phone, "
 			+ "b.spent_money, b.booking_time, b.places_amount, b.status as booking_status, b.notes, b.booking_created, "
-			+ "b.table_no, b.visitor_spent_money from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
+			+ "b.table_no, b.visitor_spent_money, b.spent_valid from bookings b, venues v, booking_status bs WHERE user_id = ? and b.venue_id = v.id and b.status = bs.id";
 	private static final String UPDATE_BONUS_HISTORY = "INSERT INTO bonus_history(user_id, venue_id, scores_change, change_time) VALUES(?, ?, ?, now())";
 	private static final String GET_BONUS_HISTORY_SQL = "SELECT bh.scores_change, bh.change_time, v.name FROM bonus_history bh, venues v "
 			+ "WHERE bh.venue_id = v.id AND bh.user_id = ? ORDER BY bh.change_time DESC";
@@ -316,17 +316,22 @@ public class UserDAO {
 					bookingData.put("venue_name", rsBookings.getString("venue_name"));
 					bookingData.put("venue_id", rsBookings.getInt("venue_id"));
 					bookingData.put("visitor_contact_name", rsBookings.getString("visitor_contact_name"));
-					int spentMoney = rsBookings.getInt("spent_money");
+					int venueSpentMoney = rsBookings.getInt("spent_money");
 					int bonusScores = 0;
-					if(spentMoney > 0) {
-						bonusScores = spentMoney/Consts.BONUS_EXCHANGE_SCORE;
+					if(venueSpentMoney > 0) {
+						bonusScores = venueSpentMoney/Consts.BONUS_EXCHANGE_SCORE;
 					}
-					bookingData.put("spent_money", rsBookings.getInt("spent_money"));
+					bookingData.put("spent_money", venueSpentMoney);
 					bookingData.put("bonus_scores", bonusScores);
 					bookingData.put("booking_time", rsBookings.getTimestamp("booking_time"));
 					bookingData.put("places_amount", rsBookings.getInt("places_amount"));
-					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));														
-					bookingData.put("visitor_spent_money", rsBookings.getInt("visitor_spent_money"));
+					bookingData.put("booking_status", Consts.STATUS_BY_CODE.get(rsBookings.getInt("booking_status")));
+					int visitorSpentMoney = rsBookings.getInt("visitor_spent_money");
+					bookingData.put("visitor_spent_money", visitorSpentMoney);
+					
+					// Get the spent valid information
+					bookingData.put("spent_valid", VenuesDAO.getSpentValid(venueSpentMoney, visitorSpentMoney, rsBookings.getInt("spent_valid")));
+					
 					userBookings.add(bookingData);
 				}
 				result.put("bookings", userBookings);

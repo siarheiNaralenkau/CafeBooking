@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +75,8 @@ public class VenuesDAO {
 	private static final String GET_REVIEWS_SQL = "SELECT r.mark_food, r.mark_service, r.mark_atmosphere, r.mark_price_quality, r.comments_good, r.comments_bad, r.created, u.name FROM reviews r, users u WHERE venue_id = ? and r.user_id = u.id";
 	
 	private static final String UPLOAD_VENUE_PHOTO_SQL = "INSERT INTO venue_photos(venue_id, url, delete_hash) VALUES(?, ?, ?)";
+	
+	private static final String GET_VENUES_FREE_TABLES_SQL = "Select id, name, free_tables_amount from venues";
 	
 	private static DataSource dataSource;
 	
@@ -1201,7 +1205,7 @@ public class VenuesDAO {
 		/**
 		 * Spent valid statuses:
 		 * 0 - No Venue sum, no visitor sum
-		 * 1 - No visitor sum
+		 * 1 - No visitor or venue sum
 		 * 2 - Visitor sum is checking
 		 * 3 - Visitor sum is correct
 		 * 4 - Visitor sum is incorrect		
@@ -1209,7 +1213,7 @@ public class VenuesDAO {
 		int result = 0;
 		if(venueSpent == 0 && visitorSpent == 0) {
 			result = 0;
-		} else if(venueSpent > 0 && visitorSpent == 0) {
+		} else if( (venueSpent > 0 && visitorSpent == 0) || (venueSpent == 0 && visitorSpent > 0)) {
 			result = 1;
 		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 0) {
 			result = 2;
@@ -1217,6 +1221,29 @@ public class VenuesDAO {
 			result = 3;
 		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 2) {
 			result = 4;
+		}
+		return result;
+	}
+	
+	public static List<Map<String, Object>> getVenuesFreeTables() {
+		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
+		Connection con = null;
+		PreparedStatement ps = null;		
+		try {
+			con = dataSource.getConnection();
+			ps = con.prepareStatement(GET_VENUES_FREE_TABLES_SQL);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				Map<String, Object> vShort = new HashMap<String, Object>();
+				vShort.put("id", rs.getInt("id"));
+				vShort.put("name", rs.getString("name"));
+				vShort.put("free_tables_amount", rs.getInt("free_tables_amount"));
+				result.add(vShort);
+			}
+		} catch(SQLException e) {						
+			e.printStackTrace();			
+		} finally {
+			closeConnection(con, ps);
 		}
 		return result;
 	}

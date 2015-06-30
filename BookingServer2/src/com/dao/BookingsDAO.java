@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 
 import com.beans.Booking;
 import com.constants.BookingStatus;
+import com.constants.Consts;
 
 public class BookingsDAO {
 	private static DataSource dataSource;
@@ -38,6 +39,8 @@ public class BookingsDAO {
 			+ " and booking_time > ? and booking_time < ?";
 	private static final String CLAIMS_ACTIVE_SQL = "SELECT count(*) as claims_active from bookings where user_id = ? and spent_valid = 0 and venue_id=?"
 			+ " and booking_time > ? and booking_time < ?";
+	
+	private static final String DELETE_VISITOR_BOOKING_SQL = "DELETE FROM BOOKINGS WHERE id = ?";
 	
 	static {		
 		try {
@@ -355,4 +358,31 @@ public class BookingsDAO {
 		return result;
 	}
 		
+	public static Map<String, Object> deleteVisitorBooking(int bookingId) {		
+		Map<String, Object> result = new HashMap<String, Object>();
+		Connection con = null;
+		PreparedStatement ps = null;		
+		try {
+			Booking booking = VenuesDAO.getBookingById(bookingId);
+			if(booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.CANCELLED.getValue())) || 
+					booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.REJECTED.getValue()))) {
+				con = dataSource.getConnection();												
+				ps = con.prepareStatement(DELETE_VISITOR_BOOKING_SQL);
+				ps.setInt(1, bookingId);
+				ps.executeUpdate();
+				result.put("status", Consts.STATUS_SUCCESS);
+				result.put("deletedBookingId", bookingId);
+			} else {			
+				result.put("status", Consts.STATUS_FAILURE);
+				result.put("error", "Only cancelled or rejected bookings can be deleted by visitor");
+			}
+		}  catch(SQLException e) {
+			result.put("status", "failure");
+			result.put("error", e.getMessage());
+			e.printStackTrace();
+		} finally {
+			closeConnection(con, ps);
+		}
+		return result;
+	}
 }
