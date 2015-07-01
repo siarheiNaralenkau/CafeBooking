@@ -93,6 +93,9 @@ $(document).ready(function () {
 	
 	function dateFilterChanged() {        		
 		fetchGridData();
+		
+		// Update the back link with selected dates.			
+		$("#backBtn").attr("href", "./venue_stats_jq.jsp?dateFrom=" + $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val() + "&venueId=" + $("#venueId").text());
 	};
 		
 });

@@ -48,9 +48,22 @@
     });
 	
 	// Set default start and end dates.
-	var endDate = new Date();
-	var startDate = new Date();
-	startDate.setMonth(startDate.getMonth()-1);        	
+	var paramFrom = $("#dateFromParam").text();
+	var paramTo = $("#dateToParam").text();
+	var startDate, endDate;
+	
+	if(!paramFrom) {
+		startDate = new Date();
+		startDate.setMonth(startDate.getMonth()-1);
+	} else {
+		startDate = new Date(paramFrom);
+	}
+	
+	if(!paramTo) {
+		endDate = new Date();
+	} else {
+		endDate = new Date(paramTo);
+	}				        
 	
 	$("#dateFrom").datepicker({dateFormat: "yy-mm-dd"});
 	$("#dateTo").datepicker({dateFormat: "yy-mm-dd"});

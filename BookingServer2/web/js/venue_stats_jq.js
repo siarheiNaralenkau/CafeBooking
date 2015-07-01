@@ -53,11 +53,20 @@ $(document).ready(function() {
 				$("#venueName").text(result.venue.name); 								
 			}
 		});
+		
+		formatBackLink();
 	};		
 	
 	function dateFilterChanged() {
 		fetchVenueData();
 		fetchRegistredData();
 		fetchUnregistredData();
+				
+		formatBackLink();
+	};
+	
+	// Update the back link with selected dates.
+	function formatBackLink() {
+		$("#backBtn").attr("href", "./venues_by_category_jq.jsp?dateFrom=" +  $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val());
 	};
 });

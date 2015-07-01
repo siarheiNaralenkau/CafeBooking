@@ -13,11 +13,13 @@
 </head>
 
 <body>
-	<div>
-		<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
-		<span id="initialDateFrom" style="display: none"><%=request.getParameter("dateFrom") %></span>
-		<span id="initialDateTo" style="display: none"><%=request.getParameter("dateTo") %></span>
+	<div style="display: none">
+		<span id="venueId"><%=request.getParameter("venueId") %></span>
+		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>
+		<span id="initialDateTo"><%=request.getParameter("dateTo") %></span>
 	</div>
+	
+	<a href="./venues_by_category_jq.jsp" title="К списку заведений" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
 	
 	<h4>Статистика заказов по заведению <b id="venueName"></b> за период:</h4>
 	<label for='dateFrom'>С</label>

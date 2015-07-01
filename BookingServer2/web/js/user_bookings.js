@@ -112,6 +112,11 @@ $(document).ready(function () {
 	
 	function dateFilterChanged() {        		
 		fetchGridData();
+		
+		// Update the back link with selected dates.
+		var startDate = $("#dateFrom").val();
+		var endDate = $("#dateTo").val();			
+		$("#backBtn").attr("href", "./venue_stats_jq.jsp?dateFrom=" + startDate + "&dateTo=" + endDate + "&venueId=" + $("#venueId").text());
 	};
 		
 });

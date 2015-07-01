@@ -10,10 +10,13 @@
 		
 </head>
 <body>
-	<span id="venueId" style="display: none"><%=request.getParameter("venueId") %></span>
-	<span id="userId" style="display: none"><%=request.getParameter("userId") %></span>
-	<span id="initialDateFrom" style="display: none"><%=request.getParameter("dateFrom") %></span>
-	<span id="initialDateTo" style="display: none"><%=request.getParameter("dateTo") %></span>
+	<div style="display: none">
+		<span id="venueId"><%=request.getParameter("venueId") %></span>
+		<span id="userId"><%=request.getParameter("userId") %></span>
+		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>
+		<span id="initialDateTo"><%=request.getParameter("dateTo") %></span>
+	</div>
+	<a href="./venue_stats_jq.jsp" title="К списку заведений" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
 	<div style='margin-left: auto; margin-right: auto; width: 880px'>
 		<table id="bookingsGrid"></table>
 	    <div id="bookingsGridPager"></div>
