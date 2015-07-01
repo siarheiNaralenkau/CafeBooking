@@ -42,8 +42,7 @@ public class AdminDAO {
 			+ " from bookings where venue_id = ? and visitor_contact_name = ? and booking_time > ? and booking_time < ? order by booking_time desc";
 	
 	private static final String RESOLVE_BOOKING_AGREE_SQL = "UPDATE bookings SET spent_money = ?, spent_valid = 1 WHERE id = ?";
-	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 2 WHERE id = ?";
-	private static final String UPDATE_USER_BONUS = "UPDATE users SET bonus_scores = bonus_scores + ? WHERE id = ?";
+	private static final String RESOLVE_BOOKING_DISAGREE_SQL = "UPDATE bookings SET spent_valid = 2 WHERE id = ?";	
 	
 	private static final String VENUES_SHORT_SQL = "SELECT id, name FROM venues ORDER BY name";
 	
@@ -179,9 +178,13 @@ public class AdminDAO {
 				Map<String, Object> userData = new HashMap<String, Object>();
 				userData.put("id", rs.getInt("id"));
 				userData.put("name", rs.getString("visitor_contact_name"));
+				userData.put("surname", "");
 				userData.put("phone", rs.getString("visitor_contact_phone"));
 				userData.put("bookingsCount", rs.getInt("bookings_count"));
-				userData.put("spentMoney", rs.getInt("money_spent"));
+				int spentMoney = rs.getInt("money_spent");
+				int venueDept = spentMoney*Consts.BONUS_PERCENTAGE/100;
+				userData.put("spentMoney", spentMoney);
+				userData.put("dept", venueDept);
 				userData.put("email", rs.getString("email"));
 				result.add(userData);
 			}

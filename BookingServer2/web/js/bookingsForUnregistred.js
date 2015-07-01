@@ -2,10 +2,15 @@ function createUnregistredGrid() {
 	$("#jqGridUnregistred").jqGrid({
 	    colModel: [	        
 	        {
-				label: 'Имя пользователя',
+				label: 'Имя посетителя',
 	            name: 'name',
 	            width: 120                         
-	        },	        
+	        },
+	        {
+				label: 'Фамилия посетителя',
+	            name: 'surname',
+	            width: 150                         
+	        },
 	        {
 	        	label: 'Телефон',
 	        	name: 'phone',
@@ -25,7 +30,12 @@ function createUnregistredGrid() {
 	        	label: 'Потрачено денег',
 	        	name: 'spentMoney',
 	        	width: 150
-	        },	                            
+	        },	      
+	        {
+	        	label: 'Долг (5%)',
+	        	name: 'dept',
+	        	width: 120	
+	        },
 	        {                    	
 	        	name: 'moreInfo',
 	        	label: '',
@@ -35,7 +45,7 @@ function createUnregistredGrid() {
 	    ],
 	
 	    viewrecords: true, // show the current page, data rang and total records on the toolbar
-	    width: 850,
+	    width: 1000,
 	    height: 300,
 	    rowNum: 30,
 		datatype: 'local',
@@ -58,11 +68,13 @@ function fetchUnregistredData() {
 				var userItem = result[i];
 				console.log(userItem);
 				gridArrayData.push({          	
-		            name: userItem.name,            
+		            name: userItem.name, 
+		            surname: userItem.surname,
 		            phone: userItem.phone,
 		            email: userItem.email,
 		            bookingsCount: userItem.bookingsCount,
 		            spentMoney: userItem.spentMoney,
+		            dept: userItem.dept,
 		            moreInfo: "bookingId=" + userItem.id + "&venueId=" + $("#venueId").text()            
 		        });     
 			}

@@ -9,6 +9,8 @@ public class Consts {
 	public static final Long TWENTY_MINUTES_MS = 1200000L;
 	public static final Double DEFAULT_LAT = 52.42426;
 	public static final Double DEFAULT_LNG = 31.01457;
+	
+	public static final int BONUS_PERCENTAGE = 5;
 
 	public static final String ADMIN_APP_KEY = "AIzaSyCj6I4a8D7grQzJttdmxr_V2uHOfQuj_s4";
 	public static final String CLIENT_APP_KEY = "AIzaSyDnFBjNygGQJ45hUl-MPNPrK2-BGu1nWfU";
