@@ -40,7 +40,7 @@ public class BookingsDAO {
 	private static final String CLAIMS_ACTIVE_SQL = "SELECT count(*) as claims_active from bookings where user_id = ? and spent_valid = 0 and venue_id=?"
 			+ " and booking_time > ? and booking_time < ?";
 	
-	private static final String DELETE_VISITOR_BOOKING_SQL = "DELETE FROM BOOKINGS WHERE id = ?";
+	private static final String DELETE_VISITOR_BOOKING_SQL = "DELETE FROM bookings WHERE id = ?";
 	
 	static {		
 		try {
@@ -364,17 +364,22 @@ public class BookingsDAO {
 		PreparedStatement ps = null;		
 		try {
 			Booking booking = VenuesDAO.getBookingById(bookingId);
-			if(booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.CANCELLED.getValue())) || 
-					booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.REJECTED.getValue()))) {
-				con = dataSource.getConnection();												
-				ps = con.prepareStatement(DELETE_VISITOR_BOOKING_SQL);
-				ps.setInt(1, bookingId);
-				ps.executeUpdate();
-				result.put("status", Consts.STATUS_SUCCESS);
-				result.put("deletedBookingId", bookingId);
-			} else {			
+			if(booking != null) {
+				if(booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.CANCELLED.getValue())) || 
+						booking.getStatus().equals(Consts.STATUS_BY_CODE.get(BookingStatus.REJECTED.getValue()))) {
+					con = dataSource.getConnection();												
+					ps = con.prepareStatement(DELETE_VISITOR_BOOKING_SQL);
+					ps.setInt(1, bookingId);
+					ps.executeUpdate();
+					result.put("status", Consts.STATUS_SUCCESS);
+					result.put("deletedBookingId", bookingId);
+				} else {			
+					result.put("status", Consts.STATUS_FAILURE);
+					result.put("error", "Only cancelled or rejected bookings can be deleted by visitor");
+				}
+			} else {
 				result.put("status", Consts.STATUS_FAILURE);
-				result.put("error", "Only cancelled or rejected bookings can be deleted by visitor");
+				result.put("error", String.format("Booking with id = %d does not exists", bookingId));
 			}
 		}  catch(SQLException e) {
 			result.put("status", "failure");
