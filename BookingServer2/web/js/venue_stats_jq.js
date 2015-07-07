@@ -61,12 +61,15 @@ $(document).ready(function() {
 		fetchVenueData();
 		fetchRegistredData();
 		fetchUnregistredData();
-				
+					
 		formatBackLink();
 	};
 	
 	// Update the back link with selected dates.
 	function formatBackLink() {
-		$("#backBtn").attr("href", "./venues_by_category_jq.jsp?dateFrom=" +  $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val());
+		var singleVenueAdmin = $("#singleVenueAdmin").text();
+		if(singleVenueAdmin === "null") {
+			$("#backBtn").attr("href", "./venues_by_category_jq.jsp?dateFrom=" +  $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val());
+		}
 	};
 });
