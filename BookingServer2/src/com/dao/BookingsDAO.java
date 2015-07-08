@@ -24,11 +24,9 @@ public class BookingsDAO {
 	private static final String SET_BOOKING_SPENT_SQL = "UPDATE bookings SET status=?, spent_money = ? WHERE id = ?";
 	private static final String SET_VISITOR_SPENT_SQL = "UPDATE bookings SET visitor_spent_money = ? WHERE id = ?";
 	
-	private static final String GET_BOOKINGS_BY_STATUS_SQL = "select id, booking_id, new_status from booking_history where booking_id in (SELECT id from bookings WHERE venue_id = ? and booking_time >= ? and booking_time <= ?)";
+	private static final String GET_BOOKINGS_BY_STATUS_SQL = "SELECT status, COUNT(*) AS amount FROM bookings WHERE venue_id = ? and booking_created >= ? and booking_created <= ? GROUP BY status";
 	private static final String GET_SPENT_STATS_SQL = "select MIN(spent_money) as min_spent, MAX(spent_money) as max_spent, AVG(spent_money) as avg_spent, SUM(spent_money) as sum_spent FROM bookings WHERE venue_id=? "
-			+ "and spent_money is not NULL and spent_money != 0 and booking_time >= ? and booking_time <= ?";
-	private static final String GET_BOOKINS_COUNT = "SELECT count(*) as amount FROM bookings where venue_id = ? and booking_time >= ? and booking_time <= ?";
-	private static final String GET_PENDING_BOOKINGS_COUNT = "SELECT count(*) as pending_amount FROM bookings where venue_id = ? and status = 1 and booking_time >= ? and booking_time <= ?";
+			+ "and spent_money is not NULL and spent_money != 0 and booking_created >= ? and booking_created <= ?";	
 	
 	private static final String BOOKINGS_REGISTRED = "Select count(*) as bookings_count, b.user_id, u.name, u.surname, u.email, u.phone, u.bonus_scores" 
 			+ " from bookings b, users u where b.venue_id = ? and b.user_id = u.id and b.booking_time > ? and b.booking_time < ?"
@@ -253,78 +251,60 @@ public class BookingsDAO {
 		return result;
 	}
 	
-	public static Map<String, Object> getBookingStats(int venueId, String startDate, String endDate) {
-		// TODO - Add startDate and endDate filter parameters.		
+	public static Map<String, Object> getBookingStats(int venueId, String startDate, String endDate) { 		
 		Map<String, Object> result = new HashMap<String, Object>();
 				
 		Connection con = null;
 		PreparedStatement ps = null;		
 		ResultSet rs = null;
-		int bookingsCount = 0;
-		int pendingBookingsCount = 0;
+		int bookingsCount = 0;		
 		try {
-			con = dataSource.getConnection();
-			// Get bookings count.
-			ps = con.prepareStatement(GET_BOOKINS_COUNT);
-			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
-			rs = ps.executeQuery();
-			rs.next();
-			bookingsCount = rs.getInt("amount");
-			rs.close();
-			ps.close();
-			
-			// Get pending bookings count.			
-			ps = con.prepareStatement(GET_PENDING_BOOKINGS_COUNT);			
-			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
-			rs = ps.executeQuery();
-			rs.next();
-			pendingBookingsCount = rs.getInt("pending_amount");
-			rs.close();
-			ps.close();
-			
+			con = dataSource.getConnection();			
+						
 			// Get booking info grouped by status.			
 			ps = con.prepareStatement(GET_BOOKINGS_BY_STATUS_SQL);
 			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
+			ps.setString(2, startDate + " 00:00");
+			ps.setString(3, endDate + " 23:59");
 			rs = ps.executeQuery();			
 			int approved = 0;
+			int pending = 0;
 			int rejected = 0;
 			int cancelled = 0;
 			int expired = 0;
 			int completed = 0;			
 			while(rs.next()) {
-				int status = rs.getInt("new_status");												
+				int status = rs.getInt("status");
+				if(status == BookingStatus.PENDING.getValue()) {
+					pending = rs.getInt("amount");
+				}
 				if(status == BookingStatus.APPROVED.getValue()) {
-					approved += 1;
+					approved = rs.getInt("amount");
 				}
 				if(status == BookingStatus.CANCELLED.getValue()) {
-					cancelled += 1;
+					cancelled = rs.getInt("amount");
 				}
 				if(status == BookingStatus.REJECTED.getValue()) {
-					rejected += 1;
+					rejected = rs.getInt("amount");
 				}
 				if(status == BookingStatus.EXPIRED.getValue()) {
-					expired += 1;
+					expired = rs.getInt("amount");
 				}
 				if(status == BookingStatus.CLOSED.getValue()) {
-					completed += 1;
+					completed = rs.getInt("amount");
 				}								
 			}
+			bookingsCount = pending + approved + cancelled + rejected + expired + completed;
 			result.put("bookingsCreated", bookingsCount);
-			result.put("bookingsPending", pendingBookingsCount);
+			result.put("bookingsPending", pending);
 			result.put("bookingsApproved", approved);
 			result.put("bookingsRejected", rejected);
 			result.put("bookingsCancelled", cancelled);
 			result.put("bookingsExpired", expired);
 			result.put("bookingsCompleted", completed);
 			double percentUnvisited = 0;
-			if(expired != 0 && approved != 0) {
-				percentUnvisited = ((double)expired / (double)approved) * 100;
+			if(expired != 0 && bookingsCount != 0) {
+				percentUnvisited = ((double)expired / (double)bookingsCount) * 100;
 			}
 			result.put("percentUnvisited", String.format("%.2f", percentUnvisited) + "%");
 			
@@ -334,8 +314,8 @@ public class BookingsDAO {
 			// Get booking check info.
 			ps = con.prepareStatement(GET_SPENT_STATS_SQL);
 			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
+			ps.setString(2, startDate + " 00:00");
+			ps.setString(3, endDate + " 23:59");
 			rs = ps.executeQuery();
 			rs.next();
 			int minSpent = rs.getInt("min_spent");
