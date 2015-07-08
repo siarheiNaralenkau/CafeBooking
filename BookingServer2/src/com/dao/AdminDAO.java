@@ -31,7 +31,7 @@ public class AdminDAO {
 			+ " FROM venues v order by successfull_bookings desc, v.name asc";
 	
 	private static final String BOOKING_STATS_UNREG_SQL = "SELECT id, visitor_contact_name, visitor_contact_phone, email, count(*) as bookings_count, sum(spent_money) as money_spent from bookings" 
-			+ " where venue_id = ? and user_id IS NULL and booking_time > ? and booking_time < ? group by visitor_contact_name";	
+			+ " where venue_id = ? and user_id IS NULL and booking_created > ? and booking_created < ? group by visitor_contact_name";	
 	
 	private static final String BOOKINGS_FOR_USER_SQL = "SELECT id, DATE(booking_time) as booking_date, TIME(booking_time) as booking_time, DATE(booking_created) as created_date,"
 			+ " TIME(booking_created) as created_time, spent_money, visitor_spent_money, notes" 
@@ -171,8 +171,8 @@ public class AdminDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(BOOKING_STATS_UNREG_SQL);
 			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
+			ps.setString(2, startDate + " 00:00");
+			ps.setString(3, endDate + " 23:59");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {				
 				Map<String, Object> userData = new HashMap<String, Object>();

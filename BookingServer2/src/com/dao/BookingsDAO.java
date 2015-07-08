@@ -29,7 +29,7 @@ public class BookingsDAO {
 			+ "and spent_money is not NULL and spent_money != 0 and booking_created >= ? and booking_created <= ?";	
 	
 	private static final String BOOKINGS_REGISTRED = "Select count(*) as bookings_count, b.user_id, u.name, u.surname, u.email, u.phone, u.bonus_scores" 
-			+ " from bookings b, users u where b.venue_id = ? and b.user_id = u.id and b.booking_time > ? and b.booking_time < ?"
+			+ " from bookings b, users u where b.venue_id = ? and b.user_id = u.id and b.booking_created > ? and b.booking_created < ?"
 			+ " group by b.user_id";
 	private static final String SPENT_MONEY_SQL = "SELECT sum(spent_money) as spent from bookings where user_id = ? and"
 			+ " (spent_valid=1 OR spent_valid is null) and venue_id=? and booking_time > ? and booking_time < ?";
@@ -134,34 +134,7 @@ public class BookingsDAO {
 			closeConnection(con, ps);
 		}
 		return result;
-	}
-	
-//	private static void getBookingsForUnregistredUsers(int venueId, Map<String, Object> result) {
-//		Connection con = null;
-//		PreparedStatement ps = null;
-//		try {
-//			con = dataSource.getConnection();
-//			ps = con.prepareStatement(BOOKINGS_FOR_UNREGISTRED_USER);
-//			ps.setInt(1, venueId);
-//			ResultSet rs = ps.executeQuery();
-//			List<Map<String, Object>> bookings = new ArrayList<Map<String,Object>>();
-//			while(rs.next()) {
-//				Map<String, Object> userInfo = new HashMap<String, Object>();
-//				userInfo.put("userName", rs.getString("visitor_contact_name"));
-//				userInfo.put("visits", rs.getInt("visits"));
-//				userInfo.put("spent_sum", rs.getInt("spent_sum"));
-//				bookings.add(userInfo);
-//			}
-//			result.put("bookingsByUnregUsers", bookings);
-//			rs.close();
-//		} catch(SQLException e) {
-//			result.put("status", "failure");
-//			result.put("error", e.getMessage());
-//			e.printStackTrace();
-//		} finally {
-//			closeConnection(con, ps);
-//		}
-//	}
+	}	
 	
 	public static List<Map<String, Object>> getBookingsForRegistredUsers(int venueId, String startDate, String endDate) {
 		List<Map<String, Object>> result = new ArrayList<Map<String,Object>>();
@@ -171,8 +144,8 @@ public class BookingsDAO {
 			con = dataSource.getConnection();
 			ps = con.prepareStatement(BOOKINGS_REGISTRED);
 			ps.setInt(1, venueId);
-			ps.setString(2, startDate);
-			ps.setString(3, endDate);
+			ps.setString(2, startDate + " 00:00");
+			ps.setString(3, endDate + " 23:59");
 			ResultSet rs = ps.executeQuery();			
 			while(rs.next()) {
 				Map<String, Object> userInfo = new HashMap<String, Object>();
