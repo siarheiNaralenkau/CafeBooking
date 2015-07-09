@@ -34,7 +34,7 @@ function venueStats(el) {
 	var dateFrom = formatDate(startDate);
 	var dateTo = formatDate(curDate);
 	window.location = "venue_stats_jq.jsp?venueId=" + venueId + "&dateFrom="
-			+ dateFrom + "&dateTo=" + dateTo;
+			+ dateFrom + "&dateTo=" + dateTo + "&backUrl=venues_by_category.jsp";
 };
 
 function formatDate(date) {

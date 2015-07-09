@@ -18,6 +18,7 @@
 		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>
 		<span id="initialDateTo"><%=request.getParameter("dateTo") %></span>
 		<span id="singleVenueAdmin"><%=request.getAttribute("singleVenueAdmin") %></span>
+		<span id="backUrl"><%=request.getParameter("backUrl") %></span>
 	</div>
 		
 	<% if(request.getAttribute("singleVenueAdmin") != null) { %>

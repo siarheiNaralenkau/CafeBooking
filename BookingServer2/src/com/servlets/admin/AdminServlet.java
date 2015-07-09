@@ -40,15 +40,29 @@ public class AdminServlet extends HttpServlet {
 			adminLogin = request.getParameter(ADMIN_LOGIN);
 			adminPassword = request.getParameter(ADMIN_PASSWORD);
 			if(!LOGIN.equals(adminLogin) || !PASSWORD.equals(adminPassword)) {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin_login.jsp");
-				dispatcher.forward(request, response);
+				forwardLoginPage(request, response);
 			} else {
 				saveCredentialsInSession(session, adminLogin, adminPassword);
-				ServletContext servletContext = getServletContext();
-				RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/get_grouped_venues");
-				dispatcher.forward(request, response);
+				forwardVenuesList(request, response);
 			}
-		} 
+		} else {
+			if(adminLogin.equals(LOGIN) && adminPassword.equals(PASSWORD)) {
+				forwardVenuesList(request, response);
+			} else {
+				forwardLoginPage(request, response);
+			}
+		}
+	}
+	
+	protected void forwardLoginPage(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {		
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin_login.jsp");
+		dispatcher.forward(request, response);
+	}
+	
+	protected void forwardVenuesList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		ServletContext servletContext = getServletContext();
+		RequestDispatcher dispatcher = servletContext.getRequestDispatcher("/get_grouped_venues");
+		dispatcher.forward(request, response);
 	}
 	
 	protected void saveCredentialsInSession(HttpSession session, String login, String password) {

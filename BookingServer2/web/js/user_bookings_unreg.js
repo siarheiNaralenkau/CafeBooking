@@ -56,6 +56,7 @@ $(document).ready(function () {
 	$("#dateFrom").change(dateFilterChanged);
 	$("#dateTo").change(dateFilterChanged);	
 	
+	formatBackLink();	
 	fetchGridData();
 	
 	function fetchGridData() {
@@ -95,7 +96,13 @@ $(document).ready(function () {
 		fetchGridData();
 		
 		// Update the back link with selected dates.			
-		$("#backBtn").attr("href", "./venue_stats_jq.jsp?dateFrom=" + $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val() + "&venueId=" + $("#venueId").text());
+		formatBackLink();
 	};
+	
+	function formatBackLink() {
+		var backUrl = "./venue_stats_jq.jsp?dateFrom=" + $("#dateFrom").val() + "&dateTo=" + $("#dateTo").val() + "&venueId=" + $("#venueId").text();
+		console.log("Back URL: " + backUrl);
+		$("#backBtn").attr("href", backUrl);
+	}
 		
 });

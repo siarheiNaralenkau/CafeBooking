@@ -1,0 +1,15 @@
+.admin-menu-container {
+	margin-top: 10px;
+	width: 51%;
+	margin-left: auto;
+	margin-right: auto;	
+}
+
+.admin-menu-item {	
+	margin: 10px 10px 10px 10px; 
+	float: left;
+	width: 30%;
+	border: 1px solid black;	
+	font-size: 18px;
+	background-color: #C0C0C0;
+}
