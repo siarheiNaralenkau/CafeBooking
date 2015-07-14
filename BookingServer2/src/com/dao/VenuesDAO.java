@@ -1205,7 +1205,7 @@ public class VenuesDAO {
 		/**
 		 * Spent valid statuses:
 		 * 0 - No Venue sum, no visitor sum
-		 * 1 - No visitor or venue sum
+		 * 1 - No visitor sum
 		 * 2 - Visitor sum is checking
 		 * 3 - Visitor sum is correct
 		 * 4 - Visitor sum is incorrect		
@@ -1213,9 +1213,9 @@ public class VenuesDAO {
 		int result = 0;
 		if(venueSpent == 0 && visitorSpent == 0) {
 			result = 0;
-		} else if( (venueSpent > 0 && visitorSpent == 0) || (venueSpent == 0 && visitorSpent > 0)) {
+		} else if(visitorSpent == 0) {
 			result = 1;
-		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 0) {
+		} else if(visitorSpent > 0 && spentValid == 0) {
 			result = 2;
 		} else if(venueSpent > 0 && visitorSpent > 0 && spentValid == 1) {
 			result = 3;

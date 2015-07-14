@@ -17,10 +17,16 @@
 		<span id="venueId"><%=request.getParameter("venueId") %></span>
 		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>
 		<span id="initialDateTo"><%=request.getParameter("dateTo") %></span>
+		<span id="singleVenueAdmin"><%=request.getAttribute("singleVenueAdmin") %></span>
+		<span id="backUrl"><%=request.getParameter("backUrl") %></span>
 	</div>
-	
-	<a href="./venues_by_category_jq.jsp" title="К списку заведений" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
-	
+		
+	<% if(request.getAttribute("singleVenueAdmin") != null) { %>
+		<a href="./venue_admin" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
+	<% } else {%>	
+		<a href="./venues_by_category_jq.jsp" title="К списку заведений" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
+	<% } %>
+		
 	<h4>Статистика заказов по заведению <b id="venueName"></b> за период:</h4>
 	<label for='dateFrom'>С</label>
 	<input type='text' id='dateFrom'/>

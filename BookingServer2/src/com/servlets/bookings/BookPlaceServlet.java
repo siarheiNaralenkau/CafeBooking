@@ -20,7 +20,7 @@ import com.google.gson.Gson;
  * Puts a booking request in some cafe, restaurant, bar or club.
  * Requires POST request.
  * Example:
- * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3
+ * http://localhost:8080/BookingServer2/book_place?venueId=1&visitorName=Vasia&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3&email=naralenkov2010@gmail.com
  * http://localhost:8080/BookingServer2/book_place?venueId=1&userId=2&visitorPhone=1234567&places=2&bookingTime=15-08-2014 21:00&tableNumbers=1,2,3
  */
 

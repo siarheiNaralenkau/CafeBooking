@@ -15,7 +15,7 @@
 	
 </head>
 <body>
-	<a href="add_venue.jsp">Добавить новое заведение</a>
+	<a href="add_venue.jsp" style="pointer-events: none">Добавить новое заведение</a>
 	<div id="parent" style="width: 650px">
 		<table><tr>
 			<td>

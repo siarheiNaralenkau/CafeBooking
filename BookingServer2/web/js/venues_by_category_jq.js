@@ -52,14 +52,14 @@
 	var paramTo = $("#dateToParam").text();
 	var startDate, endDate;
 	
-	if(!paramFrom) {
+	if(paramFrom === "null") {
 		startDate = new Date();
 		startDate.setMonth(startDate.getMonth()-1);
 	} else {
 		startDate = new Date(paramFrom);
 	}
 	
-	if(!paramTo) {
+	if(paramTo === "null") {
 		endDate = new Date();
 	} else {
 		endDate = new Date(paramTo);
