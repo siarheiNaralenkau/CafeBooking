@@ -10,11 +10,13 @@
 		
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<div style="display: none">
 		<span id="venueId"><%=request.getParameter("venueId") %></span>
 		<span id="userId"><%=request.getParameter("userId") %></span>
 		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>
 		<span id="initialDateTo"><%=request.getParameter("dateTo") %></span>
+		<span id="adminLogin"><%=session.getAttribute("login")%></span>		
 	</div>
 	<a href="./venue_stats_jq.jsp" title="К списку заведений" id="backBtn"><img src="images/back.png" style="width: 100px; height: 50px"/></a>
 	<div style='margin-left: auto; margin-right: auto; width: 880px'>

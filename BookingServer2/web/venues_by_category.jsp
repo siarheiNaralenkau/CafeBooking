@@ -15,6 +15,7 @@
 	
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<a href="add_venue.jsp" style="pointer-events: none">Добавить новое заведение</a>
 	<div id="parent" style="width: 650px">
 		<table><tr>

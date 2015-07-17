@@ -8,6 +8,7 @@
 <title>Venues List</title>
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<table border="1">
 		<thead>
 			<tr>

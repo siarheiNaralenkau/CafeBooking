@@ -13,6 +13,7 @@
 </head>
 
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<div style="display: none">
 		<span id="venueId"><%=request.getParameter("venueId") %></span>
 		<span id="initialDateFrom"><%=request.getParameter("dateFrom") %></span>

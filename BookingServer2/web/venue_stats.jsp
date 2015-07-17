@@ -19,6 +19,7 @@
 		List<Map<String, Object>> unregUsersBookings = (List<Map<String, Object>>)bookingStats.get("bookingsByUnregUsers");
 		List<Map<String, Object>> regUsersBookings = (List<Map<String, Object>>)bookingStats.get("bookingsByRegUsers");
 	%>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<h4>Статистика заказов по заведению<b>"<%=venue.getName()%>"</b></h4>
 	<ul>
 		<li>Всего бронирований: <%=bookingStats.get("bookingsCreated") %></li>

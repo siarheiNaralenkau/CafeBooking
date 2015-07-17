@@ -68,7 +68,10 @@ public class AdminServlet extends HttpServlet {
 	protected void saveCredentialsInSession(HttpSession session, String login, String password) {
 		session.setMaxInactiveInterval(3600);
 		session.setAttribute("adminLogin", login);
-		session.setAttribute("adminPassword", password);		
+		session.setAttribute("adminPassword", password);
+		
+		session.setAttribute("login", login);
+		session.setAttribute("password", password);
 	}
 
 }

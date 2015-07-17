@@ -8,6 +8,7 @@
 	<script type="text/javascript" src=js/venues_by_category_jq.js></script>
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<div style="display: none">		
 		<span id="dateFromParam" style="display: none"><%=request.getParameter("dateFrom") %></span>
 		<span id="dateToParam" style="display: none"><%=request.getParameter("dateTo") %></span>

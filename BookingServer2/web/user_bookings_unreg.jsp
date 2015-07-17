@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="js/user_bookings_unreg.js"></script>		
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<div style="display: none">
 		<span id="venueId"><%=request.getParameter("venueId") %></span>
 		<span id="bookingId"><%=request.getParameter("bookingId") %></span>

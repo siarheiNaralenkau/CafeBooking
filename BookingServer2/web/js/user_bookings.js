@@ -1,5 +1,11 @@
 $(document).ready(function () {        	
         	
+	var adminLogin = $("#adminLogin").text();
+	var uSumFormatter = "integer";
+	if(adminLogin === "venueAdmin") {
+		uSumFormatter = userSumFormatter; 
+	}
+	
 	$("#bookingsGrid").jqGrid({
         colModel: [
             {
@@ -25,7 +31,8 @@ $(document).ready(function () {
             {
             	label: 'Сумма пользователя',
             	name: 'user_sum',
-            	width: 150
+            	width: 150,
+            	formatter: uSumFormatter
             },
             {
             	label: 'Начислено баллов',
@@ -67,7 +74,7 @@ $(document).ready(function () {
 	$("#dateTo").datepicker("setDate", endDate);
 	
 	$("#dateFrom").change(dateFilterChanged);
-	$("#dateTo").change(dateFilterChanged);	
+	$("#dateTo").change(dateFilterChanged);		
 	
 	fetchGridData();
 	
@@ -99,6 +106,19 @@ $(document).ready(function () {
 			}
 		});
 	};	
+	
+	function userSumFormatter(cellValue, options, rowObject) {
+		var resultFormat = "";
+		if(cellValue == 0 || rowObject.venue_sum == rowObject.user_sum) {
+			resultFormat = cellValue;
+		} else {
+			var clickAgree = ' onClick="resolveSumConflict(' + rowObject.bookingId + ", \'agree\', " + options.rowId + ", " + options.pos + ", " + rowObject.user_sum + ')"';
+			var clickDisagree = ' onClick="resolveSumConflict(' + rowObject.bookingId + ", \'disagree\', " + options.rowId + ", " + options.pos + ", " + rowObject.user_sum + ')"';
+			resultFormat = "<div><div>" + cellValue + "</div><div><a class='agreeBtn' href='#'" + clickAgree + ">Agree</a>" + 
+						"<a class='disagreeBtn' href='#' style='margin-left: 10px'" + clickDisagree + ">Disagree</a></div></div>";
+		}
+		return resultFormat;
+	}
 	
 	function moreInfoFormatter(cellValue, options, rowObject) {        		
     	return "<a href='./venue_stats_jq.jsp?venueId=" + cellValue + "'>Подробнее</a>";                
