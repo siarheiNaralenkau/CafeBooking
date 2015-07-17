@@ -94,6 +94,7 @@
 	</script>
 </head>
 <body>
+	<jsp:include page="logout.jsp"></jsp:include>
 	<%
 		Venue venue = (Venue)request.getAttribute("venue");
 	%>
